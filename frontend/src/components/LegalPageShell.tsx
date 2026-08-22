@@ -123,18 +123,23 @@ export function LegalConfigurationNotice() {
   return (
     <Box
       role="note"
-      sx={{
-        mb: 3,
-        p: 2,
-        border: 1,
-        borderColor: "warning.main",
-        borderRadius: 1,
-        bgcolor: (theme) =>
-          alpha(theme.palette.warning.main, theme.palette.mode === "dark" ? 0.12 : 0.08),
-        color: "text.primary",
-        fontSize: 14,
-        lineHeight: 1.6,
-      }}
+      sx={[
+        {
+          mb: 3,
+          p: 2,
+          border: 1,
+          borderColor: "warning.main",
+          borderRadius: 1,
+          bgcolor: (theme) => alpha(theme.palette.warning.main, 0.08),
+          color: "text.primary",
+          fontSize: 14,
+          lineHeight: 1.6,
+        },
+        (theme) =>
+          theme.applyStyles("dark", {
+            bgcolor: alpha(theme.palette.warning.main, 0.12),
+          }),
+      ]}
     >
       Die Betreiberangaben sind noch nicht vollständig konfiguriert. Vor einer öffentlichen
       Bereitstellung müssen die Platzhalter über die <code>NEXT_PUBLIC_LEGAL_*</code>-Variablen

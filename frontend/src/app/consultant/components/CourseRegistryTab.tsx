@@ -1,7 +1,6 @@
 "use client";
 
 import LaunchOutlinedIcon from "@mui/icons-material/LaunchOutlined";
-import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -124,11 +123,7 @@ export function CourseRegistryTab() {
   return (
     <Box sx={{ height: "100%", overflowY: "auto", px: { xs: 1.5, md: 3 }, py: 2 }}>
       <Stack spacing={2} sx={{ maxWidth: 1100, mx: "auto" }}>
-        <Stack
-          direction={{ xs: "column", sm: "row" }}
-          spacing={1}
-          sx={{ alignItems: { xs: "flex-start", sm: "center" }, justifyContent: "space-between" }}
-        >
+        <Stack spacing={1}>
           <Box>
             <Typography variant="h2">Course Registry</Typography>
             {catalogue && (
@@ -137,9 +132,6 @@ export function CourseRegistryTab() {
               </Typography>
             )}
           </Box>
-          <Button startIcon={<RefreshOutlinedIcon />} onClick={() => void loadOfferings()}>
-            Refresh
-          </Button>
         </Stack>
 
         {isLoading && (
@@ -149,7 +141,14 @@ export function CourseRegistryTab() {
           </Stack>
         )}
 
-        {error && <Alert severity="error">{error}</Alert>}
+        {error && (
+          <Alert
+            severity="error"
+            action={<Button onClick={() => void loadOfferings()}>Try again</Button>}
+          >
+            {error}
+          </Alert>
+        )}
 
         {catalogue && (
           <>
@@ -158,9 +157,9 @@ export function CourseRegistryTab() {
                 Developer preview active. The listed offerings are bundled dummy data, not FU Berlin course catalogue data.
               </Alert>
             )}
-            <Alert severity="info" variant="outlined">
-              {catalogue.source_note}
-            </Alert>
+            <Typography variant="caption" sx={{ color: "text.secondary" }}>
+              Local offering data · Verify details in the official FU course catalogue.
+            </Typography>
 
             <Stack direction="row" spacing={0.75} sx={{ flexWrap: "wrap" }}>
               <Chip label={`${totalOfferings} listed offering${totalOfferings === 1 ? "" : "s"}`} size="small" />

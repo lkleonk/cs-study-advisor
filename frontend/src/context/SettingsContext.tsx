@@ -1,7 +1,7 @@
 "use client";
 
 import CssBaseline from "@mui/material/CssBaseline";
-import { ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider, useColorScheme } from "@mui/material/styles";
 import {
   createContext,
   useContext,
@@ -12,7 +12,8 @@ import {
   type ReactNode,
 } from "react";
 
-import { createAppTheme } from "@/theme/theme";
+import { COLOR_SCHEME_STORAGE_KEY } from "@/theme/colorScheme";
+import { appTheme } from "@/theme/theme";
 import { DEV_TOOLS_ENABLED } from "@/config/publicConfig";
 import {
   COURSE_REGISTRY_PREVIEW_STORAGE_KEY,
@@ -32,10 +33,23 @@ type SettingsContextValue = {
 };
 
 const SettingsContext = createContext<SettingsContextValue | null>(null);
-const DARK_MODE_STORAGE_KEY = "fu-consultant-dark-mode";
-
 export function SettingsProvider({ children }: { children: ReactNode }) {
-  const [darkMode, setDarkMode] = useState(false);
+  return (
+    <ThemeProvider
+      theme={appTheme}
+      defaultMode="light"
+      modeStorageKey={COLOR_SCHEME_STORAGE_KEY}
+      disableTransitionOnChange
+    >
+      <CssBaseline enableColorScheme />
+      <SettingsStateProvider>{children}</SettingsStateProvider>
+    </ThemeProvider>
+  );
+}
+
+function SettingsStateProvider({ children }: { children: ReactNode }) {
+  const { mode, setMode } = useColorScheme();
+  const darkMode = mode === "dark";
   const [tracingEnabled, setTracingEnabled] = useState(true);
   const [courseRegistryPreviewEnabled, setCourseRegistryPreviewEnabled] = useState(false);
   const [studyPlanPreviewEnabled, setStudyPlanPreviewEnabled] = useState(false);
@@ -43,10 +57,6 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
-      const storedValue = window.localStorage.getItem(DARK_MODE_STORAGE_KEY);
-      if (storedValue !== null) {
-        setDarkMode(storedValue === "true");
-      }
       // Only an explicit "false" opts out; anything else keeps the default.
       setTracingEnabled(window.localStorage.getItem(TRACING_ENABLED_STORAGE_KEY) !== "false");
       if (DEV_TOOLS_ENABLED) {
@@ -62,13 +72,6 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
     return () => window.clearTimeout(timer);
   }, []);
-
-  useEffect(() => {
-    if (!hasReadStoredSettings.current) {
-      return;
-    }
-    window.localStorage.setItem(DARK_MODE_STORAGE_KEY, String(darkMode));
-  }, [darkMode]);
 
   useEffect(() => {
     if (!hasReadStoredSettings.current) {
@@ -97,7 +100,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const value = useMemo(
     () => ({
       darkMode,
-      toggleDarkMode: () => setDarkMode((current) => !current),
+      toggleDarkMode: () => setMode(darkMode ? "light" : "dark"),
       tracingEnabled,
       setTracingEnabled,
       courseRegistryPreviewEnabled,
@@ -105,19 +108,10 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       studyPlanPreviewEnabled,
       setStudyPlanPreviewEnabled,
     }),
-    [courseRegistryPreviewEnabled, darkMode, studyPlanPreviewEnabled, tracingEnabled],
+    [courseRegistryPreviewEnabled, darkMode, setMode, studyPlanPreviewEnabled, tracingEnabled],
   );
 
-  const theme = useMemo(() => createAppTheme(darkMode), [darkMode]);
-
-  return (
-    <SettingsContext.Provider value={value}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline enableColorScheme />
-        {children}
-      </ThemeProvider>
-    </SettingsContext.Provider>
-  );
+  return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>;
 }
 
 export function useSettings() {

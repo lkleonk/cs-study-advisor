@@ -311,23 +311,21 @@ export function ChatTab({
               >
                 <Paper
                   variant="outlined"
-                  sx={{
-                    p: 1.5,
-                    maxWidth: { xs: "90%", md: "75%" },
-                    bgcolor: (theme) =>
-                      isUser
-                        ? theme.palette.mode === "dark"
-                          ? theme.palette.primary.dark
-                          : theme.palette.primary.main
-                        : theme.palette.background.paper,
-                    color: (theme) =>
-                      isUser
-                        ? theme.palette.mode === "dark"
-                          ? theme.palette.common.white
-                          : theme.palette.primary.contrastText
-                        : theme.palette.text.primary,
-                    borderColor: isUser ? "primary.dark" : "divider",
-                  }}
+                  sx={[
+                    {
+                      p: 1.5,
+                      maxWidth: { xs: "90%", md: "75%" },
+                      bgcolor: isUser ? "primary.main" : "background.paper",
+                      color: isUser ? "primary.contrastText" : "text.primary",
+                      borderColor: isUser ? "primary.dark" : "divider",
+                    },
+                    isUser &&
+                      ((theme) =>
+                        theme.applyStyles("dark", {
+                          bgcolor: "primary.dark",
+                          color: "common.white",
+                        })),
+                  ]}
                 >
                   <Typography
                     variant="caption"

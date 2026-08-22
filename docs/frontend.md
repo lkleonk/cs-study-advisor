@@ -18,6 +18,8 @@ TypeScript, Material UI, and the App Router. Keep all frontend edits inside
 - `Course Registry`: read-only, locally filterable rendering of the selected
   degree's `GET /api/course-offerings` projection. It lists only courses present
   in the local semester-offering data and does not consume the request allowance.
+  Its source caveat is compact secondary text; data loads automatically, with a
+  retry action shown only after an error.
 - `Settings`: dark mode, request allowance, production-visible reset
   conversation, plus optional developer diagnostics.
 
@@ -51,6 +53,10 @@ container runs in production. `NEXT_PUBLIC_API_BASE_URL` and
 ## Client State
 
 - `SettingsContext` owns dark mode.
+- MUI CSS color schemes and `InitColorSchemeScript` apply the persisted mode
+  before the first browser paint. `fu-consultant-dark-mode` stores `light` or
+  `dark`; a pre-paint migration maps the legacy boolean values for returning
+  users.
 - `UsageContext` owns the current client-IP action allowance and runtime
   retention information returned by `GET /api/usage`.
 - `DegreeContext` owns the chosen degree program. It fetches the available

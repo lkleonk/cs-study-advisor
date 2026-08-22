@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
+import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 
 import { DegreeProvider } from "@/context/DegreeContext";
 import { SettingsProvider } from "@/context/SettingsContext";
 import { UsageProvider } from "@/context/UsageContext";
+import {
+  COLOR_SCHEME_MIGRATION_SCRIPT,
+  COLOR_SCHEME_STORAGE_KEY,
+} from "@/theme/colorScheme";
 
 import { EmotionRegistry } from "./EmotionRegistry";
 import "./globals.css";
@@ -23,6 +28,15 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: COLOR_SCHEME_MIGRATION_SCRIPT }}
+        />
+        <InitColorSchemeScript
+          attribute="data"
+          defaultMode="light"
+          modeStorageKey={COLOR_SCHEME_STORAGE_KEY}
+        />
         <EmotionRegistry>
           <SettingsProvider>
             <UsageProvider>

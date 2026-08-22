@@ -36,15 +36,18 @@ export function ChatExportDialog({ open, messages, onClose, onDownload }: ChatEx
             variant="contained"
             startIcon={<DescriptionOutlinedIcon />}
             onClick={() => onDownload("markdown")}
-            sx={{
-              bgcolor: (theme) =>
-                theme.palette.mode === "dark" ? theme.palette.primary.dark : theme.palette.primary.main,
-              color: (theme) =>
-                theme.palette.mode === "dark" ? theme.palette.common.white : theme.palette.primary.contrastText,
-              "&:hover": {
-                bgcolor: (theme) => theme.palette.primary.dark,
+            sx={[
+              {
+                bgcolor: "primary.main",
+                color: "primary.contrastText",
+                "&:hover": { bgcolor: "primary.dark" },
               },
-            }}
+              (theme) =>
+                theme.applyStyles("dark", {
+                  bgcolor: "primary.dark",
+                  color: "common.white",
+                }),
+            ]}
           >
             Markdown (.md)
           </Button>
@@ -53,16 +56,21 @@ export function ChatExportDialog({ open, messages, onClose, onDownload }: ChatEx
             variant="outlined"
             startIcon={<TextSnippetOutlinedIcon />}
             onClick={() => onDownload("text")}
-            sx={{
-              color: (theme) =>
-                theme.palette.mode === "dark" ? theme.palette.common.white : theme.palette.primary.main,
-              borderColor: "primary.dark",
-              "&:hover": {
+            sx={[
+              {
+                color: "primary.main",
                 borderColor: "primary.dark",
-                bgcolor: (theme) =>
-                  theme.palette.mode === "dark" ? theme.palette.primary.dark : theme.palette.primary.light,
+                "&:hover": {
+                  borderColor: "primary.dark",
+                  bgcolor: "primary.light",
+                },
               },
-            }}
+              (theme) =>
+                theme.applyStyles("dark", {
+                  color: "common.white",
+                  "&:hover": { bgcolor: "primary.dark" },
+                }),
+            ]}
           >
             Plain text (.txt)
           </Button>
