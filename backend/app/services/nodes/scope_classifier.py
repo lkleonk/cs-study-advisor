@@ -1,9 +1,16 @@
 import logging
 import re
 
+from app.services.agent_config import agent_flow_config
 from app.services.model_service import ModelService
 from app.services.quota_service import DailyQuotaExceeded
-from app.services.nodes.utils import degree_for, latest_user_message, parse_json_content
+from app.services.nodes.utils import (
+    degree_for,
+    format_recent_messages,
+    latest_user_message,
+    parse_json_content,
+    recent_messages,
+)
 from app.services.states.consultant_state import ConsultantState
 from app.services.wizardflow_service import (
     log_llm_error,
@@ -23,9 +30,10 @@ CLASSIFIER_SCHEMA = {
         "message_type": {
             "type": "string",
             "enum": ["degree_question", "course_offering_question", "plan_check", "off_topic"],
-        }
+        },
+        "include_cross_university_rules": {"type": "boolean"},
     },
-    "required": ["message_type"],
+    "required": ["message_type", "include_cross_university_rules"],
 }
 
 
@@ -39,6 +47,10 @@ def heuristic_classify(message: str) -> str:
         "studienplan",
         "study plan",
         "module plan",
+        "forgot",
+        "vergessen",
+        "add to my plan",
+        "hinzufuegen",
     ]
     domain_terms = [
         "informatik",
@@ -54,6 +66,7 @@ def heuristic_classify(message: str) -> str:
         "lp",
         "credit",
         "credits",
+        "ects",
         "vertiefung",
         "wissenschaftliches arbeiten",
         "softwareprojekt",
@@ -70,6 +83,8 @@ def heuristic_classify(message: str) -> str:
 
     if (any(term in lowered for term in plan_intent_terms) or has_concrete_lp_list) and has_domain_signal:
         return "plan_check"
+    if heuristic_needs_cross_university_rules(lowered):
+        return "degree_question"
     if _looks_like_degree_rule_question(lowered) and has_domain_signal:
         return "degree_question"
     if _looks_like_course_offering_question(lowered):
@@ -77,6 +92,24 @@ def heuristic_classify(message: str) -> str:
     if has_domain_signal:
         return "degree_question"
     return "off_topic"
+
+
+def heuristic_needs_cross_university_rules(message: str) -> bool:
+    text = _normalize_text(message)
+    phrases = [
+        "hu berlin",
+        "tu berlin",
+        "humboldt-universitaet",
+        "humboldt universitaet",
+        "technische universitaet berlin",
+        "nebenhoer",
+        "zweithoer",
+        "cross-registr",
+        "cross registr",
+        "partner university",
+        "partneruniversitaet",
+    ]
+    return any(phrase in text for phrase in phrases)
 
 
 def _looks_like_degree_rule_question(text: str) -> bool:
@@ -146,8 +179,12 @@ async def scope_classifier_node(state: ConsultantState) -> ConsultantState:
     wizardflow_message_id = state.get("wizardflow_message_id")
     classifier_prompt = degree_for(state).prompts.classifier_system_prompt
     message = latest_user_message(state)
-    llm_message = f"Latest user message:\n{message}"
+    conversation = format_recent_messages(
+        recent_messages(state, agent_flow_config.scope_classifier.history_turns)
+    )
+    llm_message = f"Classify the latest user message in this recent conversation:\n{conversation}"
     fallback = heuristic_classify(message)
+    fallback_cross_university = heuristic_needs_cross_university_rules(conversation)
     source = "heuristic"
 
     log_node_input(wizardflow_message_id, "scope_classifier", message)
@@ -167,23 +204,40 @@ async def scope_classifier_node(state: ConsultantState) -> ConsultantState:
         log_llm_output(wizardflow_message_id, "scope_classifier", response_content)
         data = parse_json_content(response_content)
         message_type = data.get("message_type")
+        include_cross_university_rules = data.get("include_cross_university_rules")
         if message_type not in {"degree_question", "course_offering_question", "plan_check", "off_topic"}:
             message_type = fallback
             source = "heuristic_invalid_llm_output"
         else:
             source = "llm"
+        if not isinstance(include_cross_university_rules, bool):
+            include_cross_university_rules = fallback_cross_university
+            source = f"{source}_heuristic_cross_university_flag"
     except DailyQuotaExceeded:
         raise
     except Exception as exc:
         log_llm_error(wizardflow_message_id, "scope_classifier", exc)
         logger.exception("Classifier failed; using heuristic fallback.")
         message_type = fallback
+        include_cross_university_rules = fallback_cross_university
 
-    logger.info("Scope classifier chose message_type=%s source=%s", message_type, source)
-    result: ConsultantState = {"message_type": message_type}
+    logger.info(
+        "Scope classifier chose message_type=%s include_cross_university_rules=%s source=%s",
+        message_type,
+        include_cross_university_rules,
+        source,
+    )
+    result: ConsultantState = {
+        "message_type": message_type,
+        "include_cross_university_rules": include_cross_university_rules,
+    }
     log_node_output(
         wizardflow_message_id,
         "scope_classifier",
-        {"message_type": message_type, "source": source},
+        {
+            "message_type": message_type,
+            "include_cross_university_rules": include_cross_university_rules,
+            "source": source,
+        },
     )
     return result

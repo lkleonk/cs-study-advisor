@@ -1,6 +1,9 @@
 from pydantic import BaseModel, Field
 
 
+CROSS_UNIVERSITY_RULE_SECTION_ID = "cross-university-courses"
+
+
 class ProgramRuleSource(BaseModel):
     label: str
     path: str
@@ -32,7 +35,11 @@ class ProgramRulesCatalogue(BaseModel):
     sections: list[ProgramRuleSection]
 
 
-def render_rules_context(catalogue: ProgramRulesCatalogue) -> str:
+def render_rules_context(
+    catalogue: ProgramRulesCatalogue,
+    *,
+    exclude_section_ids: set[str] | frozenset[str] | None = None,
+) -> str:
     """Render a structured rule catalogue for LLM prompts.
 
     The structured catalogue remains the source of human-readable rule text.
@@ -46,7 +53,10 @@ def render_rules_context(catalogue: ProgramRulesCatalogue) -> str:
         catalogue.source_note,
     ]
 
+    excluded = exclude_section_ids or set()
     for section in catalogue.sections:
+        if section.id in excluded:
+            continue
         lines.extend(["", section.title.upper(), f"- {section.description}"])
         for item in section.items:
             lines.append(f"- {item.label}: {item.text}")

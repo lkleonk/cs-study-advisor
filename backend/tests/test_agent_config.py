@@ -6,6 +6,7 @@ def test_agent_flow_config_values_are_available():
     assert isinstance(agent_flow_config.course_key_selector.history_turns, int)
     assert isinstance(agent_flow_config.course_key_selector.max_keys, int)
     assert isinstance(agent_flow_config.course_key_selector.include_available_semesters_note, bool)
+    assert isinstance(agent_flow_config.course_lookup.include_course_urls, bool)
     assert isinstance(agent_flow_config.answer_composer.history_turns, int)
 
 

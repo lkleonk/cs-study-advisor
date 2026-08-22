@@ -16,6 +16,7 @@ class ConsultantState(TypedDict, total=False):
     degree_id: str
     wizardflow_message_id: str
     message_type: Literal["degree_question", "course_offering_question", "plan_check", "off_topic"]
+    include_cross_university_rules: bool
     course_lookup_keys: list[str]
     course_lookup_invalid_keys: list[str]
     course_lookup_needs_clarification: bool

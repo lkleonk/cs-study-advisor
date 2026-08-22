@@ -334,7 +334,13 @@ def build_course_lookup_tree(degree_id: str) -> str:
     return "\n".join(lines)
 
 
-def format_course_lookup_context(buckets: list[dict[str, Any]], invalid_keys: list[str] | None = None, notes: list[str] | None = None) -> str:
+def format_course_lookup_context(
+    buckets: list[dict[str, Any]],
+    invalid_keys: list[str] | None = None,
+    notes: list[str] | None = None,
+    *,
+    include_course_urls: bool = True,
+) -> str:
     parts = ["Exact local course offerings from the canonical course catalogue and semester data."]
     parts.extend(f"Note: {note}" for note in notes or [] if note)
     if invalid_keys:
@@ -346,21 +352,26 @@ def format_course_lookup_context(buckets: list[dict[str, Any]], invalid_keys: li
             f"Courses listed: {len(bucket['courses'])}",
         ]
         for index, course in enumerate(bucket["courses"], start=1):
-            lines.extend(_format_course(index, course))
+            lines.extend(_format_course(index, course, include_course_url=include_course_urls))
         parts.append("\n".join(lines))
     return "" if len(parts) == 1 else "\n\n".join(parts)
 
 
-def build_course_citations(buckets: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def build_course_citations(
+    buckets: list[dict[str, Any]],
+    *,
+    include_course_urls: bool = True,
+) -> list[dict[str, Any]]:
     citations: list[dict[str, Any]] = []
     seen: set[tuple[str, str | None, str | None]] = set()
     for bucket in buckets:
         source = f"backend/app/domain/data/course_offerings/{bucket['semester']}.json"
         _append_unique_citation(citations, seen, {"source": source, "title": "Course offerings", "section_heading": bucket["key"], "page": None, "score": 1.0})
-        for course in bucket["courses"]:
-            url = normalize_course_url(course.get("url"))
-            if url:
-                _append_unique_citation(citations, seen, {"source": url, "title": course.get("title"), "section_heading": bucket["key"], "page": None, "score": 1.0})
+        if include_course_urls:
+            for course in bucket["courses"]:
+                url = normalize_course_url(course.get("url"))
+                if url:
+                    _append_unique_citation(citations, seen, {"source": url, "title": course.get("title"), "section_heading": bucket["key"], "page": None, "score": 1.0})
     return citations
 
 
@@ -377,7 +388,12 @@ def _normalized_course(course: dict[str, Any]) -> dict[str, Any]:
     return normalized
 
 
-def _format_course(index: int, course: dict[str, Any]) -> list[str]:
+def _format_course(
+    index: int,
+    course: dict[str, Any],
+    *,
+    include_course_url: bool = True,
+) -> list[str]:
     lp = course.get("lp") if course.get("lp") is not None else "not listed in offerings data"
     lines = [f"{index}. Title: {course.get('title')}", f"   Module catalog name: {course.get('module_catalog_name')}", f"   LP: {lp}"]
     if course.get("is_bachelor_module"):
@@ -386,7 +402,7 @@ def _format_course(index: int, course: dict[str, Any]) -> list[str]:
         lines.append(f"   Schedule: {course['schedule']}")
     if course.get("description"):
         lines.append(f"   Description: {course['description']}")
-    if course.get("url"):
+    if include_course_url and course.get("url"):
         lines.append(f"   URL: {course['url']}")
     return lines
 

@@ -1,4 +1,7 @@
-from app.services.nodes.scope_classifier import heuristic_classify
+from app.services.nodes.scope_classifier import (
+    heuristic_classify,
+    heuristic_needs_cross_university_rules,
+)
 from app.services.routing import route_after_classifier
 
 
@@ -43,3 +46,18 @@ def test_heuristic_classifier_detects_plan_check():
     )
 
     assert message_type == "plan_check"
+
+
+def test_heuristic_classifier_detects_cross_university_degree_question():
+    message = "Can I take and count a course at TU Berlin?"
+
+    assert heuristic_classify(message) == "degree_question"
+    assert heuristic_needs_cross_university_rules(message) is True
+
+
+def test_cross_university_heuristic_stays_off_for_unrelated_rules():
+    assert heuristic_needs_cross_university_rules("How many thesis LP do I need?") is False
+
+
+def test_heuristic_classifier_detects_incremental_plan_information():
+    assert heuristic_classify("I forgot about French (5 ECTS).") == "plan_check"

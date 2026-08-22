@@ -33,7 +33,7 @@ def _env_bool(name: str, default: bool) -> bool:
 
 @dataclass(frozen=True)
 class ScopeClassifierConfig:
-    history_turns: int = 1
+    history_turns: int = 2
 
 
 @dataclass(frozen=True)
@@ -41,6 +41,11 @@ class CourseKeySelectorConfig:
     history_turns: int = 2
     max_keys: int = 20
     include_available_semesters_note: bool = True
+
+
+@dataclass(frozen=True)
+class CourseLookupConfig:
+    include_course_urls: bool = False
 
 
 @dataclass(frozen=True)
@@ -52,12 +57,13 @@ class AnswerComposerConfig:
 class AgentFlowConfig:
     scope_classifier: ScopeClassifierConfig
     course_key_selector: CourseKeySelectorConfig
+    course_lookup: CourseLookupConfig
     answer_composer: AnswerComposerConfig
 
 
 agent_flow_config = AgentFlowConfig(
     scope_classifier=ScopeClassifierConfig(
-        history_turns=_env_int("AGENT_SCOPE_CLASSIFIER_HISTORY_TURNS", 1),
+        history_turns=_env_int("AGENT_SCOPE_CLASSIFIER_HISTORY_TURNS", 2),
     ),
     course_key_selector=CourseKeySelectorConfig(
         history_turns=_env_int("AGENT_COURSE_SELECTOR_HISTORY_TURNS", 2),
@@ -66,6 +72,9 @@ agent_flow_config = AgentFlowConfig(
             "AGENT_COURSE_SELECTOR_INCLUDE_SEMESTERS_NOTE",
             True,
         ),
+    ),
+    course_lookup=CourseLookupConfig(
+        include_course_urls=_env_bool("AGENT_COURSE_LOOKUP_INCLUDE_COURSE_URLS", False),
     ),
     answer_composer=AnswerComposerConfig(
         history_turns=_env_int("AGENT_ANSWER_COMPOSER_HISTORY_TURNS", 4),

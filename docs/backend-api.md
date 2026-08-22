@@ -137,9 +137,13 @@ Agent-flow tuning lives in `backend/app/services/agent_config.py`:
 AGENT_COURSE_SELECTOR_HISTORY_TURNS
 AGENT_COURSE_SELECTOR_MAX_KEYS
 AGENT_COURSE_SELECTOR_INCLUDE_SEMESTERS_NOTE
+AGENT_COURSE_LOOKUP_INCLUDE_COURSE_URLS
 AGENT_ANSWER_COMPOSER_HISTORY_TURNS
 ```
 
 Do not duplicate available semesters in settings. The course selector derives
 semester coverage from the session degree's projection of the canonical course
 catalogue and semester offering files.
+`AGENT_COURSE_LOOKUP_INCLUDE_COURSE_URLS` defaults to `false`; it controls URL
+exposure in lookup-generated answer context and URL citations, not storage or
+the read-only Course Registry response.

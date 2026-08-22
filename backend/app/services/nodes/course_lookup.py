@@ -5,6 +5,7 @@ from app.domain.course_offerings import (
     format_course_lookup_context,
     lookup_course_buckets,
 )
+from app.services.agent_config import agent_flow_config
 from app.services.nodes.utils import degree_for
 from app.services.states.consultant_state import ConsultantState
 from app.services.wizardflow_service import log_node_input, log_node_output
@@ -56,8 +57,12 @@ async def course_lookup_node(state: ConsultantState) -> ConsultantState:
         buckets,
         invalid_keys=[*invalid_keys, *missing_keys],
         notes=notes,
+        include_course_urls=agent_flow_config.course_lookup.include_course_urls,
     )
-    citations = build_course_citations(buckets)
+    citations = build_course_citations(
+        buckets,
+        include_course_urls=agent_flow_config.course_lookup.include_course_urls,
+    )
 
     logger.info("Course lookup returned %d bucket(s)", len(buckets))
     result = {

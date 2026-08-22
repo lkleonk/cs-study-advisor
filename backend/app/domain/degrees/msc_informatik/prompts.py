@@ -1,7 +1,3 @@
-from app.domain.degrees.msc_informatik.program_rules import get_program_rules
-from app.domain.program_rules import render_rules_context
-
-
 DOMAIN_SCOPE = """
 Domain: FU Berlin Master Informatik under the local 2014 Studien- und
 Pruefungsordnung resources.
@@ -15,19 +11,15 @@ Pruefungsordnung resources.
 """.strip()
 
 
-RULES_CONTEXT = render_rules_context(get_program_rules())
-
-
 CLASSIFIER_SYSTEM_PROMPT = f"""
 {DOMAIN_SCOPE}
-
-{RULES_CONTEXT}
 
 Classify the latest user message into exactly one message_type:
 
 - "plan_check": the user wants you to check whether a concrete module plan,
   LP distribution, specialization, seminars, projects, or ungraded/Bachelor
-  module totals satisfy the Master Informatik rules.
+  module totals satisfy the Master Informatik rules. Additions or corrections
+  to a previously supplied plan are also plan_check.
 - "degree_question": the user asks about Master Informatik rules, LP
   requirements, limits, specialization, Wissenschaftliches Arbeiten,
   Softwareprojekt, Anwendungsbereich, or the checklist, and does not need a
@@ -36,6 +28,15 @@ Classify the latest user message into exactly one message_type:
   or software projects are offered or available in a semester.
 - "off_topic": the message is unrelated to FU Berlin Master Informatik study
   consulting.
+
+Questions about taking or recognizing HU/TU courses are degree_question, not
+course_offering_question; local course lookup covers FU semester offerings.
+
+Also return include_cross_university_rules=true only when the latest question
+concerns taking or recognizing courses at HU Berlin or TU Berlin,
+Nebenhoererschaft/Zweithoererschaft, or is a contextual follow-up about that
+topic. Otherwise return false. Use earlier messages only to resolve what the
+latest user message refers to.
 
 Return valid JSON only.
 """.strip()
@@ -162,13 +163,11 @@ Return valid JSON only.
 ANSWER_COMPOSER_SYSTEM_PROMPT = f"""
 {ANSWER_IDENTITY}
 
-{RULES_CONTEXT}
-
-Use the RULES section above as your authoritative source for all degree rules,
-LP requirements, and structural constraints. The course-offering context (when
-provided) covers exact local course-offering buckets. Use it to answer which
-courses, lectures, seminars, or software projects are offered in a semester, not
-to override the rules.
+Use the relevant degree-rule context supplied with the user message as your
+authoritative source for all degree rules, LP requirements, and structural
+constraints. The course-offering context (when provided) covers exact local
+course-offering buckets. Use it to answer which courses, lectures, seminars, or
+software projects are offered in a semester, not to override the rules.
 
 Inputs you may receive:
 1. Course-offering context (may be empty)
@@ -185,7 +184,8 @@ Length:
 
 Other rules:
 - Answer in the same language as the user.
-- Do not invent Studien- or Pruefungsordnung rules beyond the RULES section.
+- Do not invent Studien- or Pruefungsordnung rules beyond the supplied
+  degree-rule context.
 - If the user asks about a specific course/module not covered by the RULES or
   the course-offering context, say the local resources do not contain enough
   information.
@@ -195,13 +195,13 @@ Other rules:
   examination office remain authoritative") when the user is making a plan
   decision or asking about their own study plan. Skip it for pure factual
   lookups.
-- When the RULES section or course-offering context contains a URL that
+- When the degree-rule context or course-offering context contains a URL that
   supports your answer (course catalogues, application forms, contact or info
   pages), include it inline as a Markdown link like
   [Vorlesungsverzeichnis](https://...) on the word it belongs to. Copy URLs
   exactly as given; never invent, shorten, or alter them. Only link http(s)
   URLs that literally appear in the context; never emit anchor links like
-  (#section) or links to the RULES section. If the context contains no URL
+  (#section) or links to the degree-rule context. If the context contains no URL
   for the topic, answer without a link.
 - Whenever you mention a resource that has a Markdown link in the context
   (Vorlesungsverzeichnis, application form, information page, MVS platform,

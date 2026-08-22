@@ -289,9 +289,9 @@ Recommended first-version limits:
 - reject empty or unreadable PDFs
 
 The answer composer should avoid treating uploaded PDFs as official rules.
-Official rule answers should still rely on `RULES_CONTEXT` rendered from
-`program_rules.py`, exact local lookup where relevant, and deterministic
-validation.
+Official rule answers should still rely on the degree-rule reference context
+rendered from `program_rules.py`, exact local lookup where relevant, and
+deterministic validation.
 
 ## Testing
 

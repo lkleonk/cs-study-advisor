@@ -68,6 +68,17 @@ def test_course_lookup_context_contains_whole_bucket():
     assert "Softwareprojekt A is graded and Softwareprojekt B is ungraded" in context
 
 
+def test_course_lookup_context_can_hide_course_urls():
+    bucket = get_course_bucket(MSC, "sose26/practical/vl")
+
+    context_with_urls = format_course_lookup_context([bucket], include_course_urls=True)
+    context_without_urls = format_course_lookup_context([bucket], include_course_urls=False)
+
+    assert "   URL: https://" in context_with_urls
+    assert "   URL: https://" not in context_without_urls
+    assert "Bildverarbeitung" in context_without_urls
+
+
 def test_markdown_style_urls_are_normalized_for_citations():
     assert normalize_course_url("[https://example.test/course](https://example.test/course)") == "https://example.test/course"
 
@@ -76,6 +87,15 @@ def test_markdown_style_urls_are_normalized_for_citations():
 
     assert any(citation["source"].startswith("https://") for citation in citations)
     assert all(not citation["source"].startswith("[") for citation in citations)
+    assert any(citation["source"].endswith("course_offerings/sose26.json") for citation in citations)
+
+
+def test_course_citations_can_hide_course_urls():
+    bucket = get_course_bucket(MSC, "sose26/practical/vl")
+
+    citations = build_course_citations([bucket], include_course_urls=False)
+
+    assert not any(citation["source"].startswith("https://") for citation in citations)
     assert any(citation["source"].endswith("course_offerings/sose26.json") for citation in citations)
 
 

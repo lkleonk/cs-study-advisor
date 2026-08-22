@@ -72,6 +72,13 @@ rule_check_result
 
 The API response includes `rule_check_result` when available.
 
+When a later chat message adds or corrects plan information, the parser receives
+both the existing `parsed_study_plan` JSON and the latest user message. It must
+return one complete updated plan, preserving existing modules while incorporating
+the new information. The returned complete plan replaces the previous state and
+is enriched and validated again. Initial chat plans and transcript uploads have
+no existing-plan input and retain the normal full-plan parsing flow.
+
 ## StudyPlan Schema
 
 The canonical in-process schema lives in `backend/app/domain/study_plan.py` and
@@ -232,7 +239,12 @@ class RuleIssue(BaseModel):
 - No persistent student profile exists.
 - No explicit `GET /api/sessions/{id}/study-plan` endpoint exists.
 - No explicit `PUT /api/sessions/{id}/study-plan` endpoint exists.
-- The study plan is currently extracted from chat text, not edited through a structured API.
+- The study plan is extracted from chat text, with follow-up messages applied by
+  asking the parser to reproduce the complete updated plan; it is not edited
+  through a structured API.
+- Because the LLM reproduces the complete plan on a follow-up, an incorrect
+  omission or alteration is still possible and should remain visible to the user
+  in the Study Plan tab.
 - The parser may miss modules when the user writes an ambiguous or incomplete plan.
 - Unknown modules can still be included, but they need explicit LP and area data or they produce validation issues/warnings.
 

@@ -39,8 +39,10 @@ session's `DegreeDefinition` via `degree_for(state)`
 from the degree registry (`backend/app/domain/degrees/`); the LLM never chooses
 the degree.
 
-Degree rules reach the system prompt through each degree's
-`prompts.RULES_CONTEXT`, rendered from that degree's `program_rules.py`; the
+Degree rules are rendered from the session degree's `program_rules.py` and
+supplied to `AnswerComposer` as reference context, not embedded in classifier or
+composer system prompts. The large `cross-university-courses` section is omitted
+unless `ScopeClassifier` marks the current question as needing it. The
 `plan_check` path skips course lookup entirely. Pure degree-rule questions on the
 `degree_question` path also skip course lookup and go straight to
 `AnswerComposer`. Course-offering questions on the `course_offering_question`
@@ -55,13 +57,14 @@ path use exact lookup buckets from the session degree's projection of
 | `degree_id` | `SessionService.create_session` (checkpoint seed) | every node via `degree_for(state)` |
 | `wizardflow_message_id` | `SessionService` | every active node, WizardFlow finalization |
 | `message_type` | `scope_classifier` | graph router, downstream nodes |
+| `include_cross_university_rules` | `scope_classifier` | `answer_composer` rule-context renderer |
 | `course_lookup_keys` | `course_key_selector` | `course_lookup`, `answer_composer` |
 | `course_lookup_invalid_keys` | `course_key_selector` | `course_lookup` |
 | `course_lookup_needs_clarification` | `course_key_selector` | `course_lookup`, `answer_composer` |
 | `course_lookup_clarification_question` | `course_key_selector` | `course_lookup`, `answer_composer` |
 | `course_lookup_message` | `course_key_selector` | `course_lookup`, `answer_composer` |
 | `course_context` | `course_lookup` | `answer_composer` |
-| `citations` | `course_lookup` | API response, `answer_composer` context |
+| `citations` | `course_lookup` | API response |
 | `parsed_study_plan` | `study_plan_parser` | `rule_checker` |
 | `rule_check_result` | `rule_checker` | `answer_composer`, API response |
 | `reply` | `answer_composer`, `offtopic` | API response |
@@ -90,6 +93,12 @@ Purpose:
 Behavior:
 
 - Uses the active LLM provider.
+- Receives a configurable two-user-turn conversation window by default
+  (`AGENT_SCOPE_CLASSIFIER_HISTORY_TURNS`) so contextual follow-ups can be
+  classified correctly.
+- Returns `include_cross_university_rules=true` only for HU/TU
+  cross-registration questions and contextual follow-ups about that topic.
+- Does not receive the full degree-rule catalogue.
 - Falls back to a local heuristic if the LLM call fails.
 - Does not answer the user.
 
@@ -140,7 +149,9 @@ Purpose:
 - Validate selector keys against the session degree's projected bucket tree
   from the canonical course catalogue and semester offering files.
 - Return the whole selected buckets as deterministic `course_context`.
-- Add bucket-level citations and course URL citations where URLs exist.
+- Add bucket-level citations. Course URL lines and URL-based citations are
+  included only when `AGENT_COURSE_LOOKUP_INCLUDE_COURSE_URLS=true`; the default
+  is `false`, so individual course URLs are not exposed to `AnswerComposer`.
 
 Output:
 
@@ -149,11 +160,10 @@ course_context
 citations
 ```
 
-Course lookup runs only on the `course_offering_question` path. Degree rules
-are rendered from each degree's `program_rules.py` into that degree's
-`RULES_CONTEXT`; pure degree questions go directly from `ScopeClassifier` to
-`AnswerComposer`. Plan checks rely on the deterministic Python validator plus
-rules in the system prompt, so they do not use course lookup.
+Course lookup runs only on the `course_offering_question` path. Pure degree
+questions go directly from `ScopeClassifier` to `AnswerComposer`. Plan checks
+rely on the deterministic Python validator plus the rendered degree-rule
+reference context, so they do not use course lookup.
 
 ### StudyPlanParser
 
@@ -171,6 +181,9 @@ Behavior:
 
 - Uses the active LLM provider with the session degree's structured JSON schema
   (`DegreeDefinition.study_plan_schema`).
+- For a chat follow-up, receives the existing parsed plan JSON plus the latest
+  message and returns a complete updated plan. Initial plans and transcript
+  parsing do not include an existing plan.
 - Falls back to a heuristic parser if the LLM call fails.
 - Enriches parsed modules through the degree's `enrich_study_plan` (the Master
   uses `module_catalog.py`; Data Science canonicalizes names/LP from its
@@ -229,13 +242,18 @@ Inputs:
 - Latest user message
 - Configurable recent conversation window
   (`AGENT_ANSWER_COMPOSER_HISTORY_TURNS`, default `4`)
+- Degree-rule reference context rendered from the selected degree's structured
+  catalogue. It normally contains every section except
+  `cross-university-courses`; that section is added when the classifier flag is
+  true.
 - Course-offering context from exact local lookup, when applicable
 - Optional deterministic rule-check result
 
 Rules:
 
 - Answer in the same language as the user.
-- Use only course-offering context and deterministic validation results.
+- Use only supplied degree rules, course-offering context, and deterministic
+  validation results.
 - Do not invent Studienordnung or Pruefungsordnung rules.
 - State uncertainty when the local resources do not answer the question.
 - Keep the answer advisory.

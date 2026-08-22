@@ -285,12 +285,19 @@
       <code>backend/app/domain/data/course_offerings/&lt;semester&gt;.json</code> through keys like
       <code>sose26/technical/swp</code>. Degrees without tagged offerings get an honest
       "no local course-offering data" note without an LLM selector call.
-      <code>degree_question</code> messages skip lookup and are answered from the
-      degree's <code>RULES_CONTEXT</code>, rendered from that degree's
-      <code>program_rules.py</code>.
+      <code>degree_question</code> messages skip lookup and are answered from
+      reference context rendered from the degree's <code>program_rules.py</code>.
+      The classifier sees two user turns but not the full rule catalogue; it
+      enables the large <code>cross-university-courses</code> section only for
+      HU/TU cross-registration questions and related follow-ups.
+      Individual course URLs stay in source data but are omitted from lookup
+      answer context and URL citations by default; deployments can enable them
+      with <code>AGENT_COURSE_LOOKUP_INCLUDE_COURSE_URLS=true</code>.
       The <code>plan_check</code> path runs parser, deterministic rule checker, then
       <code>AnswerComposer</code>; parser schema and validator come from the degree
-      package (<code>msc_informatik</code>, <code>msc_data_science</code>).
+      package (<code>msc_informatik</code>, <code>msc_data_science</code>). For a chat
+      follow-up, the parser receives the existing plan JSON plus the latest user
+      message and returns one complete updated plan before validation.
     </div>
 
     <div class="callout">

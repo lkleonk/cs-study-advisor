@@ -160,7 +160,12 @@ def test_scope_classifier_logs_the_exact_llm_input(monkeypatch):
 
     class FakeModelService:
         async def invoke(self, prompt, message, format):
-            return {"content": '{"message_type":"degree_question"}'}
+            return {
+                "content": (
+                    '{"message_type":"degree_question",'
+                    '"include_cross_university_rules":false}'
+                )
+            }
 
     monkeypatch.setattr(scope_classifier, "ModelService", FakeModelService)
     monkeypatch.setattr(
@@ -180,13 +185,25 @@ def test_scope_classifier_logs_the_exact_llm_input(monkeypatch):
         scope_classifier.scope_classifier_node(
             {
                 "wizardflow_message_id": "trace-id",
-                "messages": [{"role": "user", "content": "How many LP do I need?"}],
+                "messages": [
+                    {"role": "user", "content": "Can I study at TU Berlin?"},
+                    {"role": "assistant", "content": "Yes, through cross-registration."},
+                    {"role": "user", "content": "How many LP do I need?"},
+                ],
             }
         )
     )
 
-    assert result == {"message_type": "degree_question"}
+    assert result == {
+        "message_type": "degree_question",
+        "include_cross_university_rules": False,
+    }
     assert captured["message_id"] == "trace-id"
     assert captured["node"] == "scope_classifier"
     assert captured["prompt"] == get_degree_or_default(None).prompts.classifier_system_prompt
-    assert captured["msg"] == "Latest user message:\nHow many LP do I need?"
+    assert captured["msg"] == (
+        "Classify the latest user message in this recent conversation:\n"
+        "user: Can I study at TU Berlin?\n"
+        "assistant: Yes, through cross-registration.\n"
+        "user: How many LP do I need?"
+    )

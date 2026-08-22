@@ -1,8 +1,8 @@
 from fastapi.testclient import TestClient
 
 from app.domain.degrees.msc_informatik.program_rules import get_program_rules
-from app.domain.degrees.msc_informatik.prompts import RULES_CONTEXT
-from app.domain.program_rules import render_rules_context
+from app.domain.degrees.msc_informatik.prompts import CLASSIFIER_SYSTEM_PROMPT
+from app.domain.program_rules import CROSS_UNIVERSITY_RULE_SECTION_ID, render_rules_context
 from app.main import app
 
 
@@ -43,9 +43,30 @@ def test_program_rules_endpoint_returns_catalogue():
 
 
 def test_rules_context_is_rendered_from_program_rules():
-    assert RULES_CONTEXT == render_rules_context(get_program_rules())
+    rules_context = render_rules_context(get_program_rules())
+
+    assert "FU Berlin Master Informatik" in rules_context
+    assert "COURSES AT HU BERLIN AND TU BERLIN" in rules_context
 
 
 def test_rules_context_includes_softwareprojekt_wahlbereich_caveat():
-    assert "At least 1 and at most 2 core Softwareprojekt modules are required." in RULES_CONTEXT
-    assert "allowing 3 Softwareprojekt modules total" in RULES_CONTEXT
+    rules_context = render_rules_context(get_program_rules())
+
+    assert "At least 1 and at most 2 core Softwareprojekt modules are required." in rules_context
+    assert "allowing 3 Softwareprojekt modules total" in rules_context
+
+
+def test_rules_context_can_exclude_cross_university_section():
+    rules_context = render_rules_context(
+        get_program_rules(),
+        exclude_section_ids={CROSS_UNIVERSITY_RULE_SECTION_ID},
+    )
+
+    assert "COURSES AT HU BERLIN AND TU BERLIN" not in rules_context
+    assert "SOFTWAREPROJEKT" in rules_context
+
+
+def test_classifier_prompt_does_not_include_degree_rule_catalogue():
+    assert "COURSES AT HU BERLIN AND TU BERLIN" not in CLASSIFIER_SYSTEM_PROMPT
+    assert "At least 1 and at most 2 core Softwareprojekt" not in CLASSIFIER_SYSTEM_PROMPT
+    assert "include_cross_university_rules" in CLASSIFIER_SYSTEM_PROMPT

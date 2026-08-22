@@ -3,6 +3,9 @@ import { alpha, createTheme } from "@mui/material/styles";
 import { colors } from "./colors";
 
 export function createAppTheme(darkMode: boolean) {
+  const scrollbarTrack = darkMode ? "#111816" : colors.paperMuted;
+  const scrollbarThumb = darkMode ? "#52615c" : "#aab5b1";
+  const scrollbarThumbHover = darkMode ? "#6c7d77" : "#87958f";
   const primary = darkMode
     ? {
         main: "#78d6b4",
@@ -70,6 +73,29 @@ export function createAppTheme(darkMode: boolean) {
       },
     },
     components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          "*": {
+            scrollbarColor: `${scrollbarThumb} ${scrollbarTrack}`,
+            scrollbarWidth: "thin",
+            "&::-webkit-scrollbar": {
+              width: 10,
+              height: 10,
+            },
+            "&::-webkit-scrollbar-track": {
+              backgroundColor: scrollbarTrack,
+            },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: scrollbarThumb,
+              border: `2px solid ${scrollbarTrack}`,
+              borderRadius: 8,
+            },
+            "&::-webkit-scrollbar-thumb:hover": {
+              backgroundColor: scrollbarThumbHover,
+            },
+          },
+        },
+      },
       MuiButton: {
         styleOverrides: {
           root: {

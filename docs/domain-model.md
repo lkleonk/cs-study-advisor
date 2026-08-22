@@ -90,6 +90,12 @@ course-key selector only ever sees the tree for the session's degree.
 `tests/fixtures/msc_informatik_buckets_pre_migration.json` pins the projected
 Master tree to the pre-migration bucket file.
 
+Offering URLs remain in the semester source data and projected Course Registry
+API. Their exposure through the agent lookup is separately controlled by
+`AGENT_COURSE_LOOKUP_INCLUDE_COURSE_URLS` (default `false`): when disabled,
+course lookup omits individual URL lines from `course_context` and omits
+URL-based citations while retaining bucket/source citations.
+
 ## Program rules catalogue
 
 Structured display rules live per degree:
@@ -114,7 +120,7 @@ duplicate degree-rule validation.
 ```text
 degrees/<d>/degree_rules.py       -> executable validation logic
 degrees/<d>/program_rules.py      -> structured human-readable rule catalogue
-degrees/<d>/prompts.py            -> RULES_CONTEXT rendered from that degree's catalogue
+services/nodes/answer_composer.py -> filtered prompt context rendered from the degree catalogue
 data/courses.json                 -> shared canonical course facts
 data/degree_modules/<d>.json      -> degree-specific credit mappings and validation metadata
 data/course_offerings/<term>.json -> semester-specific delivery data

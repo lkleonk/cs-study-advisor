@@ -1,6 +1,7 @@
 import json
 import logging
 
+from app.domain.program_rules import CROSS_UNIVERSITY_RULE_SECTION_ID, render_rules_context
 from app.services.agent_config import agent_flow_config
 from app.services.model_service import ModelService
 from app.services.quota_service import DailyQuotaExceeded
@@ -44,7 +45,17 @@ ANSWER_SCHEMA = {
 async def answer_composer_node(state: ConsultantState) -> ConsultantState:
     logger.info("Answer composer invoked")
     wizardflow_message_id = state.get("wizardflow_message_id")
-    composer_prompt = degree_for(state).prompts.answer_composer_system_prompt
+    degree = degree_for(state)
+    composer_prompt = degree.prompts.answer_composer_system_prompt
+    excluded_rule_sections = (
+        set()
+        if state.get("include_cross_university_rules")
+        else {CROSS_UNIVERSITY_RULE_SECTION_ID}
+    )
+    rules_context = render_rules_context(
+        degree.get_program_rules(),
+        exclude_section_ids=excluded_rule_sections,
+    )
     user_message = latest_user_message(state)
     history = format_recent_messages(
         recent_messages(state, agent_flow_config.answer_composer.history_turns)
@@ -59,6 +70,9 @@ User message:
 
 Recent conversation:
 {history}
+
+Relevant degree-rule context:
+{rules_context}
 
 Course-offering context:
 {context}

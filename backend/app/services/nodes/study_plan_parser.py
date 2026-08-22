@@ -1,5 +1,7 @@
+import json
 import logging
 import re
+from typing import Any
 
 from app.domain.degrees import DegreeDefinition, get_degree_or_default
 from app.domain.study_plan import PlannedModule, StudyPlan
@@ -46,6 +48,7 @@ async def parse_study_plan(
     text: str,
     wizardflow_message_id: str | None = None,
     degree: DegreeDefinition | None = None,
+    existing_plan: StudyPlan | dict[str, Any] | None = None,
 ) -> StudyPlan:
     """Parse free-form text (chat message or extracted PDF) into a StudyPlan.
 
@@ -55,7 +58,22 @@ async def parse_study_plan(
     degree = degree or get_degree_or_default(None)
     parser_prompt = degree.prompts.study_plan_parser_system_prompt
     fallback = heuristic_parse_plan(text, degree)
-    llm_message = f"User message:\n{text}"
+    if existing_plan:
+        existing_plan_data = (
+            existing_plan.model_dump() if isinstance(existing_plan, StudyPlan) else existing_plan
+        )
+        llm_message = f"""
+Existing parsed study plan:
+{json.dumps(existing_plan_data, ensure_ascii=False, indent=2)}
+
+Latest user message:
+{text}
+
+Return the complete updated study plan. Preserve the existing plan and
+incorporate additions or corrections from the latest message.
+""".strip()
+    else:
+        llm_message = f"User message:\n{text}"
 
     log_llm_input(
         wizardflow_message_id,
@@ -87,5 +105,10 @@ async def parse_study_plan(
 async def study_plan_parser_node(state: ConsultantState) -> ConsultantState:
     logger.info("Study plan parser invoked")
     message = latest_user_message(state)
-    plan = await parse_study_plan(message, state.get("wizardflow_message_id"), degree_for(state))
+    plan = await parse_study_plan(
+        message,
+        state.get("wizardflow_message_id"),
+        degree_for(state),
+        existing_plan=state.get("parsed_study_plan"),
+    )
     return {"parsed_study_plan": plan.model_dump()}
