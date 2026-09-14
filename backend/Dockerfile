@@ -36,7 +36,6 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     echo "backend build: runtime Python dependencies installed"
 
 COPY app ./app
-COPY scripts ./scripts
 
 ENV PYTHONPATH=/app
 

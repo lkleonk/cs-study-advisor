@@ -56,7 +56,7 @@ class Settings(BaseModel):
     class AcademicCloud(BaseModel):
         BASE_URL: str = os.getenv("ACADEMICCLOUD_BASE_URL", "https://chat-ai.academiccloud.de/v1")
         API_KEY: str = os.getenv("ACADEMICCLOUD_API_KEY", "")
-        MODEL: str = os.getenv("ACADEMICCLOUD_MODEL", "qwen3-235b-a22b")
+        MODEL: str = os.getenv("ACADEMICCLOUD_MODEL", "qwen3-30b-a3b-instruct-2507")
         TEMPERATURE: float = float(os.getenv("ACADEMICCLOUD_TEMPERATURE", "0.2"))
         MAX_TOKENS: int = int(os.getenv("ACADEMICCLOUD_MAX_TOKENS", "1200"))
         TIMEOUT: float = float(os.getenv("ACADEMICCLOUD_TIMEOUT", "120"))

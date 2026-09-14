@@ -19,10 +19,10 @@ Public website: `https://cs-modulio.com`
 
 A FU Berlin study consultant for multiple degree programs, with a backend-first
 architecture and a standalone Next.js frontend. Supported degrees live in a
-registry (`backend/app/domain/degrees/`): currently `msc_informatik` and
-`msc_data_science`. It answers questions using exact local course-offering lookup
-plus rules in prompts, and validates proposed study plans with deterministic
-per-degree Python rules. The core principle is **LLM parses → Python validates →
+registry (`backend/app/domain/degrees/`): currently `bsc_informatik`,
+`msc_informatik`, and `msc_data_science`. It answers questions using exact local
+course-offering lookup plus rules in prompts, and validates proposed study plans
+with deterministic per-degree Python rules. The core principle is **LLM parses → Python validates →
 LLM explains**: the LLM may parse and explain, but must not be trusted for final
 LP validation. Every session is bound to exactly one degree; the LLM never
 chooses or infers the degree. The Course Registry is a second, read-only
@@ -40,6 +40,12 @@ fu_berlin_cs_consultant/
   .env.example
   ressources/
   docs/
+  infra/                         # Terraform: Azure backend + static frontend hosting
+    main.tf
+    variables.tf
+    outputs.tf
+    providers.tf
+    terraform.tfvars.example
   backend/
     app/
       main.py
@@ -62,10 +68,10 @@ fu_berlin_cs_consultant/
           msc_data_science/     # + module_catalog.py (canonical checklist modules)
       services/
       pdf/
-    scripts/
     tests/
   frontend/
-    Dockerfile
+    Dockerfile                    # local Caddy-based static preview
+    out/                          # exported site uploaded to Azure Storage $web
     src/
       app/
       components/
@@ -99,7 +105,7 @@ commands from `frontend/`.
 Compile check:
 
 ```bash
-python -m compileall -q "fu_berlin_cs_consultant\backend\app" "fu_berlin_cs_consultant\backend\scripts"
+python -m compileall -q "fu_berlin_cs_consultant\backend\app"
 ```
 
 Focused tests from `fu_berlin_cs_consultant/backend`:
@@ -128,7 +134,13 @@ curl http://localhost:8000/health
 ```
 
 Deployment/build gotchas (static export, Caddy, apt timeouts) are in
-`docs/deployment.md`.
+`docs/deployment.md`. Production uses Azure Container Apps for the backend, ACR
+for its image, Key Vault for the LLM key, and Azure Storage Static Website for
+`frontend/out/`; Terraform lives in `infra/`. Cloudflare owns public DNS/TLS.
+
+Before applying infrastructure changes, run `terraform fmt -check` and
+`terraform validate` from `infra/`, then inspect `terraform plan`. Never commit
+`terraform.tfvars`, state, plans, credentials, or access tokens.
 
 ## Documentation Expectations
 
@@ -160,4 +172,4 @@ final source of truth for exact routes, schemas, and rule lists.
 | PDF transcript upload pipeline | `docs/pdf_node.md` |
 | Frontend architecture, state, tabs, conventions | `docs/frontend.md` |
 | LLM providers, model choice, prompt conventions | `docs/llm-providers.md` |
-| Docker / Compose / Caddy / static export | `docs/deployment.md` |
+| Local and Azure deployment / Terraform / Caddy / static export | `docs/deployment.md` + `infra/README.md` |

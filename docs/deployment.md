@@ -60,3 +60,23 @@ For production, first rebuild `frontend/out/` locally and deploy the updated
 repository revision, then run the production Compose profile; only `backend` and
 Caddy run. Use `docker compose logs -f backend caddy` when production runtime
 behavior is unclear.
+
+## Azure target architecture
+
+The initial Azure/Terraform stack lives in `infra/`. It provisions Azure Static
+Web Apps for the static frontend, ACR plus Azure Container Apps for the backend,
+Key Vault with managed-identity access for the AcademicCloud API key, and Log
+Analytics. The Container App is fixed at one warm replica while sessions and
+quotas remain process-local, and WizardFlow is disabled because no persistent
+trace storage is provisioned.
+
+Infrastructure creation uses a two-phase bootstrap so neither an API key nor a
+nonexistent ACR image is required during the first apply. See `infra/README.md`
+for the exact sequence. Custom domains, DNS cutover, remote Terraform state,
+and GitHub Actions application releases are intentionally deferred.
+
+Azure for Students policies may limit both deployment regions and ACR Tasks.
+The stack supports a backend-only deployment with `deploy_frontend = false`;
+when ACR Tasks are disabled, build the backend image with local Docker and push
+it to ACR before enabling `deploy_backend`. The concrete commands and region
+notes are in `infra/README.md`.

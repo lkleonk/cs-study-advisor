@@ -40,7 +40,6 @@ fu_berlin_cs_consultant/
 │   │   └── services/            # LLM providers, vector store, agent graph
 │   │       ├── nodes/           # Agent graph nodes (course lookup, rule checker, ...)
 │   │       └── states/          # Agent graph state
-│   ├── scripts/                 # PDF extraction & resource ingestion
 │   ├── tests/                   # Pytest suite
 │   └── Dockerfile
 ├── frontend/                    # Next.js frontend
@@ -101,7 +100,7 @@ AcademicCloud (hosted API):
 
 ```env
 LLM_PROVIDER=academiccloud
-ACADEMICCLOUD_MODEL=qwen3-235b-a22b
+ACADEMICCLOUD_MODEL=qwen3-30b-a3b-instruct-2507
 # ACADEMICCLOUD_API_KEY goes in .env.local
 ```
 
