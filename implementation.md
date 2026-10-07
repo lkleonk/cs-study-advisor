@@ -166,14 +166,14 @@ Current course offerings are read from the canonical catalogue plus
 
 ## Tests
 
-[x] Add `backend/tests/test_rule_checker.py`.
+[x] Add `backend/tests/domain/test_rule_checker.py`.
 [x] Test valid plan.
 [x] Test missing specialization LP.
 [x] Test too many ungraded LP.
 [x] Test too many Bachelor-module LP.
 [x] Test too few scientific work modules.
 [x] Test too many software projects.
-[x] Add `backend/tests/test_agent_routes.py` for routing labels.
+[x] Add `backend/tests/agent/test_agent_routes.py` for routing labels.
 
 ## Docs
 
@@ -212,6 +212,7 @@ Phase 2 — shared course offerings:
 [x] Load-time validation against the registry (area vocabulary, canonical module ids).
 [x] Migration-equivalence test against the pre-migration Master buckets fixture.
 [x] `CourseKeySelector` short-circuits without an LLM call for degrees without tagged offerings.
+[x] WiSe 2026/27 offerings (`wise26-27.json`) for all three degrees, curated from the VV; maths tree excluded; B.Sc. Pflicht/Wahlpflicht modules added; placements carry module LP.
 
 Phase 3 — degree packages:
 

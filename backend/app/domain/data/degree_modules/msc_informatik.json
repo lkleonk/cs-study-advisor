@@ -519,10 +519,12 @@
       "course_id": "cluster_computing",
       "placements": [
         {
-          "module_id": "aktuelle_forschungsthemen_der_technischen_informatik"
+          "module_id": "aktuelle_forschungsthemen_der_technischen_informatik",
+          "lp": 5
         },
         {
-          "module_id": "aktuelle_forschungsthemen_der_praktischen_informatik"
+          "module_id": "aktuelle_forschungsthemen_der_praktischen_informatik",
+          "lp": 5
         }
       ]
     },
@@ -530,10 +532,12 @@
       "course_id": "bild_und_videocodierung",
       "placements": [
         {
-          "module_id": "aktuelle_forschungsthemen_der_technischen_informatik"
+          "module_id": "aktuelle_forschungsthemen_der_technischen_informatik",
+          "lp": 5
         },
         {
-          "module_id": "aktuelle_forschungsthemen_der_praktischen_informatik"
+          "module_id": "aktuelle_forschungsthemen_der_praktischen_informatik",
+          "lp": 5
         }
       ]
     },
@@ -541,13 +545,16 @@
       "course_id": "cybersecurity_and_ai_iv_angriffe",
       "placements": [
         {
-          "module_id": "aktuelle_forschungsthemen_der_technischen_informatik"
+          "module_id": "aktuelle_forschungsthemen_der_technischen_informatik",
+          "lp": 5
         },
         {
-          "module_id": "aktuelle_forschungsthemen_der_praktischen_informatik"
+          "module_id": "aktuelle_forschungsthemen_der_praktischen_informatik",
+          "lp": 5
         },
         {
-          "module_id": "aktuelle_forschungsthemen_der_theoretischen_informatik"
+          "module_id": "aktuelle_forschungsthemen_der_theoretischen_informatik",
+          "lp": 5
         }
       ]
     },
@@ -555,7 +562,8 @@
       "course_id": "mobilkommunikation",
       "placements": [
         {
-          "module_id": "mobilkommunikation"
+          "module_id": "mobilkommunikation",
+          "lp": 5
         }
       ]
     },
@@ -563,10 +571,12 @@
       "course_id": "softwareprojekt_telematik",
       "placements": [
         {
-          "module_id": "softwareprojekt_technische_informatik_a"
+          "module_id": "softwareprojekt_technische_informatik_a",
+          "lp": 10
         },
         {
-          "module_id": "softwareprojekt_praktische_informatik_a"
+          "module_id": "softwareprojekt_praktische_informatik_a",
+          "lp": 10
         }
       ]
     },
@@ -574,7 +584,8 @@
       "course_id": "softwareprojekt_verteilte_systeme",
       "placements": [
         {
-          "module_id": "softwareprojekt_technische_informatik_a"
+          "module_id": "softwareprojekt_technische_informatik_a",
+          "lp": 10
         }
       ]
     },
@@ -582,7 +593,8 @@
       "course_id": "seminar_proseminar_internet_of_things_security_technische_informatik",
       "placements": [
         {
-          "module_id": "wissenschaftliches_arbeiten_technische_informatik_a"
+          "module_id": "wissenschaftliches_arbeiten_technische_informatik_a",
+          "lp": 5
         }
       ]
     },
@@ -590,7 +602,8 @@
       "course_id": "seminar_proseminar_telematik",
       "placements": [
         {
-          "module_id": "wissenschaftliches_arbeiten_technische_informatik_a"
+          "module_id": "wissenschaftliches_arbeiten_technische_informatik_a",
+          "lp": 5
         }
       ]
     },
@@ -598,7 +611,8 @@
       "course_id": "bildverarbeitung",
       "placements": [
         {
-          "module_id": "bildverarbeitung"
+          "module_id": "bildverarbeitung",
+          "lp": 5
         }
       ]
     },
@@ -606,7 +620,8 @@
       "course_id": "computergrafik",
       "placements": [
         {
-          "module_id": "computergrafik"
+          "module_id": "computergrafik",
+          "lp": 10
         }
       ]
     },
@@ -614,7 +629,8 @@
       "course_id": "angewandte_biometrie",
       "placements": [
         {
-          "module_id": "aktuelle_forschungsthemen_der_praktischen_informatik"
+          "module_id": "aktuelle_forschungsthemen_der_praktischen_informatik",
+          "lp": 5
         }
       ]
     },
@@ -622,7 +638,8 @@
       "course_id": "human_centered_data_science",
       "placements": [
         {
-          "module_id": "spezielle_aspekte_der_praktischen_informatik"
+          "module_id": "spezielle_aspekte_der_praktischen_informatik",
+          "lp": 5
         }
       ]
     },
@@ -630,7 +647,8 @@
       "course_id": "ethics_and_epistemology_of_ai",
       "placements": [
         {
-          "module_id": "spezielle_aspekte_der_praktischen_informatik"
+          "module_id": "spezielle_aspekte_der_praktischen_informatik",
+          "lp": 5
         }
       ]
     },
@@ -638,7 +656,8 @@
       "course_id": "advanced_data_visualization_for_artificial_intelligence",
       "placements": [
         {
-          "module_id": "spezielle_aspekte_der_praktischen_informatik"
+          "module_id": "spezielle_aspekte_der_praktischen_informatik",
+          "lp": 5
         }
       ]
     },
@@ -646,7 +665,8 @@
       "course_id": "empirische_methoden_im_software_engineering",
       "placements": [
         {
-          "module_id": "empirische_bewertung_in_der_informatik"
+          "module_id": "empirische_bewertung_in_der_informatik",
+          "lp": 5
         }
       ]
     },
@@ -654,10 +674,12 @@
       "course_id": "markovketten",
       "placements": [
         {
-          "module_id": "spezielle_aspekte_der_praktischen_informatik"
+          "module_id": "spezielle_aspekte_der_praktischen_informatik",
+          "lp": 5
         },
         {
-          "module_id": "ausgewahlte_themen_der_theoretischen_informatik"
+          "module_id": "ausgewahlte_themen_der_theoretischen_informatik",
+          "lp": 10
         }
       ]
     },
@@ -665,7 +687,8 @@
       "course_id": "softwareprojekt_datenverwaltung",
       "placements": [
         {
-          "module_id": "softwareprojekt_praktische_informatik_a"
+          "module_id": "softwareprojekt_praktische_informatik_a",
+          "lp": 10
         }
       ]
     },
@@ -673,7 +696,8 @@
       "course_id": "softwareprojekt_semantische_technologien",
       "placements": [
         {
-          "module_id": "softwareprojekt_praktische_informatik_a"
+          "module_id": "softwareprojekt_praktische_informatik_a",
+          "lp": 10
         }
       ]
     },
@@ -681,7 +705,8 @@
       "course_id": "softwareprojekt_amos_projekt",
       "placements": [
         {
-          "module_id": "softwareprojekt_praktische_informatik_a"
+          "module_id": "softwareprojekt_praktische_informatik_a",
+          "lp": 10
         }
       ]
     },
@@ -689,7 +714,8 @@
       "course_id": "softwareprojekt_secure_identity",
       "placements": [
         {
-          "module_id": "softwareprojekt_praktische_informatik_a"
+          "module_id": "softwareprojekt_praktische_informatik_a",
+          "lp": 10
         }
       ]
     },
@@ -697,7 +723,8 @@
       "course_id": "softwareprojekt_open_source_source_development",
       "placements": [
         {
-          "module_id": "softwareprojekt_praktische_informatik_a"
+          "module_id": "softwareprojekt_praktische_informatik_a",
+          "lp": 10
         }
       ]
     },
@@ -705,10 +732,12 @@
       "course_id": "seminar_reinforcement_learning_in_computer_chess_and_beyond_towards_absolute_sustainability",
       "placements": [
         {
-          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a"
+          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a",
+          "lp": 5
         },
         {
-          "module_id": "wissenschaftliches_arbeiten_theoretische_informatik_a"
+          "module_id": "wissenschaftliches_arbeiten_theoretische_informatik_a",
+          "lp": 5
         }
       ]
     },
@@ -716,7 +745,8 @@
       "course_id": "projektseminar_probleme_bei_planungssystemen_der_nachsten_generation_mit_schwerpunkt_auf_navigationssystemen",
       "placements": [
         {
-          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a"
+          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a",
+          "lp": 5
         }
       ]
     },
@@ -724,7 +754,8 @@
       "course_id": "seminar_beitrage_zum_software_engineering",
       "placements": [
         {
-          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a"
+          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a",
+          "lp": 5
         }
       ]
     },
@@ -732,7 +763,8 @@
       "course_id": "seminar_proseminar_agile_methoden_technische_praktiken",
       "placements": [
         {
-          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a"
+          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a",
+          "lp": 5
         }
       ]
     },
@@ -740,7 +772,8 @@
       "course_id": "seminar_security_engineering",
       "placements": [
         {
-          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a"
+          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a",
+          "lp": 5
         }
       ]
     },
@@ -748,7 +781,8 @@
       "course_id": "seminar_proseminar_new_trends_in_informationsystems_ntis",
       "placements": [
         {
-          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a"
+          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a",
+          "lp": 5
         }
       ]
     },
@@ -756,7 +790,8 @@
       "course_id": "seminar_continual_learning",
       "placements": [
         {
-          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a"
+          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a",
+          "lp": 5
         }
       ]
     },
@@ -764,7 +799,8 @@
       "course_id": "seminar_proseminar_how_to_startup",
       "placements": [
         {
-          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a"
+          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a",
+          "lp": 5
         }
       ]
     },
@@ -772,10 +808,12 @@
       "course_id": "seminar_netzwerke_dynamische_modelle_und_ml_fur_datenintegration_in_den_lebenswissenschaften",
       "placements": [
         {
-          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a"
+          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a",
+          "lp": 5
         },
         {
-          "module_id": "wissenschaftliches_arbeiten_theoretische_informatik_a"
+          "module_id": "wissenschaftliches_arbeiten_theoretische_informatik_a",
+          "lp": 5
         }
       ]
     },
@@ -783,7 +821,8 @@
       "course_id": "elektronische_krankenakten_und_ihre_nutzung_in_der_aktuellen_forschung",
       "placements": [
         {
-          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a"
+          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a",
+          "lp": 5
         }
       ]
     },
@@ -791,7 +830,8 @@
       "course_id": "seminar_proseminar_time_series_modelling",
       "placements": [
         {
-          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a"
+          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a",
+          "lp": 5
         }
       ]
     },
@@ -799,7 +839,8 @@
       "course_id": "projektmanagement_in_agilen_umgebungen_teil_2_sose",
       "placements": [
         {
-          "module_id": "grundlagen_des_managements_von_it_projekten"
+          "module_id": "grundlagen_des_managements_von_it_projekten",
+          "lp": 5
         }
       ]
     },
@@ -807,10 +848,12 @@
       "course_id": "seminar_aktuelle_themen_der_kryptographie",
       "placements": [
         {
-          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a"
+          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a",
+          "lp": 5
         },
         {
-          "module_id": "wissenschaftliches_arbeiten_theoretische_informatik_a"
+          "module_id": "wissenschaftliches_arbeiten_theoretische_informatik_a",
+          "lp": 5
         }
       ]
     },
@@ -818,7 +861,8 @@
       "course_id": "kryptoanalyse_asymmetrischer_verfahren",
       "placements": [
         {
-          "module_id": "aktuelle_forschungsthemen_der_theoretischen_informatik"
+          "module_id": "aktuelle_forschungsthemen_der_theoretischen_informatik",
+          "lp": 5
         }
       ]
     },
@@ -826,7 +870,8 @@
       "course_id": "advanced_topics_on_post_quantum_cryptography",
       "placements": [
         {
-          "module_id": "aktuelle_forschungsthemen_der_theoretischen_informatik"
+          "module_id": "aktuelle_forschungsthemen_der_theoretischen_informatik",
+          "lp": 5
         }
       ]
     },
@@ -834,7 +879,8 @@
       "course_id": "approximationsalgorithmen",
       "placements": [
         {
-          "module_id": "ausgewahlte_themen_der_theoretischen_informatik"
+          "module_id": "ausgewahlte_themen_der_theoretischen_informatik",
+          "lp": 10
         }
       ]
     },
@@ -842,7 +888,8 @@
       "course_id": "softwareprojekt_anwendungen_von_algorithmen",
       "placements": [
         {
-          "module_id": "softwareprojekt_theoretische_informatik_a"
+          "module_id": "softwareprojekt_theoretische_informatik_a",
+          "lp": 10
         }
       ]
     },
@@ -850,7 +897,271 @@
       "course_id": "seminar_uber_algorithmen",
       "placements": [
         {
-          "module_id": "wissenschaftliches_arbeiten_theoretische_informatik_a"
+          "module_id": "wissenschaftliches_arbeiten_theoretische_informatik_a",
+          "lp": 5
+        }
+      ]
+    },
+    {
+      "course_id": "praktiken_professioneller_softwareentwicklung",
+      "placements": [
+        {
+          "module_id": "praktiken_professioneller_softwareentwicklung",
+          "lp": 5
+        }
+      ]
+    },
+    {
+      "course_id": "softwareprojekt_mobilkommunikation",
+      "placements": [
+        {
+          "module_id": "softwareprojekt_praktische_informatik_a",
+          "lp": 10
+        },
+        {
+          "module_id": "softwareprojekt_technische_informatik_a",
+          "lp": 10
+        }
+      ]
+    },
+    {
+      "course_id": "softwareprojekt_coding_ixd",
+      "placements": [
+        {
+          "module_id": "softwareprojekt_praktische_informatik_a",
+          "lp": 10
+        }
+      ]
+    },
+    {
+      "course_id": "softwareprojekt_maschinelles_lernen_fur_lebenswissenschaftliche_daten",
+      "placements": [
+        {
+          "module_id": "softwareprojekt_praktische_informatik_a",
+          "lp": 10
+        }
+      ]
+    },
+    {
+      "course_id": "seminar_ai_methods_and_dynamical_systems_in_mathematics_planning_and_sustainability_towards_critical_mathematical_economics",
+      "placements": [
+        {
+          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a",
+          "lp": 5
+        },
+        {
+          "module_id": "wissenschaftliches_arbeiten_theoretische_informatik_a",
+          "lp": 5
+        }
+      ]
+    },
+    {
+      "course_id": "projektseminar_datenverwaltung_informatik_und_archaologie",
+      "placements": [
+        {
+          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a",
+          "lp": 5
+        }
+      ]
+    },
+    {
+      "course_id": "seminar_proseminar_kunstliche_intelligenz_autonome_fahrzeuge",
+      "placements": [
+        {
+          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a",
+          "lp": 5
+        }
+      ]
+    },
+    {
+      "course_id": "seminar_adabiatische_quantenalgorithmen",
+      "placements": [
+        {
+          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a",
+          "lp": 5
+        },
+        {
+          "module_id": "wissenschaftliches_arbeiten_theoretische_informatik_a",
+          "lp": 5
+        }
+      ]
+    },
+    {
+      "course_id": "neue_und_alte_fehler_in_ml_und_datenanalyse",
+      "placements": [
+        {
+          "module_id": "wissenschaftliches_arbeiten_praktische_informatik_a",
+          "lp": 5
+        }
+      ]
+    },
+    {
+      "course_id": "secure_software_engineering",
+      "placements": [
+        {
+          "module_id": "aktuelle_forschungsthemen_der_praktischen_informatik",
+          "lp": 5
+        }
+      ]
+    },
+    {
+      "course_id": "datenkompression",
+      "placements": [
+        {
+          "module_id": "aktuelle_forschungsthemen_der_praktischen_informatik",
+          "lp": 5
+        },
+        {
+          "module_id": "spezielle_aspekte_der_theoretischen_informatik",
+          "lp": 5
+        }
+      ]
+    },
+    {
+      "course_id": "datenvisualisierung",
+      "placements": [
+        {
+          "module_id": "aktuelle_forschungsthemen_der_praktischen_informatik",
+          "lp": 5
+        }
+      ]
+    },
+    {
+      "course_id": "kryptowahrungen_und_blockchain",
+      "placements": [
+        {
+          "module_id": "aktuelle_forschungsthemen_der_praktischen_informatik",
+          "lp": 5
+        },
+        {
+          "module_id": "aktuelle_forschungsthemen_der_technischen_informatik",
+          "lp": 5
+        }
+      ]
+    },
+    {
+      "course_id": "integrative_analyse_lebenswissenschaftlicher_daten_und_einbeziehung_von_vorwissen",
+      "placements": [
+        {
+          "module_id": "aktuelle_forschungsthemen_der_praktischen_informatik",
+          "lp": 5
+        }
+      ]
+    },
+    {
+      "course_id": "spezielle_aspekte_der_datenverwaltung_geospatial_databases",
+      "placements": [
+        {
+          "module_id": "spezielle_aspekte_der_datenverwaltung",
+          "lp": 5
+        }
+      ]
+    },
+    {
+      "course_id": "machine_learning_for_data_science",
+      "placements": [
+        {
+          "module_id": "ausgewahlte_themen_der_praktischen_informatik",
+          "lp": 10
+        }
+      ]
+    },
+    {
+      "course_id": "projektmanagement_in_agilen_umgebungen_teil_1_wise",
+      "placements": [
+        {
+          "module_id": "grundlagen_des_managements_von_it_projekten",
+          "lp": 5
+        }
+      ]
+    },
+    {
+      "course_id": "hoehere_algorithmik",
+      "placements": [
+        {
+          "module_id": "hohere_algorithmik",
+          "lp": 10
+        }
+      ]
+    },
+    {
+      "course_id": "seminar_proseminar_post_quanten_kryptographie",
+      "placements": [
+        {
+          "module_id": "wissenschaftliches_arbeiten_theoretische_informatik_a",
+          "lp": 5
+        }
+      ]
+    },
+    {
+      "course_id": "kryptoanalyse_symmetrischer_verfahren",
+      "placements": [
+        {
+          "module_id": "aktuelle_forschungsthemen_der_theoretischen_informatik",
+          "lp": 5
+        }
+      ]
+    },
+    {
+      "course_id": "post_quantum_kryptographie_gitterverfahren",
+      "placements": [
+        {
+          "module_id": "aktuelle_forschungsthemen_der_theoretischen_informatik",
+          "lp": 5
+        }
+      ]
+    },
+    {
+      "course_id": "elliptic_curve_cryptography",
+      "placements": [
+        {
+          "module_id": "aktuelle_forschungsthemen_der_theoretischen_informatik",
+          "lp": 5
+        }
+      ]
+    },
+    {
+      "course_id": "multiplicative_weights_algorithms_optimization_and_learning",
+      "placements": [
+        {
+          "module_id": "ausgewahlte_themen_der_theoretischen_informatik",
+          "lp": 10
+        }
+      ]
+    },
+    {
+      "course_id": "kryptographie_und_sicherheit_in_verteilten_systemen",
+      "placements": [
+        {
+          "module_id": "kryptographie_und_sicherheit_in_verteilten_systemen",
+          "lp": 10
+        }
+      ]
+    },
+    {
+      "course_id": "betriebssysteme",
+      "placements": [
+        {
+          "module_id": "betriebssysteme",
+          "lp": 10
+        }
+      ]
+    },
+    {
+      "course_id": "telematik",
+      "placements": [
+        {
+          "module_id": "telematik",
+          "lp": 10
+        }
+      ]
+    },
+    {
+      "course_id": "seminar_proseminar_technische_informatik",
+      "placements": [
+        {
+          "module_id": "wissenschaftliches_arbeiten_technische_informatik_a",
+          "lp": 5
         }
       ]
     }

@@ -33,6 +33,15 @@ class AnswerGenerationError(RuntimeError):
     """Raised when the answer composer cannot produce a real answer."""
 
 
+NO_PLAN_VALIDATION_NOTE = (
+    "(Automatic study-plan validation is not available for this degree. Do not state "
+    "whether a plan or transcript satisfies the degree rules or how many LP are still "
+    "missing as a verified fact. You may explain the relevant rules and compare them "
+    "with the listed modules as orientation only, and recommend confirming with the "
+    "examination office / Studienberatung.)"
+)
+
+
 ANSWER_SCHEMA = {
     "type": "object",
     "properties": {
@@ -61,8 +70,15 @@ async def answer_composer_node(state: ConsultantState) -> ConsultantState:
         recent_messages(state, agent_flow_config.answer_composer.history_turns)
     )
     context = state.get("course_context") or "(no course-offering context)"
-    rule_result = state.get("rule_check_result")
+    rule_result = state.get("rule_check_result") if degree.plan_validation_enabled else None
     parsed_plan = state.get("parsed_study_plan")
+    rule_check_context = (
+        json.dumps(rule_result, ensure_ascii=False, indent=2)
+        if rule_result
+        else "(not a plan check)"
+        if degree.plan_validation_enabled
+        else NO_PLAN_VALIDATION_NOTE
+    )
 
     message = f"""
 User message:
@@ -80,11 +96,11 @@ Course-offering context:
 Course lookup keys:
 {json.dumps(state.get("course_lookup_keys") or [], ensure_ascii=False, indent=2)}
 
-Parsed study plan (validated module list, e.g. from an uploaded transcript):
+Parsed study plan (module list, e.g. from an uploaded transcript):
 {json.dumps(parsed_plan, ensure_ascii=False, indent=2) if parsed_plan else "(no parsed study plan)"}
 
 Deterministic rule-check result:
-{json.dumps(rule_result, ensure_ascii=False, indent=2) if rule_result else "(not a plan check)"}
+{rule_check_context}
 """.strip()
 
     log_llm_input(

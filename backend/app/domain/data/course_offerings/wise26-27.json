@@ -1,0 +1,477 @@
+{
+  "semester": "wise26-27",
+  "offerings": [
+    {
+      "course_id": "praktiken_professioneller_softwareentwicklung",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Mo 14:00-16:00; Erster Termin: 12.10.2026; Ort: T9/049 Seminarraum (Takustr. 9); Praktiken professioneller Softwareentwicklung (Praxisteil): Mo 16:00-18:00; Erster Termin: 12.10.2026; Ort: T9/049 Seminarraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117244?sm=1039762"
+    },
+    {
+      "course_id": "softwareprojekt_mobilkommunikation",
+      "type": "swp",
+      "lp": null,
+      "schedule": "Di 14:00-16:00; Erster Termin: 13.10.2026; Ort: T9/K63 Hardwarepraktikum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117210?sm=1039762"
+    },
+    {
+      "course_id": "softwareprojekt_semantische_technologien",
+      "type": "swp",
+      "lp": null,
+      "schedule": "Mi 14:00-16:00; Erster Termin: 14.10.2026; Ort: T9/051 Seminarraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117268?sm=1039762"
+    },
+    {
+      "course_id": "softwareprojekt_coding_ixd",
+      "type": "swp",
+      "lp": null,
+      "schedule": "-; Ort: keine Angabe",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117316?sm=1039762"
+    },
+    {
+      "course_id": "softwareprojekt_amos_projekt",
+      "type": "swp",
+      "lp": null,
+      "schedule": "-; Ort: keine Angabe",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117366?sm=1039762"
+    },
+    {
+      "course_id": "softwareprojekt_secure_identity",
+      "type": "swp",
+      "lp": null,
+      "schedule": "Mi 10:00-12:00; Erster Termin: 14.10.2026; Ort: T9/055 Seminarraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117419?sm=1039762"
+    },
+    {
+      "course_id": "softwareprojekt_maschinelles_lernen_fur_lebenswissenschaftliche_daten",
+      "type": "swp",
+      "lp": null,
+      "schedule": "Mi 16:00-18:00; Erster Termin: 14.10.2026; Ort: A7/SR 031 (Arnimallee 7)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117451?sm=1039762"
+    },
+    {
+      "course_id": "seminar_ai_methods_and_dynamical_systems_in_mathematics_planning_and_sustainability_towards_critical_mathematical_economics",
+      "type": "seminar",
+      "lp": null,
+      "schedule": "Do 14:00-16:00; Erster Termin: 15.10.2026; Ort: A7/SR 140 Seminarraum (Hinterhaus) (Arnimallee 7)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117955?sm=1039762"
+    },
+    {
+      "course_id": "projektseminar_datenverwaltung_informatik_und_archaologie",
+      "type": "seminar",
+      "lp": null,
+      "schedule": "Do 10:00-12:00, zusätzliche Termine siehe LV-Details; Erster Termin: 15.10.2026; Ort: T9/046 Seminarraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117174?sm=1039762"
+    },
+    {
+      "course_id": "seminar_beitrage_zum_software_engineering",
+      "type": "seminar",
+      "lp": null,
+      "schedule": "Do 14:00-16:00; Erster Termin: 15.10.2026; Ort: T9/049 Seminarraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117192?sm=1039762"
+    },
+    {
+      "course_id": "seminar_proseminar_kunstliche_intelligenz_autonome_fahrzeuge",
+      "type": "seminar",
+      "lp": null,
+      "schedule": "Di 10:00-12:00; Erster Termin: 13.10.2026; Ort: T9/SR 006 Seminarraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117248?sm=1039762"
+    },
+    {
+      "course_id": "seminar_adabiatische_quantenalgorithmen",
+      "type": "seminar",
+      "lp": null,
+      "schedule": "Do 14:00-16:00; Erster Termin: 15.10.2026; Ort: T9/SR 006 Seminarraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117344?sm=1039762"
+    },
+    {
+      "course_id": "projektseminar_probleme_bei_planungssystemen_der_nachsten_generation_mit_schwerpunkt_auf_navigationssystemen",
+      "type": "seminar",
+      "lp": null,
+      "schedule": "Mi 10:00-12:00; Erster Termin: 14.10.2026; Ort: T9/046 Seminarraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117386?sm=1039762"
+    },
+    {
+      "course_id": "seminar_netzwerke_dynamische_modelle_und_ml_fur_datenintegration_in_den_lebenswissenschaften",
+      "type": "seminar",
+      "lp": null,
+      "schedule": "Di 12:00-14:00; Erster Termin: 06.10.2026; Ort: T9/137 Konferenzraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117465?sm=1039762"
+    },
+    {
+      "course_id": "neue_und_alte_fehler_in_ml_und_datenanalyse",
+      "type": "seminar",
+      "lp": null,
+      "schedule": "Di 10:00-12:00; Erster Termin: 13.10.2026; Ort: A7/SR 031 (Arnimallee 7)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117489?sm=1039762"
+    },
+    {
+      "course_id": "secure_software_engineering",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Fr 12:00-14:00; Erster Termin: 16.10.2026; Ort: T9/051 Seminarraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117340?sm=1039762"
+    },
+    {
+      "course_id": "datenkompression",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Mo 16:00-18:00; Erster Termin: 12.10.2026; Ort: T9/055 Seminarraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117378?sm=1039762"
+    },
+    {
+      "course_id": "datenvisualisierung",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Di 10:00-12:00; Erster Termin: 13.10.2026; Ort: A3/SR 120 (Arnimallee 3-5)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117394?sm=1039762"
+    },
+    {
+      "course_id": "kryptowahrungen_und_blockchain",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Di 10:00-12:00; Erster Termin: 13.10.2026; Ort: T9/K40 Multimediaraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117399?sm=1039762"
+    },
+    {
+      "course_id": "integrative_analyse_lebenswissenschaftlicher_daten_und_einbeziehung_von_vorwissen",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Fr 14:00-16:00; Erster Termin: 16.10.2026; Ort: T9/SR 006 Seminarraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117503?sm=1039762"
+    },
+    {
+      "course_id": "spezielle_aspekte_der_datenverwaltung_geospatial_databases",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Di 14:00-16:00; Erster Termin: 13.10.2026; Ort: T9/049 Seminarraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117182?sm=1039762"
+    },
+    {
+      "course_id": "machine_learning_for_data_science",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Di 14:00-16:00, Do 14:00-16:00; Erster Termin: 13.10.2026; Ort: A3/Hs 001 Hörsaal (Arnimallee 3-5)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117429?sm=1039762"
+    },
+    {
+      "course_id": "projektmanagement_in_agilen_umgebungen_teil_1_wise",
+      "type": "seminar",
+      "lp": null,
+      "schedule": "Mo 08:00-10:00, Fr 16:00-18:00; Erster Termin: 16.10.2026; Ort: T9/053 Seminarraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117460?sm=1039762"
+    },
+    {
+      "course_id": "hoehere_algorithmik",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Mo 10:00-12:00, Fr 10:00-12:00; Erster Termin: 12.10.2026; Ort: A6/SR 032 Seminarraum (Arnimallee 6)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117164?sm=1039762"
+    },
+    {
+      "course_id": "softwareprojekt_anwendungen_von_algorithmen",
+      "type": "swp",
+      "lp": null,
+      "schedule": "Do 08:00-10:00; Erster Termin: 15.10.2026; Ort: T9/SR 006 Seminarraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117197?sm=1039762"
+    },
+    {
+      "course_id": "seminar_proseminar_post_quanten_kryptographie",
+      "type": "seminar",
+      "lp": null,
+      "schedule": "Di 16:00-18:00; Erster Termin: 13.10.2026; Ort: T9/055 Seminarraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117440?sm=1039762"
+    },
+    {
+      "course_id": "kryptoanalyse_symmetrischer_verfahren",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Di 10:00-12:00; Erster Termin: 13.10.2026; Ort: T9/049 Seminarraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117336?sm=1039762"
+    },
+    {
+      "course_id": "post_quantum_kryptographie_gitterverfahren",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Do 10:00-12:00; Erster Termin: 15.10.2026; Ort: T9/SR 006 Seminarraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117360?sm=1039762"
+    },
+    {
+      "course_id": "elliptic_curve_cryptography",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Mo 10:00-12:00; Erster Termin: 12.10.2026; Ort: T9/051 Seminarraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117518?sm=1039762"
+    },
+    {
+      "course_id": "multiplicative_weights_algorithms_optimization_and_learning",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Mi 14:00-16:00, Fr 10:00-12:00; Erster Termin: 14.10.2026; Ort: A7/SR 031 (Arnimallee 7)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117302?sm=1039762"
+    },
+    {
+      "course_id": "kryptographie_und_sicherheit_in_verteilten_systemen",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Mi 14:00-16:00, Do 12:00-14:00; Erster Termin: 14.10.2026; Ort: T9/SR 006 Seminarraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117171?sm=1039762"
+    },
+    {
+      "course_id": "betriebssysteme",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Mo 12:00-14:00, Mi 12:00-14:00; Erster Termin: 12.10.2026; Ort: T9/055 Seminarraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117089?sm=1039762"
+    },
+    {
+      "course_id": "telematik",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Mo 14:00-16:00, Do 16:00-18:00; Erster Termin: 12.10.2026; Ort: A7/SR 031 (Arnimallee 7)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117189?sm=1039762"
+    },
+    {
+      "course_id": "softwareprojekt_verteilte_systeme",
+      "type": "swp",
+      "lp": null,
+      "schedule": "Di 12:00-14:00; Erster Termin: 13.10.2026; Ort: A3/SR 120 (Arnimallee 3-5)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117292?sm=1039762"
+    },
+    {
+      "course_id": "seminar_proseminar_technische_informatik",
+      "type": "seminar",
+      "lp": null,
+      "schedule": "Do 12:00-14:00; Erster Termin: 15.10.2026; Ort: T9/K63 Hardwarepraktikum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117232?sm=1039762"
+    },
+    {
+      "course_id": "seminar_proseminar_telematik",
+      "type": "seminar",
+      "lp": null,
+      "schedule": "Di 10:00-12:00; Erster Termin: 13.10.2026; Ort: T9/SR 005 Übungsraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117411?sm=1039762"
+    },
+    {
+      "course_id": "konzepte_der_programmierung",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Mo 14:00-16:00, Mi 12:00-14:00; Erster Termin: 12.10.2026; Ort: Gr. Hörsaal (Raum B.001) (Arnimallee 22)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1099673?sm=1039762"
+    },
+    {
+      "course_id": "programmierpraktikum_bsc",
+      "type": "praktikum",
+      "lp": null,
+      "schedule": "Termine siehe LV-Details; Erster Termin: 20.10.2026; Ort: T9/K38 Rechnerpoolraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117478?sm=1039762"
+    },
+    {
+      "course_id": "wissenschaftliches_arbeiten_in_der_informatik",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Di 16:00-18:00; Erster Termin: 13.10.2026; Ort: T9/Gr. Hörsaal (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117330?sm=1039762"
+    },
+    {
+      "course_id": "proseminar_theoretische_informatik",
+      "type": "seminar",
+      "lp": null,
+      "schedule": "Mi 16:00-18:00; Erster Termin: 14.10.2026; Ort: T9/046 Seminarraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117151?sm=1039762"
+    },
+    {
+      "course_id": "proseminar_interactive_data_visualization",
+      "type": "seminar",
+      "lp": null,
+      "schedule": "Do 14:00-16:00; Erster Termin: 15.10.2026; Ort: Virtueller Raum 01",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117264?sm=1039762"
+    },
+    {
+      "course_id": "proseminar_data_algorithms_and_society",
+      "type": "seminar",
+      "lp": null,
+      "schedule": "Mo 10:00-12:00; Erster Termin: 12.10.2026; Ort: T9/055 Seminarraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1119251?sm=1039762"
+    },
+    {
+      "course_id": "diskrete_strukturen_fuer_informatik",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Di 14:00-16:00, Do 14:00-16:00, zusätzliche Termine siehe LV-Details; Erster Termin: 13.10.2026; Ort: Gr. Hörsaal (Raum B.001) (Arnimallee 22)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1099680?sm=1039762"
+    },
+    {
+      "course_id": "auswirkungen_der_informatik",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Mo 12:00-14:00; Erster Termin: 12.10.2026; Ort: T9/Gr. Hörsaal (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117142?sm=1039762"
+    },
+    {
+      "course_id": "rechnerarchitektur",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Di 12:00-14:00; Erster Termin: 13.10.2026; Ort: T9/Gr. Hörsaal (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117115?sm=1039762"
+    },
+    {
+      "course_id": "grundlagen_der_theoretischen_informatik",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Mo 10:00-12:00, zusätzliche Termine siehe LV-Details; Erster Termin: 12.10.2026; Ort: T9/Gr. Hörsaal (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117131?sm=1039762"
+    },
+    {
+      "course_id": "nebenlaeufige_parallele_und_verteilte_programmierung",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Mo 14:00-16:00, Do 12:00-14:00; Erster Termin: 12.10.2026; Ort: T9/Gr. Hörsaal (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117351?sm=1039762"
+    },
+    {
+      "course_id": "analysis_fuer_informatik",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Di 14:00-16:00, Do 14:00-16:00; Erster Termin: 13.10.2026; Ort: T9/Gr. Hörsaal (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117124?sm=1039762"
+    },
+    {
+      "course_id": "maschinelles_lernen",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Mi 12:00-14:00; Erster Termin: 14.10.2026; Ort: T9/Gr. Hörsaal (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117483?sm=1039762"
+    },
+    {
+      "course_id": "analysis_ii",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Di 10:00-12:00, Do 10:00-12:00; Erster Termin: 13.10.2026; Ort: A3/Hs 001 Hörsaal (Arnimallee 3-5)",
+      "description": "Listed as a free-elective candidate only; credit recognition and relevance require confirmation.",
+      "url": "https://www.fu-berlin.de/vv/de/lv/1118343?sm=1039762"
+    },
+    {
+      "course_id": "lineare_algebra_ii",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Mi 12:00-14:00, Fr 08:00-10:00; Erster Termin: 14.10.2026; Ort: A3/Hs 001 Hörsaal (Arnimallee 3-5)",
+      "description": "Listed as a free-elective candidate only; credit recognition and relevance require confirmation.",
+      "url": "https://www.fu-berlin.de/vv/de/lv/1118350?sm=1039762"
+    },
+    {
+      "course_id": "computerorientierte_mathematik_i",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Fr 12:00-14:00; Erster Termin: 16.10.2026; Ort: T9/Gr. Hörsaal (Takustr. 9)",
+      "description": "Listed as a free-elective candidate only; credit recognition and relevance require confirmation.",
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117676?sm=1039762"
+    },
+    {
+      "course_id": "numerik_i",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Mo 10:00-12:00, Mi 10:00-12:00; Erster Termin: 12.10.2026; Ort: KöLu24-26/SR 006 Neuro/Mathe (Königin-Luise-Str. 24 / 26)",
+      "description": "Listed as a free-elective candidate only; credit recognition and relevance require confirmation.",
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117811?sm=1039762"
+    },
+    {
+      "course_id": "funktionalanalysis",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Di 12:00-14:00, Do 12:00-14:00; Erster Termin: 13.10.2026; Ort: A6/SR 025/026 Seminarraum (Arnimallee 6)",
+      "description": "Listed as a free-elective candidate only; credit recognition and relevance require confirmation.",
+      "url": "https://www.fu-berlin.de/vv/de/lv/1118326?sm=1039762"
+    },
+    {
+      "course_id": "stochastik_ii",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Mo 10:00-12:00, Do 08:00-10:00; Erster Termin: 15.10.2026; Ort: A3/Hs 001 Hörsaal (Arnimallee 3-5)",
+      "description": "Listed as a free-elective candidate only; credit recognition and relevance require confirmation.",
+      "url": "https://www.fu-berlin.de/vv/de/lv/1118362?sm=1039762"
+    },
+    {
+      "course_id": "introduction_to_profile_areas",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Fr 14:00-16:00, zusätzliche Termine siehe LV-Details; Erster Termin: 30.10.2026; Ort: A3/Hs 001 Hörsaal (Arnimallee 3-5); Projektseminar: Einführung in die Profilbereiche Data Science: Fr 16:00-18:00, zusätzliche Termine siehe LV-Details; Erster Termin: 30.10.2026; Ort: A6/SR 032 Seminarraum (Arnimallee 6)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1107211?sm=1039762"
+    },
+    {
+      "course_id": "statistics_for_data_science",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Di 12:00-14:00; Erster Termin: 13.10.2026; Ort: T9/046 Seminarraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117436?sm=1039762"
+    },
+    {
+      "course_id": "programming_for_data_science",
+      "type": "seminar",
+      "lp": null,
+      "schedule": "Di 08:00-10:00, Di 10:00-12:00; Erster Termin: 13.10.2026; Ort: T9/046 Seminarraum (Takustr. 9)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1117433?sm=1039762"
+    },
+    {
+      "course_id": "statistik_fur_kleine_fallzahlen",
+      "type": "vl",
+      "lp": null,
+      "schedule": "Mi 14:00-16:00; Erster Termin: 14.10.2026; Ort: A6/SR 032 Seminarraum (Arnimallee 6)",
+      "description": null,
+      "url": "https://www.fu-berlin.de/vv/de/lv/1108022?sm=1039762"
+    }
+  ]
+}

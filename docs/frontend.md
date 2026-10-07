@@ -11,10 +11,15 @@ TypeScript, Material UI, and the App Router. Keep all frontend edits inside
   Markdown (including emphasis, lists, and safe inline links); raw HTML is not
   rendered.
 - `Study Plan`: student-specific extracted plan, modules, LP totals, Wahlbereich
-  data, and validation issues. Needs dedicated study-plan API endpoints before
-  it can be complete.
+  data, and validation issues. Shown only for degrees whose `GET /api/degrees`
+  entry has `plan_validation_enabled` (currently M.Sc. Informatik); for other
+  degrees the tab, its panel, and the degree-switch "Open Study Plan" shortcut
+  are hidden, while PDF upload in the chat still works as chat-only context.
+  Needs dedicated study-plan API endpoints before it can be complete.
 - `Degree Rules`: read-only rendering of `GET /api/program-rules`, plus a
-  persistent external link to the Modulio degree-structure escape room.
+  persistent external link to the Modulio degree-structure escape room, and a
+  "Copy" button (tooltip explains it) that renders the loaded catalogue
+  client-side as a markdown system prompt for use with an external AI.
 - `Course Registry`: read-only, locally filterable rendering of the selected
   degree's `GET /api/course-offerings` projection. It lists only courses present
   in the local semester-offering data and does not consume the request allowance.

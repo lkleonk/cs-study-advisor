@@ -13,11 +13,11 @@ LLM never chooses or infers it. Currently registered: `msc_informatik`
 (M.Sc. Informatik, SPO 2014), `msc_data_science` (M.Sc. Data Science,
 FU-Mitteilungen 18/2021), and `bsc_informatik` (B.Sc. Informatik,
 FU-Mitteilungen 23/2023). The B.Sc. package provides its 2023 programme-rules
-catalogue and the locally supplied SoSe 2026 offering projection. Its
-deterministic study-plan validation remains unavailable. The B.Sc. projection
-does not imply that modules are offered in other semesters; its 0084d maths
-entries are free-elective candidates only and still require recognition and
-relevance confirmation.
+catalogue and the locally supplied SoSe 2026 and WiSe 2026/27 offering
+projections. Its deterministic study-plan validation remains unavailable. The
+B.Sc. projection does not imply that modules are offered in other semesters;
+its 0084d maths entries are free-elective candidates only and still require
+recognition and relevance confirmation.
 
 Each degree package owns:
 
@@ -28,6 +28,10 @@ program_rules.py   -> structured display catalogue (shared models from app.domai
 module_catalog.py  -> canonical module list (checklist-style degrees only)
 __init__.py        -> assembles the DegreeDefinition
 ```
+
+`plan_validation_enabled` (default `False`) marks degrees whose deterministic
+validator is trusted; only `msc_informatik` sets it. The other validators stay
+in the code and tests but are not used at runtime until the flag is flipped.
 
 `DegreeDefinition` fields beyond prompts/rules: `study_plan_schema` (parser LLM
 output schema), `enrich_study_plan` (deterministic post-parse enrichment),
@@ -74,11 +78,16 @@ an offering file records only its semester-specific delivery details:
 
 Cross-file invariants, enforced at load time by
 `app.domain.course_offerings.validate_course_catalog` (and guarded by
-`tests/test_course_offerings.py::test_real_data_file_is_valid`):
+`tests/domain/test_course_offerings.py::test_real_catalogue_is_valid`):
 
 - IDs must resolve across all three layers.
 - Credit mappings must use a known degree module and one of that degree's areas.
 - A course may map to multiple modules/areas within one degree.
+- Placement-level LP is the LP of the module the course is credited to (e.g.
+  5 LP for a topic lecture under "Aktuelle Forschungsthemen", 10 LP for a
+  Softwareprojekt). It wins over offering-level LP. B.Sc. "Wissenschaftliches
+  Arbeiten" lecture/proseminar placements stay without LP because they are
+  parts of one 6-LP module.
 - Offering-level LP remains a semester-specific override when the delivery
   differs from the canonical module LP.
 - Bachelor-module markers remain part of degree credit mappings so the lookup
@@ -88,7 +97,13 @@ Cross-file invariants, enforced at load time by
 `semester -> area -> course_type` bucket tree deterministically; the LLM
 course-key selector only ever sees the tree for the session's degree.
 `tests/fixtures/msc_informatik_buckets_pre_migration.json` pins the projected
-Master tree to the pre-migration bucket file.
+SoSe 2026 Master tree to the pre-migration bucket file.
+
+Semester files are curated from the FU Vorlesungsverzeichnis per degree. Only
+courses creditable to one of the degree's modules are included: the M.Sc.
+listing also contains the whole mathematics tree (Analysis III, Numerik,
+Topologie, BMS seminars, ...), which is deliberately left out. Übungen are not
+listed separately.
 
 Offering URLs remain in the semester source data and projected Course Registry
 API. Their exposure through the agent lookup is separately controlled by

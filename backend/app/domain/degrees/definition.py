@@ -36,3 +36,8 @@ class DegreeDefinition:
     # checklist; placements must then reference these ids. None means the
     # degree has no canonical list and placements carry module_catalog_name.
     course_modules: dict[str, str] | None = None
+    # Whether deterministic study-plan validation is trusted for this degree.
+    # When False, plan checks are answered as plain degree questions, uploaded
+    # transcripts are only extracted into chat context, and the frontend hides
+    # the Study Plan tab.
+    plan_validation_enabled: bool = False

@@ -9,7 +9,7 @@ The first version intentionally supports only PDFs with machine-readable text. O
 - Let a user attach a PDF to an existing chat session.
 - Extract embedded text from the PDF algorithmically.
 - Make the extracted text available to the current session's agent flow.
-- Allow the existing study-plan parser and deterministic rule checker to use extracted PDF text when the PDF contains a study plan.
+- Allow the existing study-plan parser and deterministic rule checker to use extracted PDF text when the PDF contains a study plan. The rule checker only runs for degrees with `plan_validation_enabled` (currently M.Sc. Informatik); for other degrees the parsed plan is kept as chat context only, without a rule verdict.
 - Keep uploaded PDFs session-scoped and temporary.
 
 ## Non-Goals

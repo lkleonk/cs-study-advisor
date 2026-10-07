@@ -1,8 +1,9 @@
 "use client";
 
+import CheckIcon from "@mui/icons-material/Check";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import LaunchOutlinedIcon from "@mui/icons-material/LaunchOutlined";
-import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import SportsEsportsOutlinedIcon from "@mui/icons-material/SportsEsportsOutlined";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
@@ -13,6 +14,7 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Stack from "@mui/material/Stack";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useCallback, useEffect, useState } from "react";
 
@@ -40,11 +42,46 @@ function itemRange(item: ProgramRuleItem) {
   return null;
 }
 
+function buildSystemPrompt(catalogue: ProgramRulesCatalogue) {
+  const lines = [
+    `You are a study advisor for the ${catalogue.degree_program} at Freie Universität Berlin.`,
+    "Answer questions about the degree using only the rules below. If something is not covered, say so and refer to the official regulation or the examination office instead of guessing. Do not invent module names, credit points or deadlines.",
+    "",
+    `# ${catalogue.degree_program} - ${catalogue.regulation}`,
+    catalogue.source_note,
+  ];
+  for (const section of catalogue.sections) {
+    lines.push("", `## ${section.title}`, section.description);
+    for (const item of section.items) {
+      const range = itemRange(item);
+      lines.push(`- ${item.label}${range ? ` (${range})` : ""}: ${item.text}`);
+    }
+    for (const source of section.sources) {
+      if (source.path.startsWith("http")) {
+        lines.push(`- Official source: ${source.label} (${source.path})`);
+      }
+    }
+  }
+  return lines.join("\n");
+}
+
 export function DegreeRulesTab() {
   const { effectiveDegreeId } = useDegree();
   const [catalogue, setCatalogue] = useState<ProgramRulesCatalogue | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  const copySystemPrompt = useCallback(async () => {
+    if (!catalogue) return;
+    try {
+      await navigator.clipboard.writeText(buildSystemPrompt(catalogue));
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setError("Could not copy to the clipboard.");
+    }
+  }, [catalogue]);
 
   const loadRules = useCallback(async () => {
     setIsLoading(true);
@@ -68,39 +105,37 @@ export function DegreeRulesTab() {
   return (
     <Box sx={{ height: "100%", overflowY: "auto", px: { xs: 1.5, md: 3 }, py: 2 }}>
         <Stack spacing={2} sx={{ maxWidth: 1100, mx: "auto" }}>
-        <Stack
-          direction={{ xs: "column", sm: "row" }}
-          spacing={1}
-          sx={{
-            alignItems: { xs: "flex-start", sm: "center" },
-            justifyContent: "space-between",
-          }}
-        >
-          <Box>
-            <Stack direction="row" spacing={1} sx={{ alignItems: "center", flexWrap: "wrap" }}>
-              <Typography variant="h2">Degree Rules</Typography>
-              {catalogue && (
-                <Chip label={catalogue.catalogue_version} size="small" variant="outlined" />
-              )}
-            </Stack>
+        <Box>
+          <Stack direction="row" spacing={1} sx={{ alignItems: "center", flexWrap: "wrap" }}>
+            <Typography variant="h2">Degree Rules</Typography>
             {catalogue && (
-              <Typography variant="body2" sx={{ color: "text.secondary", mt: 0.5 }}>
-                {catalogue.degree_program} - {catalogue.regulation}
-              </Typography>
+              <Chip label={catalogue.catalogue_version} size="small" variant="outlined" />
             )}
-            {catalogue && (
-              <Typography
-                variant="caption"
-                sx={{ color: "text.secondary", display: "block", mt: 0.5 }}
-              >
-                {catalogue.source_note}
-              </Typography>
-            )}
-          </Box>
-          <Button startIcon={<RefreshOutlinedIcon />} onClick={() => void loadRules()}>
-            Refresh
-          </Button>
+            <Box sx={{ flexGrow: 1 }} />
+            <Tooltip title="Copies these degree rules as a system prompt. Paste it into another AI assistant (e.g. as custom instructions) to discuss your degree there.">
+              <span>
+                <Button
+                  size="small"
+                  startIcon={copied ? <CheckIcon /> : <ContentCopyIcon />}
+                  onClick={() => void copySystemPrompt()}
+                  disabled={!catalogue}
+                >
+                  {copied ? "Copied" : "Copy"}
+                </Button>
+              </span>
+            </Tooltip>
           </Stack>
+          {catalogue && (
+            <Typography variant="body2" sx={{ color: "text.secondary", mt: 0.5 }}>
+              {catalogue.degree_program} - {catalogue.regulation}
+            </Typography>
+          )}
+          {catalogue && (
+            <Typography variant="caption" sx={{ color: "text.secondary", display: "block", mt: 0.5 }}>
+              {catalogue.source_note}
+            </Typography>
+          )}
+        </Box>
 
           <Box
             component="section"

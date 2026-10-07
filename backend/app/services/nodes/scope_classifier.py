@@ -177,7 +177,8 @@ def _normalize_text(text: str) -> str:
 async def scope_classifier_node(state: ConsultantState) -> ConsultantState:
     logger.info("Scope classifier invoked")
     wizardflow_message_id = state.get("wizardflow_message_id")
-    classifier_prompt = degree_for(state).prompts.classifier_system_prompt
+    degree = degree_for(state)
+    classifier_prompt = degree.prompts.classifier_system_prompt
     message = latest_user_message(state)
     conversation = format_recent_messages(
         recent_messages(state, agent_flow_config.scope_classifier.history_turns)
@@ -220,6 +221,11 @@ async def scope_classifier_node(state: ConsultantState) -> ConsultantState:
         logger.exception("Classifier failed; using heuristic fallback.")
         message_type = fallback
         include_cross_university_rules = fallback_cross_university
+
+    if message_type == "plan_check" and not degree.plan_validation_enabled:
+        # No trusted validator for this degree: answer as a degree question.
+        message_type = "degree_question"
+        source = f"{source}_plan_validation_disabled"
 
     logger.info(
         "Scope classifier chose message_type=%s include_cross_university_rules=%s source=%s",

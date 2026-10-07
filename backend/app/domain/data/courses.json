@@ -98,7 +98,7 @@
   {
     "id": "spezielle_aspekte_ds_technologies",
     "name": "Spezielle Aspekte der Data Science Technologies",
-    "lp": null,
+    "lp": 5,
     "aliases": []
   },
   {
@@ -817,7 +817,9 @@
     "id": "mensch_computer_interaktion",
     "name": "Mensch-Computer Interaktion",
     "lp": 6,
-    "aliases": ["Human Computer Interaction I"]
+    "aliases": [
+      "Human Computer Interaction I"
+    ]
   },
   {
     "id": "proseminar_theoretische_informatik",
@@ -828,13 +830,13 @@
   {
     "id": "analysis_ii",
     "name": "Analysis II",
-    "lp": null,
+    "lp": 10,
     "aliases": []
   },
   {
     "id": "lineare_algebra_ii",
     "name": "Lineare Algebra II",
-    "lp": null,
+    "lp": 10,
     "aliases": []
   },
   {
@@ -846,7 +848,7 @@
   {
     "id": "stochastik_i",
     "name": "Stochastik I",
-    "lp": null,
+    "lp": 10,
     "aliases": []
   },
   {
@@ -907,6 +909,234 @@
     "id": "softwareprojekt_chat_search_and_summaries_llms",
     "name": "Softwareprojekt: Chat, Search and Summaries: Smarter Apps with LLMs",
     "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "konzepte_der_programmierung",
+    "name": "Konzepte der Programmierung",
+    "lp": 9,
+    "aliases": []
+  },
+  {
+    "id": "diskrete_strukturen_fuer_informatik",
+    "name": "Diskrete Strukturen für Informatik",
+    "lp": 9,
+    "aliases": []
+  },
+  {
+    "id": "auswirkungen_der_informatik",
+    "name": "Auswirkungen der Informatik",
+    "lp": 6,
+    "aliases": []
+  },
+  {
+    "id": "rechnerarchitektur",
+    "name": "Rechnerarchitektur",
+    "lp": 6,
+    "aliases": []
+  },
+  {
+    "id": "grundlagen_der_theoretischen_informatik",
+    "name": "Grundlagen der Theoretischen Informatik",
+    "lp": 6,
+    "aliases": []
+  },
+  {
+    "id": "nebenlaeufige_parallele_und_verteilte_programmierung",
+    "name": "Nebenläufige, parallele und verteilte Programmierung",
+    "lp": 9,
+    "aliases": []
+  },
+  {
+    "id": "analysis_fuer_informatik",
+    "name": "Analysis für Informatik",
+    "lp": 9,
+    "aliases": []
+  },
+  {
+    "id": "datenvisualisierung",
+    "name": "Datenvisualisierung",
+    "lp": 6,
+    "aliases": []
+  },
+  {
+    "id": "maschinelles_lernen",
+    "name": "Maschinelles Lernen",
+    "lp": 6,
+    "aliases": []
+  },
+  {
+    "id": "aktuelle_forschungsthemen_in_der_informatik",
+    "name": "Aktuelle Forschungsthemen in der Informatik",
+    "lp": 6,
+    "aliases": []
+  },
+  {
+    "id": "vertiefte_aspekte_der_informatik",
+    "name": "Vertiefte Aspekte der Informatik",
+    "lp": 6,
+    "aliases": []
+  },
+  {
+    "id": "softwareprojekt_mobilkommunikation",
+    "name": "Softwareprojekt: Mobilkommunikation",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "softwareprojekt_coding_ixd",
+    "name": "Softwareprojekt: Coding IxD",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "softwareprojekt_maschinelles_lernen_fur_lebenswissenschaftliche_daten",
+    "name": "Softwareprojekt: Maschinelles Lernen für Lebenswissenschaftliche Daten",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "seminar_ai_methods_and_dynamical_systems_in_mathematics_planning_and_sustainability_towards_critical_mathematical_economics",
+    "name": "Seminar: AI-methods and Dynamical Systems in Mathematics, Planning and Sustainability - Towards Critical Mathematical Economics",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "projektseminar_datenverwaltung_informatik_und_archaologie",
+    "name": "Projektseminar: Datenverwaltung - Informatik und Archäologie",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "seminar_proseminar_kunstliche_intelligenz_autonome_fahrzeuge",
+    "name": "Seminar/Proseminar: Künstliche Intelligenz - Autonome Fahrzeuge",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "seminar_adabiatische_quantenalgorithmen",
+    "name": "Seminar: Adabiatische Quantenalgorithmen",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "neue_und_alte_fehler_in_ml_und_datenanalyse",
+    "name": "Neue (und alte) Fehler in ML und Datenanalyse",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "secure_software_engineering",
+    "name": "Secure Software Engineering",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "datenkompression",
+    "name": "Datenkompression",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "kryptowahrungen_und_blockchain",
+    "name": "Kryptowährungen und Blockchain",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "integrative_analyse_lebenswissenschaftlicher_daten_und_einbeziehung_von_vorwissen",
+    "name": "Integrative Analyse lebenswissenschaftlicher Daten und Einbeziehung von Vorwissen",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "spezielle_aspekte_der_datenverwaltung_geospatial_databases",
+    "name": "Spezielle Aspekte der Datenverwaltung: Geospatial Databases",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "projektmanagement_in_agilen_umgebungen_teil_1_wise",
+    "name": "Projektmanagement in agilen Umgebungen Teil 1 (WiSe)",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "seminar_proseminar_post_quanten_kryptographie",
+    "name": "Seminar/Proseminar: Post-Quanten-Kryptographie",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "kryptoanalyse_symmetrischer_verfahren",
+    "name": "Kryptoanalyse symmetrischer Verfahren",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "post_quantum_kryptographie_gitterverfahren",
+    "name": "Post-Quantum-Kryptographie: Gitterverfahren",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "elliptic_curve_cryptography",
+    "name": "Elliptic Curve Cryptography",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "multiplicative_weights_algorithms_optimization_and_learning",
+    "name": "Multiplicative Weights - Algorithms, Optimization, and Learning",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "seminar_proseminar_technische_informatik",
+    "name": "Seminar/Proseminar: Technische Informatik",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "proseminar_interactive_data_visualization",
+    "name": "Proseminar: Interactive Data Visualization",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "proseminar_data_algorithms_and_society",
+    "name": "Proseminar: Data, Algorithms and Society",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "statistik_fur_kleine_fallzahlen",
+    "name": "Statistik für kleine Fallzahlen",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "computerorientierte_mathematik_i",
+    "name": "Computerorientierte Mathematik I",
+    "lp": 5,
+    "aliases": []
+  },
+  {
+    "id": "numerik_i",
+    "name": "Numerik I",
+    "lp": 10,
+    "aliases": []
+  },
+  {
+    "id": "funktionalanalysis",
+    "name": "Funktionalanalysis",
+    "lp": 10,
+    "aliases": []
+  },
+  {
+    "id": "stochastik_ii",
+    "name": "Stochastik II",
+    "lp": 10,
     "aliases": []
   }
 ]

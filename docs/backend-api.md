@@ -29,15 +29,19 @@ and transcript uploads read the session's degree from that state — the LLM nev
 chooses or infers it.
 
 `POST /api/sessions/{session_id}/transcript` accepts a multipart PDF upload
-(field name `file`). See `docs/pdf_node.md`.
+(field name `file`). See `docs/pdf_node.md`. For degrees without
+`plan_validation_enabled` the transcript is only parsed into the session's
+chat context: `rule_check_result` is `null` and the reply says that automatic
+validation is unavailable.
 
 ## Read-only endpoints (no quota, no LLM)
 
 These must never consume quota or invoke the LLM:
 
-- `GET /api/degrees` lists registered degrees (id, display name, regulation) for
+- `GET /api/degrees` lists registered degrees (id, display name, regulation,
+  `plan_validation_enabled`) for
   the frontend picker. `bsc_informatik` exposes its 2023 degree rules and
-  locally supplied SoSe 2026 course offerings. It has no deterministic plan
+  locally supplied SoSe 2026 and WiSe 2026/27 course offerings. It has no deterministic plan
   validation yet; availability in other semesters is unknown, and its 0084d
   maths listings are free-elective candidates rather than automatically
   recognised credit.

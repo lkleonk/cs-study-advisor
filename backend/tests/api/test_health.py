@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 os.environ.setdefault("LLM_PROVIDER", "local_ollama")
 
 from app.routes import health_router  # noqa: E402

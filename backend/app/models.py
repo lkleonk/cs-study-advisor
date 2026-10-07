@@ -26,6 +26,7 @@ class DegreeInfo(BaseModel):
     id: str
     display_name: str
     regulation: str
+    plan_validation_enabled: bool
 
 
 class CourseOfferingItem(BaseModel):

@@ -154,7 +154,12 @@ class SessionService:
         degree = self._session_degree(session_id)
         try:
             plan = await parse_study_plan(document.full_text, wizardflow_message_id, degree)
-            rule_result = check_study_plan(plan, wizardflow_message_id, degree)
+            # Without a trusted validator the transcript only becomes chat context.
+            rule_result = (
+                check_study_plan(plan, wizardflow_message_id, degree)
+                if degree.plan_validation_enabled
+                else None
+            )
         except HTTPException:
             raise
         except Exception as exc:
@@ -177,7 +182,7 @@ class SessionService:
             filename=document.filename,
             reply=reply,
             parsed_study_plan=plan,
-            rule_check_result=rule_result.model_dump(),
+            rule_check_result=rule_result.model_dump() if rule_result else None,
         )
 
     def delete_session(self, session_id: str) -> None:
@@ -207,8 +212,8 @@ class SessionService:
                 {
                     "wizardflow_message_id": wizardflow_message_id,
                     "parsed_study_plan": plan.model_dump(),
-                    "rule_check_result": rule_result.model_dump(),
-                    "message_type": "plan_check",
+                    "rule_check_result": rule_result.model_dump() if rule_result else None,
+                    "message_type": "plan_check" if rule_result else "degree_question",
                 },
             )
         except Exception:
@@ -217,9 +222,17 @@ class SessionService:
     def _summarize_transcript(self, filename: str, plan: StudyPlan, rule_result) -> str:
         module_count = len(plan.modules)
         total_lp = sum(module.lp for module in plan.modules)
+        summary = (
+            rule_result.summary
+            if rule_result
+            else (
+                "Automatic rule validation is not available for this degree yet. The "
+                "modules are now part of this chat, so you can ask questions about them."
+            )
+        )
         return (
             f"Processed {filename}: extracted {module_count} module(s) totalling "
-            f"{total_lp} LP. {rule_result.summary}"
+            f"{total_lp} LP. {summary}"
         )
 
 

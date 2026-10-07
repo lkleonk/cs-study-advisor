@@ -139,7 +139,12 @@ async def reinit_trace_file():
 @degrees_router.get("", response_model=list[DegreeInfo])
 async def read_degrees():
     return [
-        DegreeInfo(id=degree.id, display_name=degree.display_name, regulation=degree.regulation)
+        DegreeInfo(
+            id=degree.id,
+            display_name=degree.display_name,
+            regulation=degree.regulation,
+            plan_validation_enabled=degree.plan_validation_enabled,
+        )
         for degree in list_degrees()
     ]
 

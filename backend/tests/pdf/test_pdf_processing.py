@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from app.pdf.clean import clean_pdf_text  # noqa: E402
 from app.pdf.extract import PDFExtractor  # noqa: E402
@@ -13,7 +13,7 @@ from app.pdf.validation import validate_pdf_readability  # noqa: E402
 
 
 RESOURCE_PDF = (
-    Path(__file__).resolve().parents[2] / "ressources" / "Leistungsuebersicht.pdf"
+    Path(__file__).resolve().parents[3] / "ressources" / "Leistungsuebersicht.pdf"
 )
 
 

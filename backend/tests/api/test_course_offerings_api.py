@@ -28,12 +28,13 @@ def test_course_offerings_endpoint_returns_default_degree_projection():
     assert lecture["label"] == "Lecture"
 
 
-def test_course_offerings_endpoint_normalizes_urls_and_preserves_null_lp():
+def test_course_offerings_endpoint_normalizes_urls_and_uses_module_lp():
     response = TestClient(app).get("/api/course-offerings")
 
     courses = _all_courses(response.json())
     cluster_computing = next(course for course in courses if course["title"] == "Cluster Computing")
-    assert cluster_computing["lp"] is None
+    # Topic courses take the LP of the module they are credited to.
+    assert cluster_computing["lp"] == 5
     assert cluster_computing["url"].startswith("https://")
     assert not cluster_computing["url"].startswith("[")
 

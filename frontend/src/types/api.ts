@@ -108,6 +108,8 @@ export type DegreeInfo = {
   id: string;
   display_name: string;
   regulation: string;
+  /** Only degrees with trusted deterministic validation get the Study Plan tab. */
+  plan_validation_enabled: boolean;
 };
 
 export type HealthResponse = {

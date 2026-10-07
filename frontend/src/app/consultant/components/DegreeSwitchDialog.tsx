@@ -19,7 +19,8 @@ type DegreeSwitchDialogProps = {
   hasChatMessages: boolean;
   hasStudyPlan: boolean;
   onDownloadChat: () => void;
-  onOpenStudyPlan: () => void;
+  /** Omitted when the current degree has no Study Plan tab. */
+  onOpenStudyPlan?: () => void;
   onCancel: () => void;
   onConfirm: () => void;
 };
@@ -57,20 +58,24 @@ export function DegreeSwitchDialog({
           >
             Download chat
           </Button>
-          <Button
-            size="small"
-            variant="outlined"
-            startIcon={<FactCheckOutlinedIcon />}
-            disabled={!hasStudyPlan}
-            onClick={onOpenStudyPlan}
-          >
-            Open Study Plan to print summary
-          </Button>
+          {onOpenStudyPlan && (
+            <Button
+              size="small"
+              variant="outlined"
+              startIcon={<FactCheckOutlinedIcon />}
+              disabled={!hasStudyPlan}
+              onClick={onOpenStudyPlan}
+            >
+              Open Study Plan to print summary
+            </Button>
+          )}
         </Stack>
-        <Typography variant="caption" sx={{ display: "block", color: "text.secondary", mt: 1 }}>
-          Opening the Study Plan cancels the switch so you can print or save the module summary
-          first; switch again afterwards.
-        </Typography>
+        {onOpenStudyPlan && (
+          <Typography variant="caption" sx={{ display: "block", color: "text.secondary", mt: 1 }}>
+            Opening the Study Plan cancels the switch so you can print or save the module summary
+            first; switch again afterwards.
+          </Typography>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onCancel}>Cancel</Button>

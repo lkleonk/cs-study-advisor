@@ -161,7 +161,7 @@ def get_program_rules() -> ProgramRulesCatalogue:
                 id="cross-university-courses",
                 title="Courses at HU Berlin and TU Berlin (Nebenhörerschaft)",
                 description=(
-                    "Modules taken as a cross-registered student ('Nebenhörer:in', also called "
+                    "Modules taken as a cross-registered student ('Nebenhörer', also called "
                     "Zweithörerschaft) at Humboldt-Universität or Technische Universität Berlin can be "
                     "recognized for the B.Sc. Informatik, most directly in the Free-Elective Area, and "
                     "in some cases as a specific compulsory-elective or ABV module. The steps below "
@@ -172,7 +172,7 @@ def get_program_rules() -> ProgramRulesCatalogue:
                         label="Legal basis",
                         text=(
                             "Berlin's universities (FU, HU, TU, UdK) allow students to attend and be "
-                            "examined in individual courses at a partner university as a Nebenhörer:in, "
+                            "examined in individual courses at a partner university as a Nebenhörer, "
                             "in addition to normal enrollment at their home university."
                         ),
                     ),
@@ -205,7 +205,7 @@ def get_program_rules() -> ProgramRulesCatalogue:
                         label="Step 3 - Ask the teacher",
                         text=(
                             "Email the teacher of the HU/TU module and ask whether you may participate "
-                            "as Nebenhörer:in. Attach the filled Nebenhörer application form: the "
+                            "as Nebenhörer. Attach the filled Nebenhörer application form: the "
                             "[HU form (PDF)](https://www.hu-berlin.de/fileadmin/Mediathek/Zentrale_Seiten/Studium/Dokumente/Studium_Anmeldung_Gasthorerschaft_Nebenhoererschaft_20210323.pdf) "
                             "or the [TU form (PDF)](https://www.static.tu.berlin/fileadmin/www/10002460/Bewerben_und_Einschreiben/GH_NH/Nebenhoererschein_SLM.pdf)."
                         ),

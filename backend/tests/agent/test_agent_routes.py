@@ -61,3 +61,26 @@ def test_cross_university_heuristic_stays_off_for_unrelated_rules():
 
 def test_heuristic_classifier_detects_incremental_plan_information():
     assert heuristic_classify("I forgot about French (5 ECTS).") == "plan_check"
+
+
+def _classify_as_plan_check(monkeypatch, degree_id):
+    import asyncio
+
+    from app.services.nodes import scope_classifier
+
+    class FakeModelService:
+        async def invoke(self, **kwargs):
+            return {"content": '{"message_type": "plan_check", "include_cross_university_rules": false}'}
+
+    monkeypatch.setattr(scope_classifier, "ModelService", FakeModelService)
+    state = {"degree_id": degree_id, "messages": [{"role": "user", "content": "Check my plan please"}]}
+    return asyncio.run(scope_classifier.scope_classifier_node(state))["message_type"]
+
+
+def test_plan_check_is_kept_for_degrees_with_plan_validation(monkeypatch):
+    assert _classify_as_plan_check(monkeypatch, "msc_informatik") == "plan_check"
+
+
+def test_plan_check_becomes_degree_question_without_plan_validation(monkeypatch):
+    assert _classify_as_plan_check(monkeypatch, "bsc_informatik") == "degree_question"
+    assert _classify_as_plan_check(monkeypatch, "msc_data_science") == "degree_question"

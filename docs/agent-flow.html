@@ -293,7 +293,10 @@
       Individual course URLs stay in source data but are omitted from lookup
       answer context and URL citations by default; deployments can enable them
       with <code>AGENT_COURSE_LOOKUP_INCLUDE_COURSE_URLS=true</code>.
-      The <code>plan_check</code> path runs parser, deterministic rule checker, then
+      The <code>plan_check</code> path exists only for degrees with
+      <code>plan_validation_enabled</code> (currently <code>msc_informatik</code>); for other
+      degrees <code>ScopeClassifier</code> downgrades it to <code>degree_question</code>.
+      It runs parser, deterministic rule checker, then
       <code>AnswerComposer</code>; parser schema and validator come from the degree
       package (<code>msc_informatik</code>, <code>msc_data_science</code>). For a chat
       follow-up, the parser receives the existing plan JSON plus the latest user

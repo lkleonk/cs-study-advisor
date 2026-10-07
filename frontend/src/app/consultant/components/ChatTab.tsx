@@ -74,7 +74,8 @@ export function ChatTab({
   onDownloadChat,
 }: ChatTabProps) {
   const { usage, updateQuota } = useUsage();
-  const { effectiveDegreeId } = useDegree();
+  const { effectiveDegreeId, degrees } = useDegree();
+  const currentDegree = degrees.find((degree) => degree.id === effectiveDegreeId);
   const { tracingEnabled } = useSettings();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -286,10 +287,12 @@ export function ChatTab({
           {messages.length === 0 && (
             <Paper variant="outlined" sx={{ p: 2, bgcolor: "background.paper" }}>
               <Typography variant="h2" sx={{ mb: 0.75 }}>
-                FU Berlin Master Informatik
+                FU Berlin {currentDegree?.display_name ?? "study consultant"}
               </Typography>
               <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                Ask a study-rule question or paste a draft study plan.
+                {currentDegree?.plan_validation_enabled
+                  ? "Ask a study-rule question or paste a draft study plan."
+                  : "Ask a study-rule or course question, or upload your transcript PDF."}
               </Typography>
             </Paper>
           )}

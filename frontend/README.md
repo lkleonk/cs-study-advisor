@@ -19,6 +19,22 @@ contains deployment-specific sections that must be completed with the actual
 hosting provider, LLM provider, recipients, and retention periods before a
 public deployment.
 
+## Browser test
+
+Install dependencies and Playwright's Chromium browser, then run the frontend
+journey test from this directory:
+
+```bash
+npm ci
+npx playwright install chromium
+npm run test:e2e
+```
+
+The test starts a local Next.js server and mocks the API responses in the
+browser. It checks degree selection, session creation, message submission, and
+reply rendering without making an LLM call. It does not test the live backend
+or the correctness of an LLM answer.
+
 ## Getting Started
 
 First, run the development server:

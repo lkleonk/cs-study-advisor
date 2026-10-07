@@ -26,7 +26,7 @@ def test_bsc_sose26_offerings_are_valid_and_degree_scoped():
     validate_course_catalog()
 
     assert has_offerings(BSC)
-    assert available_semesters(BSC) == ["sose26"]
+    assert available_semesters(BSC) == ["sose26", "wise26-27"]
     assert "No local course-offering data exists for other semesters." in build_available_semesters_note(BSC)
 
 
@@ -69,6 +69,6 @@ def test_bsc_math_offerings_are_free_elective_candidates_not_automatic_credit_cl
     analysis = next(course for course in courses if course["title"] == "Analysis II")
     computer_math = next(course for course in courses if course["title"] == "Computerorientierte Mathematik II")
 
-    assert analysis["lp"] is None
+    assert analysis["lp"] == 10
     assert "candidate" in analysis["description"]
     assert computer_math["lp"] == 5

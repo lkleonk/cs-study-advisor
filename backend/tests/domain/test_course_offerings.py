@@ -17,7 +17,7 @@ from app.domain.course_offerings import (
 
 
 MSC = "msc_informatik"
-FIXTURE_PATH = Path(__file__).with_name("fixtures") / "msc_informatik_buckets_pre_migration.json"
+FIXTURE_PATH = Path(__file__).resolve().parents[1] / "fixtures" / "msc_informatik_buckets_pre_migration.json"
 
 
 def test_catalogue_uses_shared_courses_degree_mappings_and_semester_files():
@@ -102,7 +102,7 @@ def test_course_citations_can_hide_course_urls():
 def test_data_science_offerings_are_projected():
     assert has_offerings("msc_data_science")
     tree = project_offerings("msc_data_science")
-    assert set(tree) == {"sose26"}
+    assert set(tree) == {"sose26", "wise26-27"}
     assert set(tree["sose26"]) == {"grundlagen", "life_sciences", "technologies"}
 
     def titles(area, course_type):
@@ -129,18 +129,26 @@ def test_projection_matches_pre_migration_master_buckets():
         }
 
     old_buckets = bucket_index(old)
-    new_buckets = bucket_index(projected)
+    # The fixture only covers SoSe 2026; later semesters are added on top.
+    new_buckets = {key: courses for key, courses in bucket_index(projected).items() if key[0] == "sose26"}
     assert set(new_buckets) == set(old_buckets)
 
-    def comparable(course):
+    def comparable(course, lp=None):
         return (
             course["title"],
             course["module_catalog_name"],
-            course.get("lp"),
+            course.get("lp") if lp is None else lp,
             course.get("schedule"),
             course.get("description"),
             course.get("url"),
         )
 
     for key, old_courses in old_buckets.items():
-        assert sorted(map(comparable, old_courses)) == sorted(map(comparable, new_buckets[key])), key
+        new_courses = new_buckets[key]
+        # The fixture predates module-LP backfill: where it had no LP, accept the projected one.
+        new_lp = {(c["title"], c["module_catalog_name"]): c.get("lp") for c in new_courses}
+        expected = [
+            comparable(c, new_lp.get((c["title"], c["module_catalog_name"])) if c.get("lp") is None else None)
+            for c in old_courses
+        ]
+        assert sorted(expected, key=str) == sorted(map(comparable, new_courses), key=str), key

@@ -43,7 +43,11 @@ Degree rules are rendered from the session degree's `program_rules.py` and
 supplied to `AnswerComposer` as reference context, not embedded in classifier or
 composer system prompts. The large `cross-university-courses` section is omitted
 unless `ScopeClassifier` marks the current question as needing it. The
-`plan_check` path skips course lookup entirely. Pure degree-rule questions on the
+`plan_check` path skips course lookup entirely. It only exists for degrees with
+`DegreeDefinition.plan_validation_enabled` (currently `msc_informatik`): for
+every other degree `ScopeClassifier` downgrades `plan_check` to
+`degree_question`, so no rule verdict is produced, and `AnswerComposer` is told
+that automatic plan validation is unavailable. Pure degree-rule questions on the
 `degree_question` path also skip course lookup and go straight to
 `AnswerComposer`. Course-offering questions on the `course_offering_question`
 path use exact lookup buckets from the session degree's projection of

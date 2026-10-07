@@ -25,4 +25,5 @@ DEGREE = DegreeDefinition(
     enrich_study_plan=enrich_study_plan,
     course_areas=("technical", "practical", "theoretical", "application"),
     course_modules=course_modules(),
+    plan_validation_enabled=True,
 )

@@ -14,7 +14,7 @@ import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import NextLink from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactElement } from "react";
 
 import { DEGREE_STORAGE_KEY, useDegree } from "@/context/DegreeContext";
 import { useUsage } from "@/context/UsageContext";
@@ -44,7 +44,9 @@ import {
 import { WelcomeDialog } from "./WelcomeDialog";
 import { WizardFlowPromo } from "./WizardFlowPromo";
 
-const tabs = [
+type TabId = "chat" | "study-plan" | "degree-rules" | "course-registry" | "settings";
+
+const tabs: { label: string; icon: ReactElement; id: TabId }[] = [
   { label: "Chat", icon: <ChatBubbleOutlineIcon />, id: "chat" },
   { label: "Study Plan", icon: <FactCheckOutlinedIcon />, id: "study-plan" },
   { label: "Degree Rules", icon: <RuleOutlinedIcon />, id: "degree-rules" },
@@ -88,7 +90,7 @@ function readStoredStudyPlan(): StudyPlan | null {
 export function ConsultantShell() {
   const { usage } = useUsage();
   const { degreeId, effectiveDegreeId, degrees, selectDegree } = useDegree();
-  const [activeTab, setActiveTab] = useState(0);
+  const [selectedTab, setSelectedTab] = useState<TabId>("chat");
   const [pendingDegreeId, setPendingDegreeId] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [latestRuleCheck, setLatestRuleCheck] = useState<RuleCheckResult | null>(null);
@@ -105,6 +107,12 @@ export function ConsultantShell() {
   const [wizardFlowPromoOpen, setWizardFlowPromoOpen] = useState(false);
   const [chatExportOpen, setChatExportOpen] = useState(false);
   const [chatMessagesToExport, setChatMessagesToExport] = useState<ChatMessage[]>([]);
+
+  // The Study Plan tab only exists for degrees with trusted plan validation.
+  const planValidationEnabled =
+    degrees.find((degree) => degree.id === effectiveDegreeId)?.plan_validation_enabled ?? false;
+  const visibleTabs = tabs.filter((tab) => tab.id !== "study-plan" || planValidationEnabled);
+  const activeTab = visibleTabs.some((tab) => tab.id === selectedTab) ? selectedTab : "chat";
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -210,7 +218,7 @@ export function ConsultantShell() {
     setLatestStudyPlan(null);
     setChatMessages([]);
     setResetToken((current) => current + 1);
-    setActiveTab(0);
+    setSelectedTab("chat");
   };
 
   const requestDegreeSwitch = (nextDegreeId: string) => {
@@ -313,7 +321,7 @@ export function ConsultantShell() {
           </Box>
           <Tabs
             value={activeTab}
-            onChange={(_, nextTab) => setActiveTab(nextTab)}
+            onChange={(_, nextTab: TabId) => setSelectedTab(nextTab)}
             sx={{
               order: { xs: 3, lg: 0 },
               width: { xs: "100%", lg: "auto" },
@@ -332,9 +340,10 @@ export function ConsultantShell() {
               },
             }}
           >
-            {tabs.map((tab) => (
+            {visibleTabs.map((tab) => (
               <Tab
                 key={tab.id}
+                value={tab.id}
                 icon={tab.icon}
                 iconPosition="start"
                 label={
@@ -363,11 +372,11 @@ export function ConsultantShell() {
         <Box
           id="chat-panel"
           role="tabpanel"
-          hidden={activeTab !== 0}
+          hidden={activeTab !== "chat"}
           aria-labelledby="chat-tab"
           sx={{ height: "100%", minHeight: 0 }}
         >
-          {activeTab === 0 && (
+          {activeTab === "chat" && (
             <ChatTab
               key={resetToken}
               sessionId={sessionId}
@@ -380,50 +389,52 @@ export function ConsultantShell() {
             />
           )}
         </Box>
-        <Box
-          id="study-plan-panel"
-          role="tabpanel"
-          hidden={activeTab !== 1}
-          aria-labelledby="study-plan-tab"
-          sx={{ height: "100%", minHeight: 0 }}
-        >
-          {activeTab === 1 && (
-            <StudyPlanTab
-              latestRuleCheck={latestRuleCheck}
-              latestStudyPlan={latestStudyPlan}
-              sessionId={sessionId}
-              onSessionIdChange={setSessionId}
-              onRuleCheckResult={setLatestRuleCheck}
-              onStudyPlan={setLatestStudyPlan}
-            />
-          )}
-        </Box>
+        {planValidationEnabled && (
+          <Box
+            id="study-plan-panel"
+            role="tabpanel"
+            hidden={activeTab !== "study-plan"}
+            aria-labelledby="study-plan-tab"
+            sx={{ height: "100%", minHeight: 0 }}
+          >
+            {activeTab === "study-plan" && (
+              <StudyPlanTab
+                latestRuleCheck={latestRuleCheck}
+                latestStudyPlan={latestStudyPlan}
+                sessionId={sessionId}
+                onSessionIdChange={setSessionId}
+                onRuleCheckResult={setLatestRuleCheck}
+                onStudyPlan={setLatestStudyPlan}
+              />
+            )}
+          </Box>
+        )}
         <Box
           id="degree-rules-panel"
           role="tabpanel"
-          hidden={activeTab !== 2}
+          hidden={activeTab !== "degree-rules"}
           aria-labelledby="degree-rules-tab"
           sx={{ height: "100%", minHeight: 0 }}
         >
-          {activeTab === 2 && <DegreeRulesTab />}
+          {activeTab === "degree-rules" && <DegreeRulesTab />}
         </Box>
         <Box
           id="course-registry-panel"
           role="tabpanel"
-          hidden={activeTab !== 3}
+          hidden={activeTab !== "course-registry"}
           aria-labelledby="course-registry-tab"
           sx={{ height: "100%", minHeight: 0 }}
         >
-          {activeTab === 3 && <CourseRegistryTab />}
+          {activeTab === "course-registry" && <CourseRegistryTab />}
         </Box>
         <Box
           id="settings-panel"
           role="tabpanel"
-          hidden={activeTab !== 4}
+          hidden={activeTab !== "settings"}
           aria-labelledby="settings-tab"
           sx={{ height: "100%", minHeight: 0 }}
         >
-          {activeTab === 4 && (
+          {activeTab === "settings" && (
             <SettingsTab
               sessionId={sessionId}
               onClearLocalState={handleClearLocalState}
@@ -485,10 +496,14 @@ export function ConsultantShell() {
         hasChatMessages={chatMessages.length > 0}
         hasStudyPlan={latestStudyPlan !== null}
         onDownloadChat={() => openChatExport(chatMessages)}
-        onOpenStudyPlan={() => {
-          setPendingDegreeId(null);
-          setActiveTab(1);
-        }}
+        onOpenStudyPlan={
+          planValidationEnabled
+            ? () => {
+                setPendingDegreeId(null);
+                setSelectedTab("study-plan");
+              }
+            : undefined
+        }
         onCancel={() => setPendingDegreeId(null)}
         onConfirm={() => void confirmDegreeSwitch()}
       />
@@ -507,7 +522,7 @@ export function ConsultantShell() {
         onClose={() => setQuotaExhaustedOpen(false)}
         onBrowseRegistry={() => {
           setQuotaExhaustedOpen(false);
-          setActiveTab(3);
+          setSelectedTab("course-registry");
         }}
       />
       <RequestUsageDialog open={usageDialogOpen} onClose={() => setUsageDialogOpen(false)} />

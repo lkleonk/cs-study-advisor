@@ -22,16 +22,19 @@ const FALLBACK_DEGREES: DegreeInfo[] = [
     id: DEFAULT_DEGREE_ID,
     display_name: "M.Sc. Informatik",
     regulation: "2014 Studien- und Pruefungsordnung",
+    plan_validation_enabled: true,
   },
   {
     id: "msc_data_science",
     display_name: "M.Sc. Data Science",
     regulation: "2021 Studien- und Pruefungsordnung (FU-Mitteilungen 18/2021)",
+    plan_validation_enabled: false,
   },
   {
     id: "bsc_informatik",
     display_name: "B.Sc. Informatik",
     regulation: "2023 Studien- und Pruefungsordnung (FU-Mitteilungen 23/2023)",
+    plan_validation_enabled: false,
   },
 ];
 

@@ -7,7 +7,7 @@
       "lp": null,
       "schedule": "Do 12:00-14:00; Erster Termin: 23.04.2026; Ort: T9/051 Seminarraum (Takustr. 9)",
       "description": null,
-      "url": "[https://www.fu-berlin.de/vv/de/lv/1073956?m=224971&pc=196394&sm=965826](https://www.fu-berlin.de/vv/de/lv/1073956?m=224971&pc=196394&sm=965826)"
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073731?m=224971&pc=196394&sm=965826"
     },
     {
       "course_id": "bild_und_videocodierung",
@@ -15,7 +15,7 @@
       "lp": null,
       "schedule": "Mo 16:00-18:00; Erster Termin: 13.04.2026; Ort: T9/SR 005 Übungsraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073956?sm=965826"
     },
     {
       "course_id": "cybersecurity_and_ai_iv_angriffe",
@@ -23,7 +23,7 @@
       "lp": null,
       "schedule": "Di 12:00-14:00; Erster Termin: 14.04.2026; Ort: T9/046 Seminarraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1074031?sm=965826"
     },
     {
       "course_id": "mobilkommunikation",
@@ -31,7 +31,7 @@
       "lp": null,
       "schedule": "Mi 10:00-12:00; Erster Termin: 15.04.2026; Ort: T9/SR 005 Übungsraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073817?sm=965826"
     },
     {
       "course_id": "softwareprojekt_telematik",
@@ -39,7 +39,7 @@
       "lp": null,
       "schedule": "Zeit: -; Ort: keine Angabe",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1081694?sm=965826"
     },
     {
       "course_id": "softwareprojekt_verteilte_systeme",
@@ -47,7 +47,7 @@
       "lp": null,
       "schedule": "Di 12:00-14:00; Erster Termin: 14.04.2026; Ort: T9/SR 006 Seminarraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073886?sm=965826"
     },
     {
       "course_id": "seminar_proseminar_internet_of_things_security_technische_informatik",
@@ -55,7 +55,7 @@
       "lp": null,
       "schedule": "Mi 10:00-12:00; Erster Termin: 15.04.2026; Ort: T9/K40 Multimediaraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073846?sm=965826"
     },
     {
       "course_id": "seminar_proseminar_telematik",
@@ -63,7 +63,7 @@
       "lp": null,
       "schedule": "Di 10:00-12:00; Erster Termin: 14.04.2026; Ort: T9/049 Seminarraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073974?sm=965826"
     },
     {
       "course_id": "bildverarbeitung",
@@ -71,7 +71,7 @@
       "lp": null,
       "schedule": "Di 12:00-14:00; Erster Termin: 14.04.2026; Ort: A6/SR 031 Seminarraum (Arnimallee 6)",
       "description": null,
-      "url": "[https://www.fu-berlin.de/vv/de/lv/1073799?m=224657&pc=196394&sm=965826](https://www.fu-berlin.de/vv/de/lv/1073799?m=224657&pc=196394&sm=965826)"
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073799?m=224657&pc=196394&sm=965826"
     },
     {
       "course_id": "computergrafik",
@@ -79,7 +79,7 @@
       "lp": null,
       "schedule": "Fr 10:00-14:00; zusätzliche Termine siehe LV-Details; Erster Termin: 17.04.2026; Ort: T9/046 Seminarraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073801?sm=965826"
     },
     {
       "course_id": "angewandte_biometrie",
@@ -87,7 +87,7 @@
       "lp": null,
       "schedule": "Mo 08:00-10:00; zusätzliche Termine siehe LV-Details; Erster Termin: 13.04.2026; Ort: T9/046 Seminarraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073795?sm=965826"
     },
     {
       "course_id": "human_centered_data_science",
@@ -95,7 +95,7 @@
       "lp": null,
       "schedule": "Do 14:00-16:00; zusätzliche Termine siehe LV-Details; Erster Termin: 16.04.2026; Ort: T9/SR 006 Seminarraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073992?sm=965826"
     },
     {
       "course_id": "ethics_and_epistemology_of_ai",
@@ -103,7 +103,7 @@
       "lp": null,
       "schedule": "Mi 12:00-14:00; Erster Termin: 15.04.2026; Ort: Virtueller Raum 11",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1074008?sm=965826"
     },
     {
       "course_id": "advanced_data_visualization_for_artificial_intelligence",
@@ -111,7 +111,7 @@
       "lp": null,
       "schedule": "Mi 10:00-12:00; zusätzliche Termine siehe LV-Details; Erster Termin: 22.04.2026; Ort: T9/Gr. Hörsaal (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1074076?sm=965826"
     },
     {
       "course_id": "empirische_methoden_im_software_engineering",
@@ -119,7 +119,7 @@
       "lp": null,
       "schedule": "Mo 16:00-18:00; Erster Termin: 13.04.2026; Ort: T9/049 Seminarraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073803?sm=965826"
     },
     {
       "course_id": "markovketten",
@@ -127,7 +127,7 @@
       "lp": null,
       "schedule": "Di 12:00-14:00, Do 10:00-12:00; zusätzliche Termine siehe LV-Details; Erster Termin: 14.04.2026; Ort: T9/053 Seminarraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073948?sm=965826"
     },
     {
       "course_id": "softwareprojekt_datenverwaltung",
@@ -135,7 +135,7 @@
       "lp": null,
       "schedule": "Mo 13.04. 10:00-12:00; Erster Termin: 13.04.2026; Ort: T9/K40 Multimediaraum (Takustr. 9)",
       "description": null,
-      "url": "[https://www.fu-berlin.de/vv/de/lv/1073828?m=224801&pc=196394&sm=965826](https://www.fu-berlin.de/vv/de/lv/1073828?m=224801&pc=196394&sm=965826)"
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073828?m=224801&pc=196394&sm=965826"
     },
     {
       "course_id": "softwareprojekt_semantische_technologien",
@@ -143,7 +143,7 @@
       "lp": null,
       "schedule": "Mi 14:00-16:00; Erster Termin: 15.04.2026; Ort: T9/SR 006 Seminarraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073870?sm=965826"
     },
     {
       "course_id": "softwareprojekt_amos_projekt",
@@ -151,7 +151,7 @@
       "lp": null,
       "schedule": "Zeit: -; Ort: keine Angabe",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073932?sm=965826"
     },
     {
       "course_id": "softwareprojekt_secure_identity",
@@ -159,7 +159,7 @@
       "lp": null,
       "schedule": "Mi 10:00-12:00; Erster Termin: 15.04.2026; Ort: T9/051 Seminarraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073979?sm=965826"
     },
     {
       "course_id": "softwareprojekt_open_source_source_development",
@@ -167,7 +167,7 @@
       "lp": null,
       "schedule": "Do 12:00-14:00; Erster Termin: 16.04.2026; Ort: T9/SR 006 Seminarraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073993?sm=965826"
     },
     {
       "course_id": "seminar_reinforcement_learning_in_computer_chess_and_beyond_towards_absolute_sustainability",
@@ -175,7 +175,7 @@
       "lp": null,
       "schedule": "Do 14:00-16:00; Erster Termin: 16.04.2026; Ort: A7/SR 140 Seminarraum (Hinterhaus) (Arnimallee 7)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1074495?sm=965826"
     },
     {
       "course_id": "projektseminar_probleme_bei_planungssystemen_der_nachsten_generation_mit_schwerpunkt_auf_navigationssystemen",
@@ -183,7 +183,7 @@
       "lp": null,
       "schedule": "Di 10:00-12:00; Erster Termin: 14.04.2026; Ort: T9/051 Seminarraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073808?sm=965826"
     },
     {
       "course_id": "seminar_beitrage_zum_software_engineering",
@@ -191,7 +191,7 @@
       "lp": null,
       "schedule": "Mo 12:00-14:00; Erster Termin: 13.04.2026; Ort: T9/055 Seminarraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073820?sm=965826"
     },
     {
       "course_id": "seminar_proseminar_agile_methoden_technische_praktiken",
@@ -199,7 +199,7 @@
       "lp": null,
       "schedule": "Mi 12:00-14:00; Erster Termin: 15.04.2026; Ort: T9/SR 006 Seminarraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073855?sm=965826"
     },
     {
       "course_id": "seminar_security_engineering",
@@ -207,15 +207,15 @@
       "lp": null,
       "schedule": "Fr 12:00-14:00; Erster Termin: 17.04.2026; Ort: T9/053 Seminarraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073926?sm=965826"
     },
     {
       "course_id": "seminar_proseminar_new_trends_in_informationsystems_ntis",
       "type": "seminar",
       "lp": null,
-      "schedule": "Mi 10:00-12:00; Erster Termin: 15.04.2026; Ort: T9/SR 006 Seminarraum (Takustr. 9)",
+      "schedule": "Mi 10:00-12:00; Erster Termin: 22.04.2026; Ort: T9/055 Seminarraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073963?sm=965826"
     },
     {
       "course_id": "seminar_continual_learning",
@@ -223,7 +223,7 @@
       "lp": null,
       "schedule": "Termine siehe LV-Details; Erster Termin: 14.09.2026; Ort: T9/053 Seminarraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1074004?sm=965826"
     },
     {
       "course_id": "seminar_proseminar_how_to_startup",
@@ -231,7 +231,7 @@
       "lp": null,
       "schedule": "Mi 12:00-14:00; Erster Termin: 15.04.2026; Ort: T9/053 Seminarraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1074011?sm=965826"
     },
     {
       "course_id": "seminar_netzwerke_dynamische_modelle_und_ml_fur_datenintegration_in_den_lebenswissenschaften",
@@ -239,7 +239,7 @@
       "lp": null,
       "schedule": "Di 12:00-14:00; Erster Termin: 14.04.2026; Ort: T9/137 Konferenzraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1074019?sm=965826"
     },
     {
       "course_id": "elektronische_krankenakten_und_ihre_nutzung_in_der_aktuellen_forschung",
@@ -247,7 +247,7 @@
       "lp": null,
       "schedule": "Termine siehe LV-Details; Erster Termin: 15.04.2026; Ort: T9/K40 Multimediaraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1074062?sm=965826"
     },
     {
       "course_id": "seminar_proseminar_time_series_modelling",
@@ -255,7 +255,7 @@
       "lp": null,
       "schedule": "Termine siehe LV-Details; Erster Termin: 01.09.2026; Ort: T9/K40 Multimediaraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1074095?sm=965826"
     },
     {
       "course_id": "projektmanagement_in_agilen_umgebungen_teil_2_sose",
@@ -263,7 +263,7 @@
       "lp": null,
       "schedule": "Mo 08:00-10:00, Fr 16:00-18:00; Erster Termin: 13.04.2026; Ort: T9/SR 006 Seminarraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1074040?sm=965826"
     },
     {
       "course_id": "seminar_aktuelle_themen_der_kryptographie",
@@ -271,7 +271,7 @@
       "lp": null,
       "schedule": "Do 14:00-16:00; Erster Termin: 16.04.2026; Ort: T9/053 Seminarraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073911?sm=965826"
     },
     {
       "course_id": "kryptoanalyse_asymmetrischer_verfahren",
@@ -279,7 +279,7 @@
       "lp": null,
       "schedule": "Do 10:00-12:00; Erster Termin: 16.04.2026; Ort: T9/049 Seminarraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073921?sm=965826"
     },
     {
       "course_id": "advanced_topics_on_post_quantum_cryptography",
@@ -287,7 +287,7 @@
       "lp": null,
       "schedule": "Mi 10:00-12:00; Erster Termin: 15.04.2026; Ort: A7/SR 031 (Arnimallee 7)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1074090?sm=965826"
     },
     {
       "course_id": "approximationsalgorithmen",
@@ -295,7 +295,7 @@
       "lp": null,
       "schedule": "Mo 12:00-14:00, Do 16:00-18:00; Erster Termin: 13.04.2026; Ort: T9/046 Seminarraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1081340?sm=965826"
     },
     {
       "course_id": "softwareprojekt_anwendungen_von_algorithmen",
@@ -303,7 +303,7 @@
       "lp": null,
       "schedule": "Mi 16:00-18:00; Erster Termin: 15.04.2026; Ort: T9/055 Seminarraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1086112?sm=965826"
     },
     {
       "course_id": "seminar_uber_algorithmen",
@@ -311,7 +311,7 @@
       "lp": null,
       "schedule": "Mi 14:00-16:00; Erster Termin: 15.04.2026; Ort: T9/049 Seminarraum (Takustr. 9)",
       "description": null,
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1086136?sm=965826"
     },
     {
       "course_id": "betriebs_und_kommunikationssysteme",
@@ -319,7 +319,7 @@
       "lp": 6,
       "schedule": "Vorlesung: Mo 12:00-14:00; zusätzliche Termine siehe LV-Details; Erster Termin: 13.04.2026; Ort: T9/Gr. Hörsaal (Takustr. 9)",
       "description": "FU module 0086eA1.10. Vorlesung 19300701 (Barry Linnert). Übung 19300704 (Barry Linnert), one group: Mo 14:00-16:00; Di 12:00-14:00 or 14:00-16:00; Mi 08:00-10:00, 12:00-14:00 or 14:00-16:00; Do 10:00-12:00, 12:00-14:00 or 16:00-18:00. First exercise: 13.04.2026; T9/K38 Rechnerpoolraum (Takustr. 9).",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073759?sm=965826"
     },
     {
       "course_id": "datenbanksysteme_bsc",
@@ -327,7 +327,7 @@
       "lp": 6,
       "schedule": "Vorlesung: Di 14:00-16:00 and Do 14:00-16:00; zusätzliche Termine siehe LV-Details; Erster Termin: 14.04.2026; Ort: T9/Gr. Hörsaal (Takustr. 9)",
       "description": "FU module 0086eA1.11. Vorlesung 19301501 (Agnès Voisard). Übung 19301502 (N.N.), one group: Mi 12:00-14:00; Do 10:00-12:00 or 12:00-14:00; Fr 10:00-12:00 or 12:00-14:00. First exercise: 15.04.2026; T9/SR 005 Übungsraum (Takustr. 9).",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073777?sm=965826"
     },
     {
       "course_id": "programmierpraktikum_bsc",
@@ -335,7 +335,7 @@
       "lp": 5,
       "schedule": "Termine siehe LV-Details; Erster Termin: 08.05.2026; Ort: T9/K38 Rechnerpoolraum (Takustr. 9)",
       "description": "FU module 0086eA1.12. Seminar am PC 19335804: Programmierpraktikum (Lutz Prechelt).",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1074050?sm=965826"
     },
     {
       "course_id": "statistik_fuer_informatik",
@@ -343,7 +343,7 @@
       "lp": 6,
       "schedule": "Vorlesung: Mo 14:00-16:00; zusätzliche Termine siehe LV-Details; Erster Termin: 13.04.2026; Ort: T9/Gr. Hörsaal (Takustr. 9)",
       "description": "FU module 0086eA1.13. Vorlesung 19335701 (Katinka Wolter). Übung 19335702 (Katinka Wolter), one group: Mo 12:00-14:00; Di 14:00-16:00; Mi 12:00-14:00 or 14:00-16:00; Do 10:00-12:00; Fr 10:00-12:00, 12:00-14:00 or 14:00-16:00. First exercise: 13.04.2026; T9/053 Seminarraum (Takustr. 9).",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1074048?sm=965826"
     },
     {
       "course_id": "informationssicherheit_bsc",
@@ -351,7 +351,7 @@
       "lp": 6,
       "schedule": "Vorlesung: Mi 14:00-16:00; Erster Termin: 15.04.2026; Ort: T9/Gr. Hörsaal (Takustr. 9)",
       "description": "FU module 0086eA1.14. Vorlesung 19335601 (Volker Roth). Tutorium 19335605 (Volker Roth), one group: Mo 12:00-14:00; Di 12:00-16:00; Do 14:00-16:00 or 16:00-18:00; Fr 10:00-12:00, 10:00-14:00 or 12:00-14:00. First tutorial: 13.04.2026; T9/K36 Rechnerpoolraum (Takustr. 9).",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1074045?sm=965826"
     },
     {
       "course_id": "softwaretechnik_bsc",
@@ -359,7 +359,7 @@
       "lp": 9,
       "schedule": "Vorlesung: Mo 10:00-12:00 and Do 12:00-14:00; zusätzliche Termine siehe LV-Details; Erster Termin: 13.04.2026; Ort: T9/Gr. Hörsaal (Takustr. 9)",
       "description": "FU module 0086eA1.15. Vorlesung 19301401 (Lutz Prechelt). Übung 19301402 (Linus Ververs), one group: Di 08:00-10:00, 10:00-12:00 or 14:00-16:00; Fr 08:00-10:00, 10:00-12:00 or 14:00-16:00. First exercise: 14.04.2026; T9/051 Seminarraum (Takustr. 9).",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073769?sm=965826"
     },
     {
       "course_id": "wissenschaftliches_arbeiten_in_der_informatik",
@@ -367,7 +367,7 @@
       "lp": 6,
       "schedule": "Vorlesung: Di 16:00-18:00; Erster Termin: 14.04.2026; Ort: T9/Gr. Hörsaal (Takustr. 9)",
       "description": "FU module 0086eA1.16. Vorlesung 19319701 (Claudia Müller-Birn). Complete it with one active seminar/proseminar listed in the same compulsory bucket; cancelled seminars are excluded.",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073905?sm=965826"
     },
     {
       "course_id": "proseminar_theoretische_informatik",
@@ -375,7 +375,7 @@
       "lp": null,
       "schedule": "Mi 14:00-16:00; Erster Termin: 15.04.2026; Ort: T9/055 Seminarraum (Takustr. 9)",
       "description": "FU event 19301710. Proseminar: Theoretische Informatik (Wolfgang Mulzer), selectable within Wissenschaftliches Arbeiten in der Informatik.",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1086108?sm=965826"
     },
     {
       "course_id": "algorithmen_und_datenstrukturen_bsc",
@@ -383,7 +383,7 @@
       "lp": 9,
       "schedule": "Vorlesung: Di 16:00-18:00 and Fr 12:00-14:00; zusätzliche Termine siehe LV-Details; Erster Termin: 14.04.2026; Ort: Hs 1a Hörsaal (Habelschwerdter Allee 45)",
       "description": "FU module 0086eA1.4. Vorlesung 19300101 (Kristin Knorr). Übung 19300102 (Kristin Knorr), one group: Mo 14:00-16:00 or 16:00-18:00; Mi 08:00-10:00, 12:00-14:00, 14:00-16:00 or 16:00-18:00; Do 08:00-10:00 or 16:00-18:00; Fr 08:00-10:00 or 14:00-16:00. First exercise: 13.04.2026; T9/055 Seminarraum (Takustr. 9).",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1055212?sm=965826"
     },
     {
       "course_id": "lineare_algebra_fuer_informatik",
@@ -391,7 +391,7 @@
       "lp": 9,
       "schedule": "Vorlesung: Termine siehe LV-Details; Erster Termin: 16.04.2026; Ort: Hs 1b Hörsaal (Habelschwerdter Allee 45)",
       "description": "FU module 0086eA1.5. Vorlesung 19301001 (Max Willert). Übung 19301002 (Max Willert), one group: Mo 08:00-10:00, 10:00-12:00, 14:00-16:00 or 16:00-18:00; Di 08:00-10:00, 10:00-12:00, 12:00-14:00, 14:00-16:00 or 16:00-18:00. First exercise: 13.04.2026; T9/049 Seminarraum (Takustr. 9).",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1055223?sm=965826"
     },
     {
       "course_id": "grundlagen_des_datenschutzrechts",
@@ -399,7 +399,7 @@
       "lp": 6,
       "schedule": "Vorlesung: Mi 16:00-18:00; Erster Termin: 15.04.2026; Ort: T9/049 Seminarraum (Takustr. 9)",
       "description": "FU module 0086eB1.10. Vorlesung 19307201 (Philip Scholz). Übung 19307202 (Philip Scholz): Mi 18:00-20:00; first exercise: 15.04.2026; T9/049 Seminarraum (Takustr. 9).",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073825?sm=965826"
     },
     {
       "course_id": "vertiefung_theoretische_informatik",
@@ -407,7 +407,7 @@
       "lp": 6,
       "schedule": "Vorlesung: Mi 10:00-12:00; Erster Termin: 15.04.2026; Ort: T9/046 Seminarraum (Takustr. 9)",
       "description": "FU module 0086eB1.11. Vorlesung 19336401 (Günther Rothe). Übung 19336402 (Mahmoud Elashmawi), one group: Fr 10:00-12:00 or 16:00-18:00; first exercise: 17.04.2026; T9/046 Seminarraum (Takustr. 9).",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1074060?sm=965826"
     },
     {
       "course_id": "architektur_eingebetteter_systeme",
@@ -415,7 +415,7 @@
       "lp": 6,
       "schedule": "Vorlesung: Fr 12:00-14:00; Erster Termin: 17.04.2026; Ort: T9/051 Seminarraum (Takustr. 9)",
       "description": "FU module 0086eB1.2. Vorlesung 19335901 (Jochen Schiller). Übung 19335902 (Jochen Schiller), one group: Di 12:00-14:00 or 14:00-16:00; first exercise: 14.04.2026; T9/K63 Hardwarepraktikum (Takustr. 9).",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1074055?sm=965826"
     },
     {
       "course_id": "funktionale_programmierung",
@@ -423,7 +423,7 @@
       "lp": 6,
       "schedule": "Vorlesung: Di 14:00-16:00; zusätzliche Termine siehe LV-Details; Erster Termin: 14.04.2026; Ort: T9/SR 005 Übungsraum (Takustr. 9)",
       "description": "FU module 0086eB1.5. Vorlesung 19336001 (Max Willert). Übung 19336002 (Max Willert): Mo 10:00-12:00; first exercise: 13.04.2026; T9/SR 005 Übungsraum (Takustr. 9).",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1074057?sm=965826"
     },
     {
       "course_id": "mensch_computer_interaktion",
@@ -431,7 +431,7 @@
       "lp": 6,
       "schedule": "Vorlesung: Di 10:00-12:00; zusätzliche Termine siehe LV-Details; Erster Termin: 14.04.2026; Ort: T9/055 Seminarraum (Takustr. 9)",
       "description": "FU module 0086eB1.8. Vorlesung 19330601 (Claudia Müller-Birn). Übung 19330602, Human Computer Interaction I (Malte Heiser): Do 10:00-12:00; first exercise: 16.04.2026; A7/SR 031 (Arnimallee 7).",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073989?sm=965826"
     },
     {
       "course_id": "analysis_ii",
@@ -439,7 +439,7 @@
       "lp": null,
       "schedule": "Vorlesung: Di 10:00-12:00 and Do 10:00-12:00; zusätzliche Termine siehe LV-Details; Erster Termin: 14.04.2026; Ort: A3/Hs 001 Hörsaal (Arnimallee 3-5)",
       "description": "FU module 0084dA1.2. Vorlesung 19211601 (Elena Mäder-Baumdicker). Übung 19211602 (Elena Mäder-Baumdicker, Marita Thomas), one group: Mo 10:00-12:00; Mi 14:00-16:00; Do 08:00-10:00 or 16:00-18:00. First exercise: 13.04.2026; Arnimallee 14, 1.1.53. Listed as a free-elective candidate only; credit recognition and relevance require confirmation.",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1054092?sm=965826"
     },
     {
       "course_id": "lineare_algebra_ii",
@@ -447,7 +447,7 @@
       "lp": null,
       "schedule": "Vorlesung: Mo 12:00-14:00 and Mi 12:00-14:00; zusätzliche Termine siehe LV-Details; Erster Termin: 13.04.2026; Ort: A3/Hs 001 Hörsaal (Arnimallee 3-5)",
       "description": "FU module 0084dA1.5. Vorlesung 19211701 (Georg Loho). Übung 19211702 (Jan-Hendrik de Wiljes), one group: Do 08:00-10:00; Fr 08:00-10:00 or 10:00-12:00. First exercise: 16.04.2026; A3/SR 120 (Arnimallee 3-5). Listed as a free-elective candidate only; credit recognition and relevance require confirmation.",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1054095?sm=965826"
     },
     {
       "course_id": "computerorientierte_mathematik_ii",
@@ -455,7 +455,7 @@
       "lp": 5,
       "schedule": "Vorlesung: Fr 12:00-14:00; zusätzliche Termine siehe LV-Details; Erster Termin: 17.04.2026; Ort: T9/Gr. Hörsaal (Takustr. 9)",
       "description": "FU module 0084dA1.7. Vorlesung 19211901, Computerorientierte Mathematik II (5 LP) (Ilja Klebanov). Übung 19211902 (N.N.), one group: Di 10:00-12:00; Mi 12:00-14:00; Fr 08:00-10:00. First exercise: 14.04.2026; A6/SR 009 Seminarraum (Arnimallee 6). Listed as a free-elective candidate only; credit recognition and relevance require confirmation.",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1074348?sm=965826"
     },
     {
       "course_id": "stochastik_i",
@@ -463,7 +463,7 @@
       "lp": null,
       "schedule": "Vorlesung: Mo 14:00-16:00 and Mi 08:00-10:00; zusätzliche Termine siehe LV-Details; Erster Termin: 13.04.2026; Ort: A6/SR 031 Seminarraum (Arnimallee 6)",
       "description": "FU module 0084dA1.8. Vorlesung 19200601 (Nicolas Perkowski). Übung 19200602 (Nicolas Perkowski), one group: Mo 12:00-14:00 or 16:00-18:00. First exercise: 13.04.2026; A3/SR 120 (Arnimallee 3-5). Listed as a free-elective candidate only; credit recognition and relevance require confirmation.",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1074233?sm=965826"
     },
     {
       "course_id": "data_science_in_life_sciences",
@@ -471,7 +471,7 @@
       "lp": null,
       "schedule": "Seminaristischer Unterricht: Mo 10:00-14:00; Projektseminar: Mi 10:00-14:00; Erster Termin: 13.04.2026; Ort: T9/SR 006 Seminarraum (Takustr. 9)",
       "description": "FU module 0590bB1.1. Seminaristischer Unterricht 19405606 and Projektseminar 19405612 (Katharina Jahn).",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1049252?sm=965826"
     },
     {
       "course_id": "machine_learning_in_bioinformatics",
@@ -479,7 +479,7 @@
       "lp": null,
       "schedule": "Mi 14:00-16:00; zusätzliche Termine siehe LV-Details; Erster Termin: 15.04.2026; Ort: A6/SR 025/026 Seminarraum (Arnimallee 6)",
       "description": "FU module 0262cD1.7. Vorlesung 19405701 (Philipp Florian Benner, Hugues Richard). Übung 19405702: Mi 16:00-18:00.",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1049357?sm=965826"
     },
     {
       "course_id": "machine_learning_and_ai_in_the_life_sciences",
@@ -487,7 +487,7 @@
       "lp": null,
       "schedule": "Fr 08:00-12:00; Erster Termin: 17.04.2026; Ort: T9/049 Seminarraum (Takustr. 9)",
       "description": "FU module 0262cD1.12 (Applied Machine Learning in Bioinformatics). Praxisseminar 19403613 (Tim Conrad, Christoph von Tycowicz).",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1049342?sm=965826"
     },
     {
       "course_id": "computer_vision_for_biomedical_images",
@@ -495,7 +495,7 @@
       "lp": null,
       "schedule": "Do 14:00-18:00; Erster Termin: 16.04.2026; Ort: A6/017 Frontalunterrichtsraum (Bioinf) (Arnimallee 6)",
       "description": "FU module 0262cD1.12 (Applied Machine Learning in Bioinformatics). Praxisseminar 60103513 (Sören Lukassen).",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1050431?sm=965826"
     },
     {
       "course_id": "complex_systems_in_bioinformatics",
@@ -503,7 +503,7 @@
       "lp": null,
       "schedule": "Di 12:00-14:00; Erster Termin: 14.04.2026; Ort: A3/SR 120 (Arnimallee 3-5)",
       "description": "FU module 0590bB1.7 (Ausgewählte Themen der Data Science in Life Sciences). Vorlesung 19405201 (Martin Vingron, Jana Wolf). Übung 19405202: Di 14:00-16:00.",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1049351?sm=965826"
     },
     {
       "course_id": "complex_systems_in_bioinformatics",
@@ -511,7 +511,7 @@
       "lp": null,
       "schedule": "Do 10:00-12:00; Erster Termin: 16.04.2026; Ort: A3/SR 120 (Arnimallee 3-5)",
       "description": "FU module 0590bB1.6 (Masterseminar Data Science in Life Sciences). Seminar 19405211 (Martin Vingron, Jana Wolf).",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1049386?sm=965826"
     },
     {
       "course_id": "topics_in_stochastic_processes_and_machine_learning",
@@ -519,7 +519,7 @@
       "lp": null,
       "schedule": "Do 10:00-12:00; Erster Termin: 16.04.2026; Ort: A3/SR 119 (Arnimallee 3-5)",
       "description": "Vorlesung 19234501 (Wei Zhang). Übung 19234502: Di 14:00-16:00; KöLu24-26/SR 006 Neuro/Mathe (Königin-Luise-Str. 24 / 26).",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1074466?sm=965826"
     },
     {
       "course_id": "methodik_klinischer_studien",
@@ -527,7 +527,7 @@
       "lp": null,
       "schedule": "Mi 14:00-16:00; Erster Termin: 15.04.2026; Ort: A6/SR 032 Seminarraum (Arnimallee 6)",
       "description": "Vorlesung 60102001 (Pimrapat Gebert, Geraldine Rauch). Übung 60102002: Mi 16:00-18:00.",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1051077?sm=965826"
     },
     {
       "course_id": "complex_data_analysis_in_physiology",
@@ -535,7 +535,7 @@
       "lp": null,
       "schedule": "Zeit: -; Ort: keine Angabe",
       "description": "Vorlesung 60102701 (Dorothee Günzel, Alexander Stahn, Katharina Brauns, Mathias Steinach).",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1049410?sm=965826"
     },
     {
       "course_id": "deep_learning_for_biomedical_applications",
@@ -543,7 +543,7 @@
       "lp": null,
       "schedule": "Mo 16:00-18:00; Erster Termin: 13.04.2026; Ort: T9/051 Seminarraum (Takustr. 9)",
       "description": "FU module 0590bB1.6 (Masterseminar Data Science in Life Sciences). Seminar 19402311 (Vitaly Belik).",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1050048?sm=965826"
     },
     {
       "course_id": "journal_club_computational_biology",
@@ -551,7 +551,7 @@
       "lp": null,
       "schedule": "Mo 14:00-16:00; Erster Termin: 13.04.2026; Ort: T9/053 Seminarraum (Takustr. 9)",
       "description": "FU module 0590bB1.6 (Masterseminar Data Science in Life Sciences). Seminar 19402911 (Knut Reinert).",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1050053?sm=965826"
     },
     {
       "course_id": "journal_club_public_health_data_science",
@@ -559,7 +559,7 @@
       "lp": null,
       "schedule": "Mi 10:00-12:00; Erster Termin: 22.04.2026; Ort: Online",
       "description": "FU module 0590bB1.6 (Masterseminar Data Science in Life Sciences). Seminar 19406411 (Liuwei Wang).",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1079687?sm=965826"
     },
     {
       "course_id": "datenbanksysteme_data_science",
@@ -567,7 +567,7 @@
       "lp": null,
       "schedule": "Di 14:00-16:00, Do 14:00-16:00; zusätzliche Termine siehe LV-Details; Erster Termin: 14.04.2026; Ort: T9/Gr. Hörsaal (Takustr. 9)",
       "description": "FU module 0590bB2.9 (Datenbanksysteme Data Science). Vorlesung 19301501 (Agnès Voisard). Übung 19301502 (N.N.).",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1073777?sm=965826"
     },
     {
       "course_id": "softwareprojekt_chat_search_and_summaries_llms",
@@ -575,7 +575,7 @@
       "lp": null,
       "schedule": "Do 12:00-14:00; Erster Termin: 16.04.2026; Ort: T9/049 Seminarraum (Takustr. 9)",
       "description": "Projektseminar 19337112 (Tim Landgraf), selectable within Softwareprojekt Data Science A/B.",
-      "url": null
+      "url": "https://www.fu-berlin.de/vv/de/lv/1074087?sm=965826"
     }
   ]
 }
