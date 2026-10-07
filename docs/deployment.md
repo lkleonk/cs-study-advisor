@@ -70,6 +70,12 @@ Analytics. The Container App is fixed at one warm replica while sessions and
 quotas remain process-local, and WizardFlow is disabled because no persistent
 trace storage is provisioned.
 
+The static website has no reverse proxy, so `/api` on `cs-modulio.com` does not
+reach the backend. `frontend/.env.production` therefore sets
+`NEXT_PUBLIC_API_BASE_URL` to the Container App URL (`terraform output -raw
+backend_url`); the backend's CORS allows `https://cs-modulio.com`. Change it to
+`https://api.cs-modulio.com` once that custom domain is set up.
+
 Infrastructure creation uses a two-phase bootstrap so neither an API key nor a
 nonexistent ACR image is required during the first apply. See `infra/README.md`
 for the exact sequence. Custom domains, DNS cutover, remote Terraform state,
