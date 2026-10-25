@@ -1,14 +1,16 @@
 "use client";
 
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import LaunchOutlinedIcon from "@mui/icons-material/LaunchOutlined";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Chip from "@mui/material/Chip";
 import CircularProgress from "@mui/material/CircularProgress";
+import Collapse from "@mui/material/Collapse";
 import FormControl from "@mui/material/FormControl";
 import IconButton from "@mui/material/IconButton";
 import InputLabel from "@mui/material/InputLabel";
@@ -24,9 +26,105 @@ import { getDummyCourseRegistry } from "@/app/consultant/dummy_data/courseRegist
 import { useDegree } from "@/context/DegreeContext";
 import { useSettings } from "@/context/SettingsContext";
 import { getCourseOfferings } from "@/services/api";
-import type { CourseOfferingArea, CourseOfferingsCatalogue } from "@/types/api";
+import type { CourseOfferingArea, CourseOfferingsCatalogue, FirstSession } from "@/types/api";
 
 const EMPTY_AREAS: CourseOfferingArea[] = [];
+
+const SESSION_DATE_FORMAT = new Intl.DateTimeFormat("en-GB", {
+  weekday: "short",
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+  timeZone: "UTC",
+});
+
+// e.g. "Tue 13 Oct 2026, 16:00–18:00 · T9/Gr. Hörsaal (Takustr. 9)"
+function formatSession(session: FirstSession) {
+  const [year, month, day] = session.date.split("-").map(Number);
+  let text = SESSION_DATE_FORMAT.format(new Date(Date.UTC(year, month - 1, day)));
+  if (session.start && session.end) {
+    text += `, ${session.start}–${session.end}`;
+  }
+  if (session.room) {
+    text += ` · ${session.room}`;
+  }
+  return text;
+}
+
+function SessionLines({ label, sessions }: { label: string; sessions: FirstSession[] }) {
+  if (sessions.length === 1) {
+    return <Typography variant="body1">{`${label}: ${formatSession(sessions[0])}`}</Typography>;
+  }
+  return (
+    <Box>
+      <Typography variant="body1">{`${label}:`}</Typography>
+      {sessions.map((session) => (
+        <Typography key={`${session.date}-${session.start ?? ""}`} variant="body1" sx={{ pl: 2 }}>
+          {formatSession(session)}
+        </Typography>
+      ))}
+    </Box>
+  );
+}
+
+function UebungLink({ url, title }: { url?: string | null; title: string }) {
+  if (!url) {
+    return null;
+  }
+  return (
+    <Tooltip title="Open official Übung page">
+      <IconButton
+        component="a"
+        href={url}
+        target="_blank"
+        rel="noreferrer"
+        size="small"
+        aria-label={`Open official Übung page for ${title}`}
+      >
+        <LaunchOutlinedIcon fontSize="small" />
+      </IconButton>
+    </Tooltip>
+  );
+}
+
+// One Übung group fits on a line; several collapse behind a toggle.
+function UebungLines({ groups, url, title }: { groups: FirstSession[]; url?: string | null; title: string }) {
+  const [open, setOpen] = useState(false);
+  if (groups.length === 0) {
+    return null;
+  }
+  if (groups.length === 1) {
+    return (
+      <Stack direction="row" spacing={0.5} sx={{ alignItems: "center" }}>
+        <SessionLines label="Übung" sessions={groups} />
+        <UebungLink url={url} title={title} />
+      </Stack>
+    );
+  }
+  return (
+    <Box>
+      <Stack direction="row" spacing={0.5} sx={{ alignItems: "center" }}>
+          <Button
+          size="small"
+          onClick={() => setOpen((value) => !value)}
+          endIcon={open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          aria-expanded={open}
+          sx={{ px: 0, minWidth: 0 }}
+        >
+          {`Übungen (${groups.length} groups)`}
+        </Button>
+        <UebungLink url={url} title={title} />
+      </Stack>
+      <Collapse in={open}>
+        {groups.map((group) => (
+          <Typography key={`${group.date}-${group.start ?? ""}-${group.room ?? ""}`} variant="body1" sx={{ pl: 2 }}>
+            {formatSession(group)}
+          </Typography>
+        ))}
+      </Collapse>
+    </Box>
+  );
+}
 
 function uniqueCourseTypes(areas: CourseOfferingArea[]) {
   const seen = new Map<string, string>();
@@ -178,9 +276,18 @@ export function CourseRegistryTab() {
                       label="Semester"
                       value={semesterId}
                       onChange={(event) => {
-                        setSemesterId(event.target.value);
-                        setAreaId("");
-                        setCourseTypeId("");
+                        const nextSemesterId = event.target.value;
+                        const nextAreas =
+                          catalogue.semesters.find((semester) => semester.id === nextSemesterId)?.areas ?? EMPTY_AREAS;
+                        // Keep the area/type filters when they still exist in the new semester.
+                        const keepArea = !areaId || nextAreas.some((area) => area.id === areaId);
+                        const nextAreaId = keepArea ? areaId : "";
+                        const typeAreas = nextAreaId ? nextAreas.filter((area) => area.id === nextAreaId) : nextAreas;
+                        const keepType =
+                          !courseTypeId || uniqueCourseTypes(typeAreas).some((type) => type.id === courseTypeId);
+                        setSemesterId(nextSemesterId);
+                        setAreaId(nextAreaId);
+                        setCourseTypeId(keepType ? courseTypeId : "");
                       }}
                     >
                       {catalogue.semesters.map((semester) => (
@@ -242,6 +349,11 @@ export function CourseRegistryTab() {
                     {visibleAreas.map((area) => (
                       <Stack key={area.id} spacing={1.25}>
                         <Typography variant="h3">{area.label}</Typography>
+                        {area.note && (
+                          <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                            {area.note}
+                          </Typography>
+                        )}
                         {area.course_types.map((courseType) => (
                           <Stack key={courseType.id} spacing={1}>
                             <Typography variant="subtitle2" sx={{ color: "text.secondary" }}>
@@ -256,39 +368,40 @@ export function CourseRegistryTab() {
                                       spacing={1}
                                       sx={{ alignItems: { xs: "flex-start", sm: "center" }, justifyContent: "space-between" }}
                                     >
-                                      <Typography variant="h3">{course.title}</Typography>
-                                      <Stack direction="row" spacing={0.75} sx={{ flexWrap: "wrap" }}>
+                                      <Typography variant="h3" sx={{ fontSize: "1.15rem" }}>{course.title}</Typography>
+                                      <Stack direction="row" spacing={0.75} sx={{ flexWrap: "wrap", alignItems: "center" }}>
                                         <Chip label={courseType.label} size="small" />
                                         {course.is_bachelor_module && <Chip label="Bachelor module" size="small" variant="outlined" />}
+                                        {course.url && (
+                                          <Tooltip title="Open official course page">
+                                            <IconButton
+                                              component="a"
+                                              href={course.url}
+                                              target="_blank"
+                                              rel="noreferrer"
+                                              size="small"
+                                              aria-label={`Open official course page for ${course.title}`}
+                                            >
+                                              <LaunchOutlinedIcon fontSize="small" />
+                                            </IconButton>
+                                          </Tooltip>
+                                        )}
                                       </Stack>
                                     </Stack>
-                                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                                    <Typography variant="body1" sx={{ color: "text.secondary" }}>
                                       {course.lp === null ? "LP not listed" : `${course.lp} LP`}
                                       {course.module_catalog_name ? ` - ${course.module_catalog_name}` : ""}
+                                      {course.fu_module_code ? ` (${course.fu_module_code})` : ""}
                                     </Typography>
-                                    {course.schedule && <Typography variant="body2">{course.schedule}</Typography>}
-                                    {course.description && (
-                                      <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                                        {course.description}
-                                      </Typography>
+                                    {course.first_sessions && course.first_sessions.length > 0 && (
+                                      <SessionLines
+                                        label={course.first_sessions.length > 1 ? "First sessions" : "First session"}
+                                        sessions={course.first_sessions}
+                                      />
                                     )}
+                                    <UebungLines groups={course.uebungen ?? []} url={course.uebung_url} title={course.title} />
                                   </Stack>
                                 </CardContent>
-                                {course.url && (
-                                  <CardActions sx={{ justifyContent: "flex-end", pt: 0 }}>
-                                    <Tooltip title="Open official course page">
-                                      <IconButton
-                                        component="a"
-                                        href={course.url}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        aria-label={`Open official course page for ${course.title}`}
-                                      >
-                                        <LaunchOutlinedIcon fontSize="small" />
-                                      </IconButton>
-                                    </Tooltip>
-                                  </CardActions>
-                                )}
                               </Card>
                             ))}
                           </Stack>

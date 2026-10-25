@@ -16,6 +16,9 @@ class DegreePrompts:
     answer_composer_system_prompt: str
     offtopic_reply_de: str
     offtopic_reply_en: str
+    # Degree-specific keywords for the heuristic classifier fallback, on top of
+    # its shared domain terms (normalized: lowercase, umlauts transliterated).
+    fallback_domain_terms: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)

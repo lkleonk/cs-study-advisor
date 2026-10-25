@@ -36,6 +36,23 @@ const FALLBACK_DEGREES: DegreeInfo[] = [
     regulation: "2023 Studien- und Pruefungsordnung (FU-Mitteilungen 23/2023)",
     plan_validation_enabled: false,
   },
+  {
+    id: "bsc_physik",
+    display_name: "B.Sc. Physik",
+    regulation: "2024 Studien- und Pruefungsordnung (FU-Mitteilungen 12/2024)",
+    plan_validation_enabled: false,
+  },
+  {
+    id: "msc_physik",
+    display_name: "M.Sc. Physik",
+    regulation: "2024 Studien- und Pruefungsordnung (FU-Mitteilungen 12/2024)",
+    plan_validation_enabled: false,
+  },  {
+    id: "bsc_bioinformatik",
+    display_name: "B.Sc. Bioinformatik",
+    regulation: "2023 Studien- und Pruefungsordnung (FU-Mitteilungen 34/2023)",
+    plan_validation_enabled: false,
+  },
 ];
 
 type DegreeContextValue = {

@@ -44,10 +44,13 @@ unnecessarily long.
 
 ## Prompt convention
 
-Applies inside every degree's `prompts.py`:
+Shared prompt text lives in `backend/app/domain/degrees/prompt_builder.py`;
+each degree's `prompts.py` only declares a `DegreePromptSpec` (name, regulation,
+topics, course types, optional extra rules/examples/parser overrides). Change
+shared wording once in the builder, never by copying it into a degree.
 
-- Internal LLM nodes use `DOMAIN_SCOPE`.
-- Only `AnswerComposer` uses `ANSWER_IDENTITY`.
+- Internal LLM nodes use `domain_scope`.
+- Only `AnswerComposer` uses `answer_identity`.
 - Keep classifiers, parsers, and course-key selectors terse and task-specific.
 - Degree-specific wording stays inside the degree package; nodes must not
   hardcode any degree's terminology.

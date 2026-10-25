@@ -20,62 +20,30 @@ import { useCallback, useEffect, useState } from "react";
 
 import { useDegree } from "@/context/DegreeContext";
 import { getProgramRules } from "@/services/api";
-import type { ProgramRuleItem, ProgramRulesCatalogue } from "@/types/api";
+import type { ProgramRulesCatalogue } from "@/types/api";
 
+import { buildDegreeRulesText, itemRange } from "./degreeRulesText";
 import { LinkifiedText } from "./LinkifiedText";
 
-const MODULIO_ESCAPE_URL = "https://degree-escape-room.vercel.app/";
-
-function itemRange(item: ProgramRuleItem) {
-  if (item.minimum !== null && item.maximum !== null && item.minimum === item.maximum) {
-    return `${item.minimum} ${item.unit ?? ""}`.trim();
-  }
-  if (item.minimum !== null && item.maximum !== null) {
-    return `${item.minimum}-${item.maximum} ${item.unit ?? ""}`.trim();
-  }
-  if (item.minimum !== null) {
-    return `min ${item.minimum} ${item.unit ?? ""}`.trim();
-  }
-  if (item.maximum !== null) {
-    return `max ${item.maximum} ${item.unit ?? ""}`.trim();
-  }
-  return null;
-}
-
-function buildSystemPrompt(catalogue: ProgramRulesCatalogue) {
-  const lines = [
-    `You are a study advisor for the ${catalogue.degree_program} at Freie Universität Berlin.`,
-    "Answer questions about the degree using only the rules below. If something is not covered, say so and refer to the official regulation or the examination office instead of guessing. Do not invent module names, credit points or deadlines.",
-    "",
-    `# ${catalogue.degree_program} - ${catalogue.regulation}`,
-    catalogue.source_note,
-  ];
-  for (const section of catalogue.sections) {
-    lines.push("", `## ${section.title}`, section.description);
-    for (const item of section.items) {
-      const range = itemRange(item);
-      lines.push(`- ${item.label}${range ? ` (${range})` : ""}: ${item.text}`);
-    }
-    for (const source of section.sources) {
-      if (source.path.startsWith("http")) {
-        lines.push(`- Official source: ${source.label} (${source.path})`);
-      }
-    }
-  }
-  return lines.join("\n");
-}
+/** External escape-room game per degree; degrees without an entry show no game banner. */
+const ESCAPE_ROOM_URL_BY_DEGREE: Record<string, string> = {
+  bsc_informatik: "https://degree-escape-room.vercel.app/",
+  msc_informatik: "https://degree-escape-room.vercel.app/",
+  msc_data_science: "https://degree-escape-room.vercel.app/",
+};
 
 export function DegreeRulesTab() {
   const { effectiveDegreeId } = useDegree();
+  const escapeRoomUrl = ESCAPE_ROOM_URL_BY_DEGREE[effectiveDegreeId];
   const [catalogue, setCatalogue] = useState<ProgramRulesCatalogue | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const copySystemPrompt = useCallback(async () => {
+  const copyDegreeRules = useCallback(async () => {
     if (!catalogue) return;
     try {
-      await navigator.clipboard.writeText(buildSystemPrompt(catalogue));
+      await navigator.clipboard.writeText(buildDegreeRulesText(catalogue));
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -112,12 +80,12 @@ export function DegreeRulesTab() {
               <Chip label={catalogue.catalogue_version} size="small" variant="outlined" />
             )}
             <Box sx={{ flexGrow: 1 }} />
-            <Tooltip title="Copies these degree rules as a system prompt. Paste it into another AI assistant (e.g. as custom instructions) to discuss your degree there.">
+            <Tooltip title="Copies these degree rules as text. Paste them into another AI assistant (e.g. ChatGPT, Claude or Gemini) to discuss your degree there.">
               <span>
                 <Button
                   size="small"
                   startIcon={copied ? <CheckIcon /> : <ContentCopyIcon />}
-                  onClick={() => void copySystemPrompt()}
+                  onClick={() => void copyDegreeRules()}
                   disabled={!catalogue}
                 >
                   {copied ? "Copied" : "Copy"}
@@ -137,6 +105,7 @@ export function DegreeRulesTab() {
           )}
         </Box>
 
+          {escapeRoomUrl && (
           <Box
             component="section"
             aria-label="Degree escape room"
@@ -161,7 +130,7 @@ export function DegreeRulesTab() {
               size="small"
               variant="outlined"
               endIcon={<LaunchOutlinedIcon />}
-              href={MODULIO_ESCAPE_URL}
+              href={escapeRoomUrl}
               target="_blank"
               rel="noopener noreferrer"
               sx={{ flexShrink: 0 }}
@@ -169,6 +138,7 @@ export function DegreeRulesTab() {
               Play the escape room
             </Button>
           </Box>
+          )}
 
           {isLoading && (
           <Stack direction="row" spacing={1} sx={{ alignItems: "center", color: "text.secondary" }}>

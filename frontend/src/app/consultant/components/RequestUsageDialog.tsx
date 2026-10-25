@@ -1,6 +1,9 @@
 "use client";
 
+import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -10,7 +13,7 @@ import Divider from "@mui/material/Divider";
 import LinearProgress from "@mui/material/LinearProgress";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { useEffect } from "react";
+import { useEffect, type ReactNode } from "react";
 
 import { useUsage } from "@/context/UsageContext";
 import type { UsageResponse } from "@/types/api";
@@ -26,6 +29,46 @@ function formatResetTime(value: string) {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(value));
+}
+
+function usedPercent(used: number, limit: number) {
+  return limit > 0 ? Math.min(100, (used / limit) * 100) : 0;
+}
+
+type QuotaBlockProps = {
+  icon: ReactNode;
+  label: string;
+  remaining: number;
+  limit: number;
+  used: number;
+  description: string;
+};
+
+/** One allowance (personal or shared); both use the same layout so neither reads as secondary. */
+function QuotaBlock({ icon, label, remaining, limit, used, description }: QuotaBlockProps) {
+  const percent = usedPercent(used, limit);
+  return (
+    <Stack spacing={0.75}>
+      <Stack direction="row" spacing={1} sx={{ alignItems: "center" }}>
+        <Box sx={{ display: "flex", color: "text.secondary" }}>{icon}</Box>
+        <Typography variant="body1" sx={{ fontWeight: 700, flexGrow: 1 }}>
+          {label}
+        </Typography>
+        <Typography variant="body1" sx={{ fontWeight: 700, fontVariantNumeric: "tabular-nums" }}>
+          {remaining} / {limit} left
+        </Typography>
+      </Stack>
+      <LinearProgress
+        variant="determinate"
+        value={percent}
+        color={percent >= 80 ? "warning" : "primary"}
+        aria-label={`${label}: ${remaining} of ${limit} requests left`}
+      />
+      <Typography variant="body2" sx={{ color: "text.secondary" }}>
+        {description}
+      </Typography>
+    </Stack>
+  );
 }
 
 export function RequestUsageDialog({
@@ -44,72 +87,55 @@ export function RequestUsageDialog({
   const displayedUsage = usageOverride ?? usage;
   const displayedIsLoading = usageOverride ? false : isLoading;
   const displayedError = usageOverride ? null : error;
-  const usedPercent = displayedUsage && displayedUsage.limit > 0
-    ? (displayedUsage.used / displayedUsage.limit) * 100
-    : 0;
   const service = displayedUsage?.service;
-  const serviceUsedPercent = service && service.limit > 0
-    ? (service.used / service.limit) * 100
-    : 0;
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs" aria-labelledby="usage-title">
       <DialogTitle id="usage-title">Daily request allowance</DialogTitle>
       <DialogContent>
-        <Stack spacing={1.5}>
-          {displayedUsage ? (
-            <>
-              <Typography variant="h2">
-                {displayedUsage.remaining} of {displayedUsage.limit} requests remaining
-              </Typography>
-              <LinearProgress variant="determinate" value={Math.min(100, usedPercent)} />
-              <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                Each chat message or transcript upload uses one request. Your allowance resets at{" "}
-                {formatResetTime(displayedUsage.reset_at)}.
-              </Typography>
-              <Typography variant="caption" sx={{ color: "text.secondary" }}>
-                The allowance is currently associated with your client IP.
-              </Typography>
+        {displayedUsage ? (
+          <Stack spacing={2.5}>
+            <QuotaBlock
+              icon={<PersonOutlineOutlinedIcon fontSize="small" />}
+              label="You"
+              remaining={displayedUsage.remaining}
+              limit={displayedUsage.limit}
+              used={displayedUsage.used}
+              description="Your personal limit (per IP address)."
+            />
 
-              {service && (
-                <>
-                  <Divider sx={{ mt: 0.5 }} />
-                  <Typography variant="overline" sx={{ color: "text.secondary" }}>
-                    Service-wide
-                  </Typography>
-                  {service.remaining > 0 ? (
-                    <>
-                      <Typography variant="body1" sx={{ fontWeight: 700 }}>
-                        {service.remaining} of {service.limit} requests remaining
-                      </Typography>
-                      <LinearProgress
-                        variant="determinate"
-                        value={Math.min(100, serviceUsedPercent)}
-                        color={serviceUsedPercent >= 80 ? "warning" : "primary"}
-                      />
-                      <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                        All users share this daily budget, counted in the same requests as your own
-                        allowance. When it runs out, requests stop for everyone until it resets —
-                        even if you have some of your own left.
-                      </Typography>
-                    </>
-                  ) : (
-                    <Alert severity="warning">
-                      The service-wide daily limit is used up, so requests will fail until it resets
-                      — even though you have {displayedUsage.remaining} of your own left.
-                    </Alert>
-                  )}
-                </>
-              )}
-            </>
-          ) : (
-            <Typography variant="body2" sx={{ color: displayedError ? "error.main" : "text.secondary" }}>
-              {displayedError ?? (
-                displayedIsLoading ? "Loading daily request allowance…" : "Daily request allowance unavailable."
-              )}
+            {service && (
+              <QuotaBlock
+                icon={<GroupsOutlinedIcon fontSize="small" />}
+                label="All users (shared)"
+                remaining={service.remaining}
+                limit={service.limit}
+                used={service.used}
+                description="Shared by everyone. If it runs out, nobody can send requests until the reset."
+              />
+            )}
+
+            {service && service.remaining <= 0 && (
+              <Alert severity="warning">
+                The shared limit is used up, so requests will fail until it resets — even though you
+                have {displayedUsage.remaining} of your own left.
+              </Alert>
+            )}
+
+            <Divider />
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
+              A chat message or transcript upload uses 1 request
+              {service ? " from both" : ""}. {service ? "Both reset" : "Resets"} on{" "}
+              {formatResetTime(displayedUsage.reset_at)}.
             </Typography>
-          )}
-        </Stack>
+          </Stack>
+        ) : (
+          <Typography variant="body2" sx={{ color: displayedError ? "error.main" : "text.secondary" }}>
+            {displayedError ?? (
+              displayedIsLoading ? "Loading daily request allowance…" : "Daily request allowance unavailable."
+            )}
+          </Typography>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Close</Button>

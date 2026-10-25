@@ -19,12 +19,17 @@ TypeScript, Material UI, and the App Router. Keep all frontend edits inside
 - `Degree Rules`: read-only rendering of `GET /api/program-rules`, plus a
   persistent external link to the Modulio degree-structure escape room, and a
   "Copy" button (tooltip explains it) that renders the loaded catalogue
-  client-side as a markdown system prompt for use with an external AI.
+  client-side as plain-text degree rules for pasting into an external AI
+  (`buildDegreeRulesText` in `degreeRulesText.ts`: two framing lines plus the
+  rules; Modulio's backend prompts are never included).
 - `Course Registry`: read-only, locally filterable rendering of the selected
   degree's `GET /api/course-offerings` projection. It lists only courses present
   in the local semester-offering data and does not consume the request allowance.
   Its source caveat is compact secondary text; data loads automatically, with a
-  retry action shown only after an error.
+  retry action shown only after an error. Each card lists the first appointment
+  of each weekly lecture slot (max four) and, for lectures, the Übung groups: one
+  group inline, several behind an „Übungen (n groups)“ toggle, nothing while the
+  VV lists none. The Übung line carries its own VV link when `uebung_url` is set.
 - `Settings`: dark mode, request allowance, production-visible reset
   conversation, plus optional developer diagnostics.
 
@@ -114,14 +119,22 @@ though the user still has their own allowance left. Both numbers count the same
 unit (one chat message or transcript upload), so they are directly comparable.
 The dialog refreshes usage on open, which is what keeps the service figure
 current; `updateQuota` only ever merges the caller's own quota from response
-headers and leaves `service` untouched.
+headers and leaves `service` untouched. Failed chat/upload requests go through
+`noteApiError`: it merges the caller's quota and, for a
+`daily_service_quota_exceeded` 429 (which carries no per-user headers), refetches
+usage so `service.remaining` shows the shared budget is gone. Quota 429s show no
+separate error dialog.
 
-When the allowance is fully exhausted (`remaining <= 0`), `QuotaExhaustedDialog`
-is shown once per reset period. It explains that chat and transcript checks are
-paused until the reset time and offers a shortcut to the Course Registry tab.
-The Chat tab's input and transcript upload are disabled while exhausted, and the
-message field placeholder shows the reset time. The read-only Course Registry and
-Degree Rules tabs stay usable throughout.
+When either allowance is exhausted (own `remaining <= 0`, or
+`service.remaining <= 0`; the own limit wins when both are), `QuotaExhaustedDialog`
+is shown once per scope and reset period, with wording for the user or
+service-wide case. It offers "Copy degree rules" (fetches the selected degree's
+program rules and copies `buildDegreeRulesText`, optionally with the chat so far
+via an "Include our conversation so far" checkbox shown only when there are
+messages) and "Go to Degree Rules". The Chat tab's input and transcript upload
+are disabled while exhausted, the placeholder shows the reset time, and a line
+under the input ("Continue in your own AI assistant") reopens the dialog. The
+read-only Course Registry and Degree Rules tabs stay usable throughout.
 
 ## Chat Export And Reset
 

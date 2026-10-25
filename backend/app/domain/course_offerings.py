@@ -7,6 +7,7 @@ LP values canonical while allowing a course to count differently per degree.
 """
 
 import re
+from datetime import date
 from functools import lru_cache
 from typing import Any
 from urllib.parse import urlparse
@@ -22,7 +23,37 @@ from app.domain.catalog_data import (
 
 LOOKUP_KEY_SEPARATOR = "/"
 VALID_COURSE_TYPES = {"vl", "swp", "praktikum", "seminar"}
-REQUIRED_OFFERING_FIELDS = {"course_id", "type", "lp", "schedule", "description", "url"}
+REQUIRED_OFFERING_FIELDS = {"course_id", "type", "lp", "first_sessions", "url"}
+OPTIONAL_OFFERING_FIELDS = {"uebungen", "uebung_url"}
+# Sessions are first appointments, never the full timetable. Each one is
+# {"date": "YYYY-MM-DD", "start": "HH:MM", "end": "HH:MM", "room": "..."}; date is
+# required, start/end come as a pair, room is optional. The weekday is derived.
+# first_sessions: the first appointment of each weekly slot of the main
+# lecture/seminar (at most MAX_FIRST_SESSIONS). uebungen (lectures only): the first
+# appointment of each Übung group; empty while the VV lists none. uebung_url
+# (lectures only): VV page of the separate Übung event.
+SESSION_FIELDS = {"date", "start", "end", "room"}
+MAX_FIRST_SESSIONS = 4
+# Above this many Übung groups the chat context gives only the count, not the list.
+UEBUNG_CONTEXT_MAX_GROUPS = 8
+TIME_RE = re.compile(r"^(?:[01]\d|2[0-3]):[0-5]\d$")
+WEEKDAYS_EN = ("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+# Official FU module code of a degree module, e.g. "0086eA1.14" (B.Sc. Informatik).
+FU_MODULE_CODE_RE = re.compile(r"^\d{4}[a-z][A-Z]\d+\.\d+$")
+# credit_note on a placement: one short sentence on how the course counts for that
+# degree (e.g. "free-elective candidate only"). Not a description: no event numbers,
+# lecturers, module codes, or times.
+CREDIT_NOTE_MAX_LENGTH = 200
+CREDIT_NOTE_FORBIDDEN_RE = re.compile(r"\b\d{8}\b|FU module|\b\d{4}[a-z][A-Z]\d+\.\d+\b|\b(?:Mo|Di|Mi|Do|Fr|Sa|So) \d{2}:\d{2}")
+# Degree-specific note shown once under an area heading in the Course Registry.
+AREA_NOTES = {
+    "bsc_informatik": {
+        "free_elective": "Candidates only; credit recognition and relevance require confirmation.",
+    },
+    "bsc_bioinformatik": {
+        "wahlbereich": "Examples only; modules other than the recommended ones need Prüfungsausschuss approval.",
+    },
+}
 MARKDOWN_LINK_RE = re.compile(r"^\[[^\]]+\]\((https?://[^)]+)\)$")
 SEMESTER_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 
@@ -50,6 +81,24 @@ AREA_LABELS = {
         "free_elective": "Free elective",
         "abv": "ABV",
     },
+    "bsc_physik": {
+        "compulsory": "Compulsory Physik",
+        "compulsory_elective": "Compulsory-elective Physik",
+        "abv": "ABV",
+    },
+    "bsc_bioinformatik": {
+        "informatik": "Informatik/Algorithmische Bioinformatik",
+        "mathematik_statistik": "Mathematik/Statistik",
+        "biologie_chemie": "Biologie/Chemie/Biochemie",
+        "wahlbereich": "Wahlbereich",
+        "abv": "ABV",
+    },
+    "msc_physik": {
+        "compulsory": "Compulsory modules",
+        "compulsory_elective": "Compulsory-elective (Wahlpflicht)",
+        "elective": "Elective area (Wahlbereich)",
+        "research_phase": "Research phase",
+    },
 }
 
 
@@ -68,6 +117,11 @@ def normalize_course_url(value: Any) -> str | None:
 def course_type_label(course_type: str) -> str:
     """Return the display label for a stable course-type ID."""
     return COURSE_TYPE_LABELS.get(course_type, course_type.replace("_", " ").title())
+
+
+def area_note(degree_id: str, area: str) -> str | None:
+    """Return an optional degree-specific note for an area, shown once per area."""
+    return AREA_NOTES.get(degree_id, {}).get(area)
 
 
 def area_label(degree_id: str, area: str) -> str:
@@ -150,6 +204,9 @@ def validate_course_catalog() -> None:
             for flag in ("is_ungraded", "is_bachelor_module", "is_scientific_work", "is_software_project"):
                 if flag in module and not isinstance(module[flag], bool):
                     raise ValueError(f"{degree_id} module {module_id!r} {flag} must be a boolean.")
+            code = module.get("fu_module_code")
+            if code is not None and (not isinstance(code, str) or not FU_MODULE_CODE_RE.fullmatch(code)):
+                raise ValueError(f"{degree_id} module {module_id!r} fu_module_code must look like '0086eA1.14'; got {code!r}.")
 
         mappings = data.get("offering_credits", [])
         if not isinstance(mappings, list):
@@ -176,8 +233,18 @@ def validate_course_catalog() -> None:
                 seen_areas.add(area)
                 if placement.get("lp") is not None and not isinstance(placement["lp"], int):
                     raise ValueError(f"{degree_id} credit mapping {course_id!r} lp must be an integer or null.")
-                if placement.get("description") is not None and not isinstance(placement["description"], str):
-                    raise ValueError(f"{degree_id} credit mapping {course_id!r} description must be a string or null.")
+                if "description" in placement:
+                    raise ValueError(f"{degree_id} credit mapping {course_id!r} uses removed field 'description'; use credit_note.")
+                note = placement.get("credit_note")
+                if note is not None and (
+                    not isinstance(note, str)
+                    or len(note) > CREDIT_NOTE_MAX_LENGTH
+                    or CREDIT_NOTE_FORBIDDEN_RE.search(note)
+                ):
+                    raise ValueError(
+                        f"{degree_id} credit mapping {course_id!r} credit_note must be one short sentence about "
+                        f"crediting (max {CREDIT_NOTE_MAX_LENGTH} chars, no event numbers, module codes, or times)."
+                    )
                 if "is_bachelor_module" in placement and not isinstance(placement["is_bachelor_module"], bool):
                     raise ValueError(f"{degree_id} credit mapping {course_id!r} is_bachelor_module must be a boolean.")
             credit_map[course_id] = placements
@@ -194,7 +261,7 @@ def validate_course_catalog() -> None:
             missing = REQUIRED_OFFERING_FIELDS - set(offering)
             if missing:
                 raise ValueError(f"{label} misses required fields: {sorted(missing)}")
-            extra = set(offering) - REQUIRED_OFFERING_FIELDS
+            extra = set(offering) - REQUIRED_OFFERING_FIELDS - OPTIONAL_OFFERING_FIELDS
             if extra:
                 raise ValueError(f"{label} has unsupported fields: {sorted(extra)}")
             course_id = offering["course_id"]
@@ -204,13 +271,66 @@ def validate_course_catalog() -> None:
                 raise ValueError(f"{label} has invalid course type {offering.get('type')!r}.")
             if offering.get("lp") is not None and not isinstance(offering["lp"], int):
                 raise ValueError(f"{label}.lp must be an integer or null.")
-            for field in ("schedule", "description", "url"):
-                if offering.get(field) is not None and not isinstance(offering[field], str):
-                    raise ValueError(f"{label}.{field} must be a string or null.")
+            if offering.get("url") is not None and not isinstance(offering["url"], str):
+                raise ValueError(f"{label}.url must be a string or null.")
+            _validate_sessions(f"{label}.first_sessions", offering["first_sessions"], max_count=MAX_FIRST_SESSIONS)
+            if "uebungen" in offering:
+                if offering["type"] != "vl":
+                    raise ValueError(f"{label}.uebungen is only allowed on lectures (type 'vl').")
+                _validate_sessions(f"{label}.uebungen", offering["uebungen"])
+            if "uebung_url" in offering:
+                if offering["type"] != "vl":
+                    raise ValueError(f"{label}.uebung_url is only allowed on lectures (type 'vl').")
+                if offering["uebung_url"] is not None and not isinstance(offering["uebung_url"], str):
+                    raise ValueError(f"{label}.uebung_url must be a string or null.")
             identity = (semester, offering["type"], course_id)
             if identity in seen_entries:
                 raise ValueError(f"{label} duplicates {identity}.")
             seen_entries.add(identity)
+
+
+def _validate_sessions(label: str, value: Any, *, max_count: int | None = None) -> None:
+    if not isinstance(value, list):
+        raise ValueError(f"{label} must be a list of first appointments; got {value!r}.")
+    if max_count is not None and len(value) > max_count:
+        raise ValueError(f"{label} holds at most {max_count} first appointments; got {len(value)}.")
+    for index, session in enumerate(value):
+        _validate_session(f"{label}[{index}]", session)
+    keys = [(session["date"], session.get("start") or "", session.get("room") or "") for session in value]
+    if keys != sorted(set(keys)):
+        raise ValueError(f"{label} must be sorted by date, start, and room without duplicates.")
+
+
+def _validate_session(label: str, value: Any) -> None:
+    hint = 'expected {"date": "YYYY-MM-DD", "start": "HH:MM", "end": "HH:MM", "room": "..."} for one first appointment'
+    if not isinstance(value, dict) or "date" not in value or set(value) - SESSION_FIELDS:
+        raise ValueError(f"{label}: {hint}; got {value!r}.")
+    try:
+        date.fromisoformat(value["date"])
+    except (TypeError, ValueError):
+        raise ValueError(f"{label}.date must be YYYY-MM-DD; got {value['date']!r}.") from None
+    if ("start" in value) != ("end" in value):
+        raise ValueError(f"{label} needs both start and end, or neither.")
+    if "start" in value:
+        if not all(isinstance(value[k], str) and TIME_RE.fullmatch(value[k]) for k in ("start", "end")):
+            raise ValueError(f"{label} start/end must be HH:MM; got {value!r}.")
+        if value["start"] >= value["end"]:
+            raise ValueError(f"{label} start must be before end; got {value!r}.")
+    room = value.get("room")
+    if room is not None and (not isinstance(room, str) or not room.strip() or ";" in room):
+        raise ValueError(f"{label}.room must be one room name; got {room!r}.")
+
+
+def format_session(session: dict[str, str]) -> str:
+    """Render one weekly slot by its first appointment, e.g. for LLM context."""
+    day = date.fromisoformat(session["date"])
+    text = WEEKDAYS_EN[day.weekday()]
+    if session.get("start"):
+        text += f" {session['start']}-{session['end']}"
+    text += f" from {day.strftime('%d.%m.%Y')}"
+    if session.get("room"):
+        text += f" ({session['room']})"
+    return text
 
 
 def _degree_placements(degree_id: str, course_id: str) -> list[dict[str, Any]]:
@@ -225,7 +345,7 @@ def project_offerings(degree_id: str) -> dict[str, Any]:
     return _project_offerings_cached(degree_id)
 
 
-@lru_cache(maxsize=8)
+@lru_cache(maxsize=16)
 def _project_offerings_cached(degree_id: str) -> dict[str, Any]:
     from app.domain.degrees import get_degree
 
@@ -239,9 +359,12 @@ def _project_offerings_cached(degree_id: str) -> dict[str, Any]:
             course = {
                 "title": offering["title"],
                 "module_catalog_name": degree.course_modules[placement["module_id"]],
+                "fu_module_code": module.get("fu_module_code"),
                 "lp": placement.get("lp") if placement.get("lp") is not None else offering.get("lp"),
-                "schedule": offering.get("schedule"),
-                "description": placement.get("description", offering.get("description")),
+                "first_sessions": offering["first_sessions"],
+                "uebungen": offering.get("uebungen", []),
+                "uebung_url": offering.get("uebung_url"),
+                "credit_note": placement.get("credit_note"),
                 "url": offering.get("url"),
             }
             if placement.get("is_bachelor_module") or module.get("is_bachelor_module"):
@@ -352,7 +475,7 @@ def format_course_lookup_context(
             f"Courses listed: {len(bucket['courses'])}",
         ]
         for index, course in enumerate(bucket["courses"], start=1):
-            lines.extend(_format_course(index, course, include_course_url=include_course_urls))
+            lines.extend(_format_course(index, course, bucket["course_type"], include_course_url=include_course_urls))
         parts.append("\n".join(lines))
     return "" if len(parts) == 1 else "\n\n".join(parts)
 
@@ -385,23 +508,40 @@ def _append_unique_citation(citations: list[dict[str, Any]], seen: set[tuple[str
 def _normalized_course(course: dict[str, Any]) -> dict[str, Any]:
     normalized = dict(course)
     normalized["url"] = normalize_course_url(course.get("url"))
+    if course.get("uebung_url"):
+        normalized["uebung_url"] = normalize_course_url(course["uebung_url"])
     return normalized
 
 
 def _format_course(
     index: int,
     course: dict[str, Any],
+    course_type: str,
     *,
     include_course_url: bool = True,
 ) -> list[str]:
     lp = course.get("lp") if course.get("lp") is not None else "not listed in offerings data"
-    lines = [f"{index}. Title: {course.get('title')}", f"   Module catalog name: {course.get('module_catalog_name')}", f"   LP: {lp}"]
+    lines = [f"{index}. Title: {course.get('title')}", f"   Module catalog name: {course.get('module_catalog_name')}"]
+    if course.get("fu_module_code"):
+        lines.append(f"   FU module code: {course['fu_module_code']}")
+    lines.append(f"   LP: {lp}")
     if course.get("is_bachelor_module"):
         lines.append("   Bachelor module: counts toward the maximum of 15 LP of Bachelor modules in a Master plan.")
-    if course.get("schedule"):
-        lines.append(f"   Schedule: {course['schedule']}")
-    if course.get("description"):
-        lines.append(f"   Description: {course['description']}")
+    if course.get("first_sessions"):
+        sessions = "; ".join(format_session(session) for session in course["first_sessions"])
+        lines.append(f"   Sessions (weekly): {sessions}")
+    if course_type == "vl":
+        groups = course.get("uebungen") or []
+        if not groups:
+            lines.append("   Übung: no data")
+        elif len(groups) > UEBUNG_CONTEXT_MAX_GROUPS:
+            lines.append(f"   Übung: {len(groups)} groups (times not listed here)")
+        else:
+            lines.append(f"   Übung groups (weekly): {'; '.join(format_session(group) for group in groups)}")
+        if include_course_url and course.get("uebung_url"):
+            lines.append(f"   Übung URL: {course['uebung_url']}")
+    if course.get("credit_note"):
+        lines.append(f"   Credit note: {course['credit_note']}")
     if include_course_url and course.get("url"):
         lines.append(f"   URL: {course['url']}")
     return lines

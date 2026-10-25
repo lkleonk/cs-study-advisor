@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 
 from app.domain.degrees.msc_informatik.program_rules import get_program_rules
-from app.domain.degrees.msc_informatik.prompts import CLASSIFIER_SYSTEM_PROMPT
+from app.domain.degrees import get_degree
 from app.domain.program_rules import CROSS_UNIVERSITY_RULE_SECTION_ID, render_rules_context
 from app.main import app
 
@@ -64,6 +64,9 @@ def test_rules_context_can_exclude_cross_university_section():
 
     assert "COURSES AT HU BERLIN AND TU BERLIN" not in rules_context
     assert "SOFTWAREPROJEKT" in rules_context
+
+
+CLASSIFIER_SYSTEM_PROMPT = get_degree("msc_informatik").prompts.classifier_system_prompt
 
 
 def test_classifier_prompt_does_not_include_degree_rule_catalogue():

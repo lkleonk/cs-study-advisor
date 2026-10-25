@@ -18,7 +18,8 @@
     },
     {
       "id": "data_science_in_life_sciences",
-      "course_id": "data_science_in_life_sciences"
+      "course_id": "data_science_in_life_sciences",
+      "fu_module_code": "0590bB1.1"
     },
     {
       "id": "forschungspraxis",
@@ -34,7 +35,8 @@
     },
     {
       "id": "spezielle_aspekte_ds_life_sciences",
-      "course_id": "spezielle_aspekte_ds_life_sciences"
+      "course_id": "spezielle_aspekte_ds_life_sciences",
+      "fu_module_code": "0590bB1.7"
     },
     {
       "id": "aktuelle_forschungsthemen_ds_life_sciences",
@@ -42,7 +44,8 @@
     },
     {
       "id": "masterseminar_ds_life_sciences",
-      "course_id": "masterseminar_ds_life_sciences"
+      "course_id": "masterseminar_ds_life_sciences",
+      "fu_module_code": "0590bB1.6"
     },
     {
       "id": "ausgewaehlte_themen_ds_life_sciences",
@@ -50,7 +53,8 @@
     },
     {
       "id": "machine_learning_in_bioinformatics",
-      "course_id": "machine_learning_in_bioinformatics"
+      "course_id": "machine_learning_in_bioinformatics",
+      "fu_module_code": "0262cD1.7"
     },
     {
       "id": "big_data_analysis_in_bioinformatics",
@@ -58,7 +62,8 @@
     },
     {
       "id": "applied_machine_learning_in_bioinformatics",
-      "course_id": "applied_machine_learning_in_bioinformatics"
+      "course_id": "applied_machine_learning_in_bioinformatics",
+      "fu_module_code": "0262cD1.12"
     },
     {
       "id": "spezielle_aspekte_ds_technologies",
@@ -86,7 +91,8 @@
     },
     {
       "id": "datenbanksysteme_data_science",
-      "course_id": "datenbanksysteme_data_science"
+      "course_id": "datenbanksysteme_data_science",
+      "fu_module_code": "0590bB2.9"
     },
     {
       "id": "verteilte_systeme",
@@ -308,6 +314,12 @@
       "course_id": "complex_systems_in_bioinformatics",
       "placements": [
         { "module_id": "spezielle_aspekte_ds_life_sciences", "area": "life_sciences", "lp": 5 }
+      ]
+    },
+    {
+      "course_id": "complex_systems_in_bioinformatics_seminar",
+      "placements": [
+        { "module_id": "masterseminar_ds_life_sciences", "area": "life_sciences", "lp": 5 }
       ]
     },
     {

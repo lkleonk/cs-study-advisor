@@ -2,6 +2,7 @@ from fastapi import APIRouter, File, Form, HTTPException, Request, Response, Upl
 
 from app.domain.course_offerings import (
     area_label,
+    area_note,
     course_type_label,
     normalize_course_url,
     project_offerings,
@@ -179,6 +180,7 @@ async def read_course_offerings(degree: str = DEFAULT_DEGREE_ID):
                 {
                     "id": area_id,
                     "label": area_label(degree, area_id),
+                    "note": area_note(degree, area_id),
                     "course_types": rendered_types,
                 }
             )

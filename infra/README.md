@@ -96,8 +96,9 @@ Invoke-RestMethod "$backendUrl/health"
 ## What is intentionally deferred
 
 - GitHub Actions workflows for frontend and backend releases
-- custom-domain validation and DNS cutover for `cs-modulio.com` and
-  `api.cs-modulio.com`
+- `api.` custom domain for the backend (the frontend custom domain
+  `unimodulio.com` is set via `frontend_custom_domain`; see
+  `docs/deployment.md`)
 - remote Terraform state
 - shared session/quota persistence and horizontal scaling
 - Azure Files for WizardFlow traces

@@ -152,12 +152,29 @@ export type ProgramRulesCatalogue = {
   sections: ProgramRuleSection[];
 };
 
+export type FirstSession = {
+  /** ISO date, YYYY-MM-DD. */
+  date: string;
+  /** HH:MM; start and end are both set or both absent. */
+  start?: string | null;
+  end?: string | null;
+  room?: string | null;
+};
+
 export type CourseOfferingItem = {
   title: string;
   module_catalog_name?: string | null;
+  /** Official FU module code of the credited module, e.g. "0086eA1.14". */
+  fu_module_code?: string | null;
   lp: number | null;
-  schedule?: string | null;
-  description?: string | null;
+  /** First appointment of each weekly lecture/seminar slot (at most two); not the timetable. */
+  first_sessions?: FirstSession[];
+  /** First appointment of each Übung group (lectures only); empty while the VV lists none. */
+  uebungen?: FirstSession[];
+  /** VV page of the lecture's Übung event. */
+  uebung_url?: string | null;
+  /** Degree-specific crediting caveat for chat context; not shown on cards. */
+  credit_note?: string | null;
   url?: string | null;
   is_bachelor_module?: boolean | null;
 };
@@ -171,6 +188,8 @@ export type CourseOfferingType = {
 export type CourseOfferingArea = {
   id: string;
   label: string;
+  /** Optional note shown once under the area heading. */
+  note?: string | null;
   course_types: CourseOfferingType[];
 };
 

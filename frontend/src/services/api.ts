@@ -41,6 +41,19 @@ export class ApiError extends Error {
   }
 }
 
+/** Error codes of the backend's HTTP 429 daily-quota responses. */
+export type QuotaErrorCode = "daily_user_action_quota_exceeded" | "daily_service_quota_exceeded";
+
+export function quotaErrorCode(error: unknown): QuotaErrorCode | null {
+  if (!(error instanceof ApiError) || error.status !== 429 || !isRecord(error.detail)) {
+    return null;
+  }
+  const code = error.detail.error_code;
+  return code === "daily_user_action_quota_exceeded" || code === "daily_service_quota_exceeded"
+    ? code
+    : null;
+}
+
 function joinUrl(path: string) {
   const base = API_BASE_URL.replace(/\/$/, "");
   return `${base}${path.startsWith("/") ? path : `/${path}`}`;

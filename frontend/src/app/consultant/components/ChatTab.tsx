@@ -1,5 +1,6 @@
 "use client";
 
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DataUsageOutlinedIcon from "@mui/icons-material/DataUsageOutlined";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -20,7 +21,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDegree } from "@/context/DegreeContext";
 import { useSettings } from "@/context/SettingsContext";
 import { useUsage } from "@/context/UsageContext";
-import { ApiError, createSession, sendMessage } from "@/services/api";
+import { createSession, quotaErrorCode, sendMessage } from "@/services/api";
 import type { RuleCheckResult, StudyPlan, TranscriptUploadResponse } from "@/types/api";
 
 import {
@@ -44,6 +45,7 @@ type ChatTabProps = {
   onMessagesChange: (messages: ChatMessage[]) => void;
   onOpenUsage: () => void;
   onDownloadChat: () => void;
+  onContinueElsewhere: () => void;
 };
 
 function formatResetTime(value: string) {
@@ -72,8 +74,9 @@ export function ChatTab({
   onMessagesChange,
   onOpenUsage,
   onDownloadChat,
+  onContinueElsewhere,
 }: ChatTabProps) {
-  const { usage, updateQuota } = useUsage();
+  const { usage, updateQuota, noteApiError } = useUsage();
   const { effectiveDegreeId, degrees } = useDegree();
   const currentDegree = degrees.find((degree) => degree.id === effectiveDegreeId);
   const { tracingEnabled } = useSettings();
@@ -125,7 +128,10 @@ export function ChatTab({
     });
   }, [messages, isLoading]);
 
-  const quotaExhausted = usage !== null && usage.remaining <= 0;
+  // Shown only while the caller still has own requests; otherwise the own limit is the reason.
+  const serviceExhausted =
+    usage !== null && usage.remaining > 0 && usage.service.remaining <= 0;
+  const quotaExhausted = usage !== null && (usage.remaining <= 0 || serviceExhausted);
   const canSend = useMemo(
     () => input.trim().length > 0 && !isLoading && !quotaExhausted,
     [input, isLoading, quotaExhausted],
@@ -186,8 +192,10 @@ export function ChatTab({
         onStudyPlan(reply.parsed_study_plan);
       }
     } catch (sendError) {
-      if (sendError instanceof ApiError) {
-        updateQuota(sendError.usage);
+      noteApiError(sendError);
+      if (quotaErrorCode(sendError)) {
+        // The quota dialog explains this; no extra error dialog.
+        return;
       }
       showError(sendError instanceof Error ? sendError.message : "The message could not be sent.");
     } finally {
@@ -197,6 +205,7 @@ export function ChatTab({
     ensureSession,
     input,
     isLoading,
+    noteApiError,
     onRuleCheckResult,
     onStudyPlan,
     quotaExhausted,
@@ -233,6 +242,41 @@ export function ChatTab({
           bgcolor: "background.paper",
         }}
       >
+        <Tooltip
+          title="Unofficial tool, not affiliated with FU Berlin. Answers may be incomplete or incorrect. Please verify important information using official FU Berlin regulations or the responsible advising office."
+          enterTouchDelay={0}
+          leaveTouchDelay={6000}
+        >
+          <Stack
+            component="aside"
+            aria-label="Unofficial service notice"
+            tabIndex={0}
+            direction="row"
+            spacing={0.5}
+            sx={{
+              mr: "auto",
+              minWidth: 0,
+              alignItems: "center",
+              color: "text.secondary",
+              cursor: "help",
+            }}
+          >
+            <InfoOutlinedIcon sx={{ fontSize: 16, flexShrink: 0 }} />
+            <Typography variant="caption" noWrap>
+              {/* Longer wording as width allows; the tooltip always holds the full notice. */}
+              <Box component="span" sx={{ display: { xs: "inline", md: "none" } }}>
+                Unofficial tool
+              </Box>
+              <Box component="span" sx={{ display: { xs: "none", md: "inline", lg: "none" } }}>
+                Unofficial tool, not affiliated with FU Berlin · verify important info
+              </Box>
+              <Box component="span" sx={{ display: { xs: "none", lg: "inline" } }}>
+                Unofficial tool, not affiliated with FU Berlin. Answers may be incomplete or
+                incorrect, so please verify important information.
+              </Box>
+            </Typography>
+          </Stack>
+        </Tooltip>
         <Tooltip title="Your chat isn't saved. Download it if you want to keep a copy.">
           <span>
             <Button
@@ -241,27 +285,53 @@ export function ChatTab({
               startIcon={<DownloadOutlinedIcon fontSize="small" />}
               disabled={messages.length === 0}
               onClick={onDownloadChat}
+              aria-label="Download chat"
+              sx={{
+                minWidth: 0,
+                "& .MuiButton-startIcon": { mr: { xs: 0, sm: 1 }, ml: { xs: 0, sm: -0.5 } },
+              }}
             >
-              Download
+              <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>
+                Download
+              </Box>
             </Button>
           </span>
         </Tooltip>
         <Tooltip
           title={
-            usage
-              ? `${usage.remaining} of ${usage.limit} daily requests left`
-              : "Daily request allowance"
+            serviceExhausted
+              ? `Modulio's shared daily capacity is used up for everyone. Your own ${usage.remaining} of ${usage.limit} requests stay for after the reset.`
+              : usage
+                ? `${usage.remaining} of ${usage.limit} daily requests left`
+                : "Daily request allowance"
           }
         >
           <Chip
             icon={<DataUsageOutlinedIcon />}
             label={
-              usage
-                ? `Usage: ${usage.remaining}/${usage.limit} requests · resets ${formatResetTimeShort(usage.reset_at)}`
-                : "Usage —"
+              serviceExhausted ? (
+                <>
+                  Service limit reached
+                  <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>
+                    {" "}· resets {formatResetTimeShort(usage.reset_at)}
+                  </Box>
+                </>
+              ) : usage ? (
+                <>
+                  <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>
+                    Usage:{" "}
+                  </Box>
+                  {usage.remaining}/{usage.limit}
+                  <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>
+                    {" "}requests · resets {formatResetTimeShort(usage.reset_at)}
+                  </Box>
+                </>
+              ) : (
+                "Usage —"
+              )
             }
             color={
-              usage && usage.remaining <= 0
+              usage && (usage.remaining <= 0 || serviceExhausted)
                 ? "error"
                 : usage && usage.remaining <= 10
                   ? "warning"
@@ -478,27 +548,20 @@ export function ChatTab({
             </span>
           </Tooltip>
         </Stack>
-        <Stack
-          component="aside"
-          aria-label="Unofficial service notice"
-          direction="row"
-          spacing={0.75}
-          sx={{
-            mt: 1,
-            alignItems: "flex-start",
-            justifyContent: "center",
-            color: "text.secondary",
-          }}
-        >
-          <InfoOutlinedIcon sx={{ mt: "1px", fontSize: 16, flexShrink: 0 }} />
-          <Typography variant="caption" sx={{ display: { xs: "block", sm: "none" } }}>
-            Unofficial service. Please verify important information.
-          </Typography>
-          <Typography variant="caption" sx={{ display: { xs: "none", sm: "block" } }}>
-            Unofficial service. Answers may be incomplete or incorrect. Please verify important
-            information using official FU Berlin regulations or the responsible advising office.
-          </Typography>
-        </Stack>
+        {quotaExhausted && (
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{ alignItems: "center", justifyContent: "center", flexWrap: "wrap", mt: 1 }}
+          >
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
+              Want to keep going today?
+            </Typography>
+            <Button size="small" startIcon={<ContentCopyIcon />} onClick={onContinueElsewhere}>
+              Continue in your own AI assistant
+            </Button>
+          </Stack>
+        )}
       </Box>
       <ChatErrorDialog
         open={errorDialogOpen}

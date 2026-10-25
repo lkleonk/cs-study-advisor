@@ -37,8 +37,8 @@ def test_bsc_compulsory_and_elective_modules_project_from_the_shared_semester_fi
 
     bks = next(course for course in compulsory_lectures if course["title"] == "Betriebs- und Kommunikationssysteme")
     assert bks["lp"] == 6
-    assert "19300701" in bks["description"]
-    assert "Barry Linnert" in bks["description"]
+    assert bks["fu_module_code"] == "0086eA1.10"
+    assert "description" not in bks
 
     assert {course["title"] for course in elective_lectures} >= {
         "Angewandte Biometrie",
@@ -70,5 +70,6 @@ def test_bsc_math_offerings_are_free_elective_candidates_not_automatic_credit_cl
     computer_math = next(course for course in courses if course["title"] == "Computerorientierte Mathematik II")
 
     assert analysis["lp"] == 10
-    assert "candidate" in analysis["description"]
+    assert "candidate" in analysis["credit_note"]
+    assert analysis["fu_module_code"] == "0084dA1.2"
     assert computer_math["lp"] == 5

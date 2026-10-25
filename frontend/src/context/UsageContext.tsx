@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from "react";
 
-import { getUsage } from "@/services/api";
+import { ApiError, getUsage, quotaErrorCode } from "@/services/api";
 import type { UsageQuota, UsageResponse } from "@/types/api";
 
 type UsageContextValue = {
@@ -19,6 +19,8 @@ type UsageContextValue = {
   error: string | null;
   refreshUsage: () => Promise<void>;
   updateQuota: (quota: UsageQuota | null) => void;
+  /** Apply the quota state carried by a failed request (user or service-wide limit). */
+  noteApiError: (error: unknown) => void;
 };
 
 const UsageContext = createContext<UsageContextValue | null>(null);
@@ -61,9 +63,23 @@ export function UsageProvider({ children }: { children: ReactNode }) {
     [refreshUsage, usage],
   );
 
+  const noteApiError = useCallback(
+    (requestError: unknown) => {
+      if (requestError instanceof ApiError) {
+        updateQuota(requestError.usage);
+      }
+      // The service-wide 429 carries no per-user headers; refetch so
+      // usage.service.remaining reflects the exhausted shared allowance.
+      if (quotaErrorCode(requestError) === "daily_service_quota_exceeded") {
+        void refreshUsage();
+      }
+    },
+    [refreshUsage, updateQuota],
+  );
+
   const value = useMemo(
-    () => ({ usage, isLoading, error, refreshUsage, updateQuota }),
-    [error, isLoading, refreshUsage, updateQuota, usage],
+    () => ({ usage, isLoading, error, refreshUsage, updateQuota, noteApiError }),
+    [error, isLoading, noteApiError, refreshUsage, updateQuota, usage],
   );
 
   return <UsageContext.Provider value={value}>{children}</UsageContext.Provider>;

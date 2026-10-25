@@ -18,7 +18,7 @@ export default function DatenschutzPage() {
     <LegalPageShell
       eyebrow="Datenschutz"
       title="Datenschutzerklärung"
-      lead="Diese Datenschutzerklärung erläutert die Verarbeitung personenbezogener Daten bei der Nutzung von Modulio. Stand: 24. Juni 2026."
+      lead="Diese Datenschutzerklärung erläutert die Verarbeitung personenbezogener Daten bei der Nutzung von Modulio. Stand: 8. Oktober 2026."
     >
       {!isLegalContactConfigured && <LegalConfigurationNotice />}
 
@@ -45,10 +45,19 @@ export default function DatenschutzPage() {
           Server-Logdaten gehören.
         </p>
         <p>
+          Die Website wird als statische Seite über Microsoft Azure Storage bereitgestellt;
+          der Backend-Dienst läuft in Microsoft Azure Container Apps. Beide werden im
+          Azure-Rechenzentrum Schweiz Nord (Zürich) betrieben. Der Abruf der Website läuft
+          zusätzlich über das Content-Delivery-Netzwerk von Cloudflare, das die Verbindung
+          verschlüsselt und die Website vor Angriffen schützt. Anfragen an den Backend-Dienst,
+          also Chatnachrichten und PDF-Uploads, werden direkt an Azure gesendet und laufen
+          nicht über Cloudflare.
+        </p>
+        <p>
           Die Verarbeitung dient der sicheren und stabilen Bereitstellung des Angebots. Sie
-          erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO. Speicherdauer und konkreter
-          Hosting-Anbieter richten sich nach der jeweiligen Bereitstellungskonfiguration und
-          müssen vom Betreiber vor der Veröffentlichung ergänzt werden.
+          erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO. Protokolle des Backend-Dienstes
+          werden in Azure Log Analytics 30 Tage lang gespeichert und danach automatisch
+          gelöscht. Für die Protokolle von Cloudflare gelten dessen eigene Speicherfristen.
         </p>
       </LegalSection>
 
@@ -56,8 +65,9 @@ export default function DatenschutzPage() {
         <p>
           Wenn Sie eine Nachricht senden, verarbeitet der Backend-Dienst den Nachrichteninhalt,
           eine zufällig erzeugte Sitzungs-ID und die für die Antwort benötigten bisherigen
-          Sitzungsdaten. Eingaben werden an den für diese Bereitstellung konfigurierten
-          Sprachmodell-Dienst übermittelt. Eine Anfrage kann mehrere Modellaufrufe auslösen.
+          Sitzungsdaten. Eingaben werden zur Beantwortung an den Sprachmodell-Dienst der
+          AcademicCloud (siehe Abschnitt 8) übermittelt. Eine Anfrage kann mehrere
+          Modellaufrufe auslösen.
         </p>
         <p>
           Die Verarbeitung ist erforderlich, um die ausdrücklich angeforderte Studienberatung
@@ -69,17 +79,14 @@ export default function DatenschutzPage() {
       <LegalSection title="4. Upload von Leistungsübersichten">
         <p>
           Der optionale PDF-Upload überträgt die Datei an den Backend-Dienst. Dort wird Text aus
-          der PDF extrahiert und ungekürzt an den konfigurierten Sprachmodell-Dienst gesendet,
+          der PDF extrahiert und ungekürzt an den Sprachmodell-Dienst gesendet,
           um Module und Leistungspunkte zu erkennen. Bildbasierte oder unzureichend lesbare PDFs
           werden abgelehnt. Die maximale Dateigröße beträgt 15 MB.
         </p>
         <p>
-          Im regulären Sitzungszustand werden anschließend nur der strukturierte Studienplan und
-          das Ergebnis der regelbasierten Prüfung weitergeführt, nicht der rohe extrahierte
-          PDF-Text. Ist die diagnostische WizardFlow-Aufzeichnung aktiviert, kann der
-          unredigierte extrahierte Text jedoch zusätzlich in einer lokalen Trace-Datei auf dem
-          Anwendungsserver gespeichert werden. Diese Aufzeichnung lässt sich im Willkommensdialog
-          und unter „Settings“ abschalten; siehe Abschnitt 7.
+          Anschließend werden nur der strukturierte Studienplan und das Ergebnis der
+          regelbasierten Prüfung in der Sitzung weitergeführt. Die PDF-Datei und der daraus
+          extrahierte Text werden nicht gespeichert.
         </p>
       </LegalSection>
 
@@ -111,32 +118,30 @@ export default function DatenschutzPage() {
 
       <LegalSection title="7. Diagnosedaten">
         <p>
-          Wenn WizardFlow aktiviert ist, können Eingaben, interne Prompts, Modellausgaben,
-          Fehlerdetails und Ergebnisse lokaler Prüfschritte in Trace-Dateien auf dem
-          Anwendungsserver gespeichert werden. Diese Dateien können personenbezogene Daten und
-          unredigierten Transkripttext enthalten und unterliegen nicht automatisch der
-          48-stündigen Sitzungslöschung. Der Betreiber muss für die konkrete Bereitstellung einen
-          Zugriffsschutz und eine Löschfrist festlegen.
-        </p>
-        <p>
-          Ist die Aufzeichnung in dieser Bereitstellung aktiviert, kann ihr im Willkommensdialog
-          oder jederzeit unter „Settings“ widersprochen werden. Nach dem Abschalten werden für
-          Anfragen dieses Browsers keine Trace-Daten mehr geschrieben; bereits zuvor
-          geschriebene Trace-Dateien werden dadurch nicht entfernt. Die Auswahl wird im
-          <code>localStorage</code> des Browsers gespeichert und gilt daher pro Browser. Ist die
-          Aufzeichnung serverseitig deaktiviert, entfällt die Auswahlmöglichkeit, weil keine
-          Trace-Daten entstehen.
+          Modulio zeichnet keine Gesprächsinhalte zu Diagnosezwecken auf. Chatnachrichten,
+          Modellantworten und hochgeladene Dokumente werden nicht in Diagnose- oder
+          Trace-Dateien gespeichert.
         </p>
       </LegalSection>
 
       <LegalSection title="8. Empfänger und Auftragsverarbeiter">
-        <p>
-          Empfänger können der Hosting-Anbieter und der jeweils konfigurierte LLM-Anbieter sein.
-          Je nach Bereitstellung wird das Modell über AcademicCloud, einen FU-internen
-          Ollama-Dienst oder einen lokal betriebenen Ollama-Dienst angesprochen. Der Betreiber
-          muss vor Veröffentlichung die tatsächlich eingesetzten Empfänger, deren Standorte und
-          gegebenenfalls geeignete Garantien für Drittlandübermittlungen konkret benennen.
-        </p>
+        <ul>
+          <li>
+            <strong>Microsoft Azure</strong> (Microsoft) für Hosting, Backend-Dienst und
+            Protokollierung. Die Server stehen in der Schweiz (Azure-Region Schweiz Nord,
+            Zürich). Für die Schweiz besteht ein Angemessenheitsbeschluss der EU-Kommission.
+          </li>
+          <li>
+            <strong>Cloudflare</strong> (Cloudflare, Inc., USA) als Content-Delivery-Netzwerk für
+            den Abruf der Website. Cloudflare ist unter dem EU-US Data Privacy Framework
+            zertifiziert.
+          </li>
+          <li>
+            <strong>AcademicCloud</strong> (Gesellschaft für wissenschaftliche Datenverarbeitung
+            mbH Göttingen, GWDG) als Sprachmodell-Dienst für Chatnachrichten und
+            PDF-Inhalte. Die Verarbeitung erfolgt in Deutschland.
+          </li>
+        </ul>
       </LegalSection>
 
       <LegalSection title="9. Cookies, Analytics und Tracking">
@@ -158,8 +163,8 @@ export default function DatenschutzPage() {
 
       <LegalSection title="11. Aktualisierungen">
         <p>
-          Diese Datenschutzerklärung ist anzupassen, wenn sich Hosting, LLM-Anbieter,
-          Protokollierung, Speicherdauern oder andere Verarbeitungsvorgänge ändern.
+          Wir passen diese Datenschutzerklärung an, wenn sich die beschriebenen Verarbeitungen
+          ändern. Es gilt die jeweils auf dieser Seite veröffentlichte Fassung.
         </p>
       </LegalSection>
     </LegalPageShell>

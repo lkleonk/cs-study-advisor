@@ -30,7 +30,7 @@ import { CourseRegistryTab } from "./CourseRegistryTab";
 import { DegreeRulesTab } from "./DegreeRulesTab";
 import { DegreeSwitchDialog } from "./DegreeSwitchDialog";
 import { LowRequestWarningDialog } from "./LowRequestWarningDialog";
-import { QuotaExhaustedDialog } from "./QuotaExhaustedDialog";
+import { QuotaExhaustedDialog, type QuotaExhaustedScope } from "./QuotaExhaustedDialog";
 import { RequestUsageDialog } from "./RequestUsageDialog";
 import { SettingsTab } from "./SettingsTab";
 import { StudyPlanTab } from "./StudyPlanTab";
@@ -39,12 +39,14 @@ import {
   CURRENT_WELCOME_VERSION,
   SESSION_ID_STORAGE_KEY,
   WELCOME_VERSION_STORAGE_KEY,
-  WIZARDFLOW_PROMO_STORAGE_KEY,
 } from "./storage";
 import { WelcomeDialog } from "./WelcomeDialog";
-import { WizardFlowPromo } from "./WizardFlowPromo";
 
 type TabId = "chat" | "study-plan" | "degree-rules" | "course-registry" | "settings";
+
+/** Viewport widths where the header switches layout; see the Tabs sx below. */
+const HEADER_ONE_ROW_MIN_WIDTH = 800;
+const HEADER_TAB_ICONS_MIN_WIDTH = 1000;
 
 const tabs: { label: string; icon: ReactElement; id: TabId }[] = [
   { label: "Chat", icon: <ChatBubbleOutlineIcon />, id: "chat" },
@@ -104,7 +106,14 @@ export function ConsultantShell() {
   const [welcomeChecked, setWelcomeChecked] = useState(false);
   const [lowRequestWarningOpen, setLowRequestWarningOpen] = useState(false);
   const [quotaExhaustedOpen, setQuotaExhaustedOpen] = useState(false);
-  const [wizardFlowPromoOpen, setWizardFlowPromoOpen] = useState(false);
+  // The visitor's own limit wins: when both are used up, that is the truthful reason.
+  const quotaExhaustedScope: QuotaExhaustedScope | null = !usage
+    ? null
+    : usage.remaining <= 0
+      ? "user"
+      : usage.service.remaining <= 0
+        ? "service"
+        : null;
   const [chatExportOpen, setChatExportOpen] = useState(false);
   const [chatMessagesToExport, setChatMessagesToExport] = useState<ChatMessage[]>([]);
 
@@ -157,34 +166,18 @@ export function ConsultantShell() {
   }, [usage, welcomeChecked, welcomeOpen]);
 
   useEffect(() => {
-    if (!welcomeChecked || welcomeOpen || !usage || usage.remaining > 0) {
+    if (!welcomeChecked || welcomeOpen || !quotaExhaustedScope || !usage) {
       return;
     }
 
-    const exhaustedKey = `fu-consultant-quota-exhausted-${usage.reset_at}`;
+    const exhaustedKey = `fu-consultant-quota-exhausted-${quotaExhaustedScope}-${usage.reset_at}`;
     if (window.sessionStorage.getItem(exhaustedKey)) {
       return;
     }
     window.sessionStorage.setItem(exhaustedKey, "shown");
     const timer = window.setTimeout(() => setQuotaExhaustedOpen(true), 0);
     return () => window.clearTimeout(timer);
-  }, [usage, welcomeChecked, welcomeOpen]);
-
-  useEffect(() => {
-    if (!welcomeChecked || welcomeOpen || lowRequestWarningOpen || quotaExhaustedOpen) {
-      return;
-    }
-    if (window.localStorage.getItem(WIZARDFLOW_PROMO_STORAGE_KEY)) {
-      return;
-    }
-    const timer = window.setTimeout(() => setWizardFlowPromoOpen(true), 1200);
-    return () => window.clearTimeout(timer);
-  }, [welcomeChecked, welcomeOpen, lowRequestWarningOpen, quotaExhaustedOpen]);
-
-  const dismissWizardFlowPromo = () => {
-    window.localStorage.setItem(WIZARDFLOW_PROMO_STORAGE_KEY, "1");
-    setWizardFlowPromoOpen(false);
-  };
+  }, [quotaExhaustedScope, usage, welcomeChecked, welcomeOpen]);
 
   const closeWelcome = (selectedDegreeId: string) => {
     window.localStorage.setItem(WELCOME_VERSION_STORAGE_KEY, CURRENT_WELCOME_VERSION);
@@ -294,24 +287,47 @@ export function ConsultantShell() {
             <Box>
               <Typography variant="h1">Modulio</Typography>
               {degrees.length > 1 ? (
-                <Select
-                  value={degrees.some((degree) => degree.id === effectiveDegreeId) ? effectiveDegreeId : ""}
-                  onChange={(event) => requestDegreeSwitch(event.target.value)}
-                  variant="standard"
-                  disableUnderline
-                  inputProps={{ "aria-label": "Degree program" }}
-                  sx={{
-                    fontSize: (theme) => theme.typography.body2.fontSize,
-                    color: "text.secondary",
-                    "& .MuiSelect-select": { py: 0, pr: 3 },
-                  }}
-                >
+                // Every degree name is rendered invisibly in the same grid cell, so the
+                // cell is always as wide as the longest name and the tabs never shift
+                // when the degree changes. The select itself hugs the current name.
+                <Box sx={{ display: "grid", "& > *": { gridArea: "1 / 1" } }}>
                   {degrees.map((degree) => (
-                    <MenuItem key={degree.id} value={degree.id}>
+                    <Box
+                      key={degree.id}
+                      component="span"
+                      aria-hidden
+                      sx={{
+                        visibility: "hidden",
+                        height: 0,
+                        overflow: "hidden",
+                        whiteSpace: "nowrap",
+                        typography: "body2",
+                        pr: 3,
+                      }}
+                    >
                       {degree.display_name}
-                    </MenuItem>
+                    </Box>
                   ))}
-                </Select>
+                  <Select
+                    value={degrees.some((degree) => degree.id === effectiveDegreeId) ? effectiveDegreeId : ""}
+                    onChange={(event) => requestDegreeSwitch(event.target.value)}
+                    variant="standard"
+                    disableUnderline
+                    inputProps={{ "aria-label": "Degree program" }}
+                    sx={{
+                      justifySelf: "start",
+                      fontSize: (theme) => theme.typography.body2.fontSize,
+                      color: "text.secondary",
+                      "& .MuiSelect-select": { py: 0, pr: 3 },
+                    }}
+                  >
+                    {degrees.map((degree) => (
+                      <MenuItem key={degree.id} value={degree.id}>
+                        {degree.display_name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Box>
               ) : (
                 <Typography variant="body2" sx={{ color: "text.secondary" }}>
                   {degrees[0]?.display_name ?? "Degree program"}
@@ -323,10 +339,23 @@ export function ConsultantShell() {
             value={activeTab}
             onChange={(_, nextTab: TabId) => setSelectedTab(nextTab)}
             sx={{
-              order: { xs: 3, lg: 0 },
-              width: { xs: "100%", lg: "auto" },
-              flex: { lg: "1 1 auto" },
-              alignSelf: { lg: "stretch" },
+              // Header steps, measured with the 5-tab degrees (brand ~160px, tabs 675px with
+              // icons / 515px without):
+              //   >= 1000px   one row, icon + label
+              //   800-999px   one row, label only
+              //   600-799px   tabs on their own row, icon + label
+              //   < 600px     tabs on their own row, icon only (label hidden on the Tab)
+              order: 3,
+              width: "100%",
+              [`@media (min-width: ${HEADER_ONE_ROW_MIN_WIDTH}px)`]: {
+                order: 0,
+                width: "auto",
+                flex: "1 1 auto",
+                alignSelf: "stretch",
+              },
+              [`@media (min-width: ${HEADER_ONE_ROW_MIN_WIDTH}px) and (max-width: ${HEADER_TAB_ICONS_MIN_WIDTH - 0.05}px)`]: {
+                "& .MuiTab-icon": { display: "none" },
+              },
               minHeight: { xs: 44, sm: 52 },
               "& .MuiTabs-scroller": {
                 height: "100%",
@@ -335,8 +364,11 @@ export function ConsultantShell() {
                 height: "100%",
               },
               "& .MuiTab-root": {
-                flex: 1,
+                // Size by label and share the spare width; labels never wrap, so the
+                // header wraps to two rows instead of breaking a label.
+                flex: "1 1 auto",
                 height: "100%",
+                whiteSpace: "nowrap",
               },
             }}
           >
@@ -358,7 +390,7 @@ export function ConsultantShell() {
                   minWidth: 0,
                   minHeight: { xs: 44, sm: 52 },
                   px: { xs: 0.75, sm: 2 },
-                  "& .MuiTab-iconWrapper": {
+                  "& .MuiTab-icon": {
                     mr: { xs: 0, sm: 1 },
                   },
                 }}
@@ -386,6 +418,7 @@ export function ConsultantShell() {
               onMessagesChange={setChatMessages}
               onOpenUsage={() => setUsageDialogOpen(true)}
               onDownloadChat={() => openChatExport()}
+              onContinueElsewhere={() => setQuotaExhaustedOpen(true)}
             />
           )}
         </Box>
@@ -466,9 +499,12 @@ export function ConsultantShell() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            gap: 1,
+            flexWrap: "wrap",
+            columnGap: 1,
+            rowGap: 0.25,
             color: "text.secondary",
             fontSize: 12,
+            "& a": { whiteSpace: "nowrap" },
           }}
         >
           <Link component={NextLink} href="/impressum" color="inherit" underline="hover">
@@ -479,6 +515,30 @@ export function ConsultantShell() {
           </Box>
           <Link component={NextLink} href="/datenschutz" color="inherit" underline="hover">
             Datenschutz
+          </Link>
+          <Box component="span" aria-hidden sx={{ opacity: 0.55 }}>
+            /
+          </Box>
+          <Link
+            href="https://github.com/lkleonk/CHATBOT-FU-berlin-computer-science-consultant"
+            target="_blank"
+            rel="noopener noreferrer"
+            color="inherit"
+            underline="hover"
+          >
+            GitHub
+          </Link>
+          <Box component="span" aria-hidden sx={{ opacity: 0.55 }}>
+            /
+          </Box>
+          <Link
+            href="https://getwizardflow.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            color="inherit"
+            underline="hover"
+          >
+            Built with WizardFlow ↗
           </Link>
         </Box>
       </Box>
@@ -518,11 +578,13 @@ export function ConsultantShell() {
       />
       <QuotaExhaustedDialog
         open={quotaExhaustedOpen}
+        scope={quotaExhaustedScope ?? "user"}
         resetAt={usage?.reset_at ?? null}
+        conversation={chatMessages}
         onClose={() => setQuotaExhaustedOpen(false)}
-        onBrowseRegistry={() => {
+        onOpenDegreeRules={() => {
           setQuotaExhaustedOpen(false);
-          setSelectedTab("course-registry");
+          setSelectedTab("degree-rules");
         }}
       />
       <RequestUsageDialog open={usageDialogOpen} onClose={() => setUsageDialogOpen(false)} />
@@ -542,7 +604,6 @@ export function ConsultantShell() {
         onClose={() => setChatExportOpen(false)}
         onDownload={downloadSelectedChatFormat}
       />
-      <WizardFlowPromo open={wizardFlowPromoOpen} onClose={dismissWizardFlowPromo} />
     </Box>
   );
 }

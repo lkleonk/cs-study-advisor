@@ -70,15 +70,31 @@ Analytics. The Container App is fixed at one warm replica while sessions and
 quotas remain process-local, and WizardFlow is disabled because no persistent
 trace storage is provisioned.
 
-The static website has no reverse proxy, so `/api` on `cs-modulio.com` does not
+The static website has no reverse proxy, so `/api` on `unimodulio.com` does not
 reach the backend. `frontend/.env.production` therefore sets
 `NEXT_PUBLIC_API_BASE_URL` to the Container App URL (`terraform output -raw
-backend_url`); the backend's CORS allows `https://cs-modulio.com`. Change it to
-`https://api.cs-modulio.com` once that custom domain is set up.
+backend_url`); the backend's CORS allows `https://unimodulio.com`. Change it to
+`https://api.unimodulio.com` once that custom domain is set up.
+
+The Storage static website serves the custom domain `unimodulio.com`
+(`frontend_custom_domain`). Azure Storage allows one custom domain per account
+and rejects unregistered host names with `400 InvalidUri`. Ownership is proven
+indirectly via the Cloudflare record `asverify` → `asverify.<storage
+account>.blob.core.windows.net` (DNS only), so `@` can stay proxied. Cloudflare
+SSL/TLS must be "Full" (Azure's certificate is for `*.web.core.windows.net`),
+and `www.unimodulio.com` is a Cloudflare redirect to the apex. The new origin
+must also be in the backend CORS origins.
+
+The old domain `cs-modulio.com` is still active but only as a redirect: its
+Cloudflare zone has a proxied placeholder `A` record (`192.0.2.1`) plus a proxied
+`www` CNAME, and a Redirect Rule sends both host names with 301 to
+`https://unimodulio.com` (path and query kept). The old Caddy server no longer
+receives traffic. The domain will be fully deactivated soon; its CORS entries
+can then be dropped from `terraform.tfvars`.
 
 Infrastructure creation uses a two-phase bootstrap so neither an API key nor a
 nonexistent ACR image is required during the first apply. See `infra/README.md`
-for the exact sequence. Custom domains, DNS cutover, remote Terraform state,
+for the exact sequence. The backend `api.` domain, remote Terraform state,
 and GitHub Actions application releases are intentionally deferred.
 
 Azure for Students policies may limit both deployment regions and ACR Tasks.

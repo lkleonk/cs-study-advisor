@@ -59,6 +59,11 @@ function renderTextMessage(message: ChatMessage): string {
   return lines.join("\n");
 }
 
+/** Messages only, without the export header; used when copying a chat elsewhere. */
+export function buildConversationText(messages: ChatMessage[]): string {
+  return messages.map(renderTextMessage).join("\n\n----------------------------------------\n\n");
+}
+
 export function buildChatMarkdown(messages: ChatMessage[]): string {
   return [
     "# Modulio chat",

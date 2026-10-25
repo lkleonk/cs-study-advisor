@@ -39,7 +39,7 @@ def _module_item(module: CatalogModule) -> ProgramRuleItem:
     lp_text = f"{module.lp} LP" if module.lp is not None else "LP varies (see module catalogue)"
     return ProgramRuleItem(
         label=module.name,
-        text=f"{module.name} ({lp_text})",
+        text=lp_text,
         minimum=module.lp,
         maximum=module.lp,
         unit="LP" if module.lp is not None else None,

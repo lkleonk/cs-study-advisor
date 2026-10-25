@@ -118,6 +118,15 @@ resource "azurerm_storage_account" "frontend" {
   shared_access_key_enabled       = true
   allow_nested_items_to_be_public = false
   tags                            = local.common_tags
+
+  dynamic "custom_domain" {
+    for_each = var.frontend_custom_domain == null ? [] : [var.frontend_custom_domain]
+
+    content {
+      name          = custom_domain.value
+      use_subdomain = true
+    }
+  }
 }
 
 resource "azurerm_storage_account_static_website" "frontend" {
@@ -180,8 +189,8 @@ resource "azurerm_container_app" "backend" {
     container {
       name   = "backend"
       image  = local.backend_image
-      cpu    = 0.5
-      memory = "1Gi"
+      cpu    = 0.25
+      memory = "0.5Gi"
 
       env {
         name  = "CONSULTANT_HOST"

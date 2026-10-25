@@ -9,7 +9,7 @@ import { useCallback, useRef, useState, type ChangeEvent } from "react";
 
 import { useSettings } from "@/context/SettingsContext";
 import { useUsage } from "@/context/UsageContext";
-import { ApiError, getApiErrorDetail, uploadTranscript } from "@/services/api";
+import { ApiError, getApiErrorDetail, quotaErrorCode, uploadTranscript } from "@/services/api";
 import type { TranscriptUploadResponse } from "@/types/api";
 
 import { UnreadablePdfDialog } from "./UnreadablePdfDialog";
@@ -33,7 +33,7 @@ export function TranscriptUpload({
   disabled = false,
   variant = "icon",
 }: TranscriptUploadProps) {
-  const { updateQuota } = useUsage();
+  const { updateQuota, noteApiError } = useUsage();
   const { tracingEnabled } = useSettings();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -59,11 +59,11 @@ export function TranscriptUpload({
         updateQuota(response.usage);
         onUploaded(response.data);
       } catch (error) {
-        if (error instanceof ApiError) {
-          updateQuota(error.usage);
-        }
+        noteApiError(error);
         const detail = getApiErrorDetail(error);
-        if (detail?.error_code === "pdf_unreadable") {
+        if (quotaErrorCode(error)) {
+          // The quota dialog explains this; no extra error dialog.
+        } else if (detail?.error_code === "pdf_unreadable") {
           setDialogOpen(true);
         } else {
           const message =
@@ -78,7 +78,7 @@ export function TranscriptUpload({
         setIsUploading(false);
       }
     },
-    [ensureSession, onError, onUploaded, tracingEnabled, updateQuota],
+    [ensureSession, noteApiError, onError, onUploaded, tracingEnabled, updateQuota],
   );
 
   const triggerPicker = () => inputRef.current?.click();

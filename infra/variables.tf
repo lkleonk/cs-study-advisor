@@ -67,7 +67,7 @@ variable "backend_image_tag" {
 variable "frontend_origin" {
   description = "Public frontend origin allowed by backend CORS, without a trailing slash."
   type        = string
-  default     = "https://cs-modulio.com"
+  default     = "https://unimodulio.com"
 
   validation {
     condition     = startswith(var.frontend_origin, "https://") && !endswith(var.frontend_origin, "/")
@@ -86,6 +86,17 @@ variable "additional_frontend_origins" {
       startswith(origin, "https://") && !endswith(origin, "/")
     ])
     error_message = "additional_frontend_origins must contain HTTPS origins without trailing slashes."
+  }
+}
+
+variable "frontend_custom_domain" {
+  description = "Custom domain registered on the frontend Storage account (validated via an asverify CNAME), or null for none."
+  type        = string
+  default     = null
+
+  validation {
+    condition     = var.frontend_custom_domain == null || !can(regex("^https?://|/", var.frontend_custom_domain))
+    error_message = "frontend_custom_domain must be a bare host name without scheme or path."
   }
 }
 

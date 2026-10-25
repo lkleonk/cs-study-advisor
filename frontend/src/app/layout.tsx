@@ -14,7 +14,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Modulio",
-  description: "Study consultant for FU Berlin computer science degree programs.",
+  description: "Study consultant for FU Berlin degree programs.",
   icons: {
     icon: "/favicon.svg",
   },

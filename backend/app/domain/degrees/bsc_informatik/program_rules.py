@@ -73,7 +73,7 @@ COMPULSORY_ELECTIVE_MODULES = (
 
 
 def _module_item(name: str, lp: int) -> ProgramRuleItem:
-    return ProgramRuleItem(label=name, text=f"{name} ({lp} LP)", minimum=lp, maximum=lp, unit="LP")
+    return ProgramRuleItem(label=name, text=f"{lp} LP", minimum=lp, maximum=lp, unit="LP")
 
 
 @lru_cache(maxsize=1)
@@ -84,8 +84,8 @@ def get_program_rules() -> ProgramRulesCatalogue:
         catalogue_version="bsc-informatik-2023-v1",
         source_note=(
             "Rules catalogue for the FU Berlin B.Sc. Informatik 2023 regulations. It covers the "
-            "degree requirements only; local course-offering data and deterministic plan checking "
-            "will be added with the canonical module catalogue. Official FU documents remain authoritative."
+            "degree requirements only, not which modules are offered in a given semester. "
+            "Official FU documents remain authoritative."
         ),
         sections=[
             ProgramRuleSection(

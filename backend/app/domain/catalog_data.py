@@ -39,7 +39,7 @@ def load_courses() -> dict[str, dict[str, Any]]:
     return courses
 
 
-@lru_cache(maxsize=8)
+@lru_cache(maxsize=16)
 def load_degree_module_data(degree_id: str) -> dict[str, Any]:
     path = DEGREE_MODULES_DIR / f"{degree_id}.json"
     data = json.loads(path.read_text(encoding="utf-8"))

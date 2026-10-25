@@ -163,6 +163,9 @@ Current course offerings are read from the canonical catalogue plus
 [x] Hide API/session diagnostics, health details, and dummy data behind
     `NEXT_PUBLIC_ENABLE_DEV_TOOLS`.
 [x] Set the default inactivity retention to 48 hours.
+[x] When the own or service-wide daily limit is exhausted, offer copying the
+    degree rules (optionally with the conversation) for an external AI
+    assistant, plus a shortcut to Degree Rules.
 
 ## Tests
 
@@ -201,6 +204,7 @@ Phase 1 — degree framework:
 [x] Add `domain/degrees/definition.py` (`DegreeDefinition` + `DegreePrompts`).
 [x] Add `domain/degrees/__init__.py` registry with `DEFAULT_DEGREE_ID=msc_informatik`.
 [x] Move Master Informatik prompts/rules/catalogue into `domain/degrees/msc_informatik/`; remove `app/prompts.py`.
+[x] Shared prompt templates in `domain/degrees/prompt_builder.py`; degree `prompts.py` files reduced to a `DegreePromptSpec`.
 [x] Extract shared `RuleIssue`/`RuleCheckResult` into `domain/rule_check.py`.
 [x] Seed `degree_id` into the LangGraph checkpoint at session creation; nodes resolve prompts via `degree_for(state)`.
 [x] `POST /api/sessions` accepts `{"degree": ...}`; add `GET /api/degrees`; `GET /api/program-rules?degree=`.
@@ -219,6 +223,9 @@ Phase 3 — degree packages:
 [x] `msc_data_science`: canonical module catalogue, profile-inference checklist validator, rules catalogue, prompts, tests.
 [ ] `bsc_informatik`: blocked on the §7(3) Pflicht and §7(4) Wahlpflicht module lists (SPO 2023).
 [ ] Add curated Data Science semester offerings once the source data is ready.
+[x] `bsc_physik`: 2024 rules catalogue, module list, SoSe 2026 / WiSe 2026/27 offerings, per-degree heuristic fallback terms; plan validation disabled.
+[x] `bsc_bioinformatik`: 2023 rules catalogue (joint FU/Charité programme, three study areas, Wahlbereich, ABV), module list, WiSe 2026/27 offerings incl. Übung groups; plan validation disabled.
+[x] `msc_physik`: 2024 rules catalogue (incl. research phase and Polytechnique double master), module list, SoSe 2026 / WiSe 2026/27 offerings; plan validation disabled.
 
 Phase 4 — frontend:
 

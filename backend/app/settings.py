@@ -25,7 +25,7 @@ class Settings(BaseModel):
     """Centralized env-backed configuration."""
 
     class Api(BaseModel):
-        TITLE: str = "FU Berlin CS Consultant API"
+        TITLE: str = "Modulio FU Berlin Study Consultant API"
         DESCRIPTION: str = "Backend consultant for FU Berlin Informatik Master study-plan and course-offering questions."
         VERSION: str = "0.1.0"
 

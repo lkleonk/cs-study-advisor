@@ -12,23 +12,35 @@ bottom and read the relevant doc on demand rather than assuming.
 - Do not edit files outside `fu_berlin_cs_consultant/`.
 - Keep original files under `ressources/` untouched unless the user explicitly asks to update source material.
 - Frontend work is allowed only inside `fu_berlin_cs_consultant/frontend/`.
+- Course-offering sessions are first appointments `{date, start?, end?, room?}`,
+  never the full timetable: `first_sessions` holds one per weekly lecture/seminar
+  slot (max 4), `uebungen` (lectures only) one per Übung group, plus its VV
+  `uebung_url`. There is no free-text description: module codes go in
+  `fu_module_code` (module entry), crediting caveats in `credit_note` (placement);
+  event numbers and lecturers are not stored. See
+  `docs/domain-model.md`. Brief data subagents with this contract.
 
 ## Project Purpose
 
-Public website: `https://cs-modulio.com`
+Public website: `https://unimodulio.com`. The old domain `cs-modulio.com`
+(and `www.`) only 301-redirects there via a Cloudflare rule and will be fully
+deactivated soon; do not reference it in new code or docs.
 
 A FU Berlin study consultant for multiple degree programs, with a backend-first
 architecture and a standalone Next.js frontend. Supported degrees live in a
 registry (`backend/app/domain/degrees/`): currently `bsc_informatik`,
-`msc_informatik`, and `msc_data_science`. It answers questions using exact local
-course-offering lookup plus rules in prompts, and validates proposed study plans
-with deterministic per-degree Python rules. The core principle is **LLM parses → Python validates →
+`bsc_physik`, `bsc_bioinformatik`, `msc_informatik`, `msc_data_science`, and `msc_physik`. It answers questions using exact local
+course-offering lookup plus rules in prompts. Study-plan validation with
+deterministic Python rules is switched on per degree via
+`DegreeDefinition.plan_validation_enabled`; currently only `msc_informatik` has it
+on, the other degrees answer from rules in prompts only. The core principle is **LLM parses → Python validates →
 LLM explains**: the LLM may parse and explain, but must not be trusted for final
 LP validation. Every session is bound to exactly one degree; the LLM never
 chooses or infers the degree. The Course Registry is a second, read-only
 consumer of the degree-scoped course-offering projection; it never reads source
 JSON in the frontend or calls the LLM. See `docs/domain-model.md` for the degree
-registry and data layers.
+registry and data layers. To add a degree, follow the checklist under
+"Adding a degree" in `docs/domain-model.md` (`bsc_physik` is the smallest template).
 
 ## Important Paths
 
@@ -53,6 +65,7 @@ fu_berlin_cs_consultant/
       models.py
       settings.py
       domain/
+        catalog_data.py         # loads courses.json and degree_modules/*.json
         course_offerings.py
         program_rules.py        # generic catalogue models + prompt renderer
         rule_check.py           # shared RuleIssue/RuleCheckResult
@@ -64,7 +77,12 @@ fu_berlin_cs_consultant/
         degrees/
           __init__.py           # registry: list_degrees(), get_degree(), DEFAULT_DEGREE_ID
           definition.py         # DegreeDefinition + DegreePrompts contract
-          msc_informatik/       # prompts.py, degree_rules.py, program_rules.py
+          prompt_builder.py     # shared prompt templates; build_prompts(spec)
+          bsc_informatik/       # each: __init__.py, prompts.py, degree_rules.py, program_rules.py
+          bsc_physik/
+          bsc_bioinformatik/    # joint FU/Charité programme
+          msc_informatik/       # only degree with plan validation enabled
+          msc_physik/
           msc_data_science/     # + module_catalog.py (canonical checklist modules)
       services/
       pdf/
@@ -81,9 +99,15 @@ fu_berlin_cs_consultant/
       types/
 ```
 
-There is no `backend/app/prompts.py`. Prompts are per-degree modules
-(`domain/degrees/<degree>/prompts.py`) exposed through `DegreeDefinition.prompts`;
+There is no `backend/app/prompts.py`. Shared prompt templates live in
+`domain/degrees/prompt_builder.py`; each `domain/degrees/<degree>/prompts.py`
+declares only a `DegreePromptSpec`, rendered into `DegreeDefinition.prompts`;
 nodes resolve them via `degree_for(state)` in `services/nodes/utils.py`.
+
+The answer composer always receives the full degree rules; the optional
+course-offering branch adds the looked-up offerings on top. Module names can
+appear in both (e.g. B.Sc. module lists): this overlap is intended, not a bug.
+Rules state requirements, offerings state semester availability.
 
 ## Local CLI Notes
 

@@ -133,13 +133,13 @@ def test_projection_matches_pre_migration_master_buckets():
     new_buckets = {key: courses for key, courses in bucket_index(projected).items() if key[0] == "sose26"}
     assert set(new_buckets) == set(old_buckets)
 
+    # Sessions and description are excluded: the fixture predates the
+    # first-appointment format and the removal of free-text descriptions.
     def comparable(course, lp=None):
         return (
             course["title"],
             course["module_catalog_name"],
             course.get("lp") if lp is None else lp,
-            course.get("schedule"),
-            course.get("description"),
             course.get("url"),
         )
 
@@ -152,3 +152,54 @@ def test_projection_matches_pre_migration_master_buckets():
             for c in old_courses
         ]
         assert sorted(expected, key=str) == sorted(map(comparable, new_courses), key=str), key
+
+
+def test_sessions_hold_only_first_appointments():
+    import pytest
+
+    from app.domain.course_offerings import _validate_sessions, format_session
+
+    monday = {"date": "2026-10-12", "start": "10:00", "end": "12:00", "room": "0.3.12 Großer Hörsaal (Arnimallee 14)"}
+    wednesday = {"date": "2026-10-14", "start": "10:00", "end": "12:00"}
+    _validate_sessions("x", [])
+    _validate_sessions("x", [monday, wednesday], max_count=2)
+    _validate_sessions("x", [{"date": "2026-04-15"}])
+    assert format_session(monday) == "Mon 10:00-12:00 from 12.10.2026 (0.3.12 Großer Hörsaal (Arnimallee 14))"
+    # Timetable strings, extra keys, half time ranges, multi-room text, too many
+    # lecture slots, and unsorted or duplicate sessions are rejected.
+    for bad, max_count in (
+        ("Mo 10:00-12:00, Mi 09:00-11:00; Erster Termin: 12.10.2026", None),
+        ([{"date": "2026-10-12", "uebung": "Mo 14:00-16:00"}], None),
+        ([{"date": "12.10.2026"}], None),
+        ([{"date": "2026-10-12", "start": "10:00"}], None),
+        ([{"date": "2026-10-12", "room": "Hörsaal; Übung: SR 005"}], None),
+        ([monday, wednesday, {"date": "2026-10-16"}], 2),
+        ([wednesday, monday], None),
+        ([monday, monday], None),
+    ):
+        with pytest.raises(ValueError):
+            _validate_sessions("x", bad, max_count=max_count)
+
+
+def test_credit_note_rejects_description_dumps():
+    from app.domain.course_offerings import CREDIT_NOTE_FORBIDDEN_RE, FU_MODULE_CODE_RE
+
+    assert not CREDIT_NOTE_FORBIDDEN_RE.search("Listed as a free-elective candidate only; recognition requires confirmation.")
+    assert CREDIT_NOTE_FORBIDDEN_RE.search("FU module 0086eA1.14. Vorlesung 19335601 (Volker Roth).")
+    assert CREDIT_NOTE_FORBIDDEN_RE.search("Tutorium: Mo 12:00-14:00")
+    assert FU_MODULE_CODE_RE.fullmatch("0086eA1.14") and FU_MODULE_CODE_RE.fullmatch("0590bB2.9")
+    assert not FU_MODULE_CODE_RE.fullmatch("FU module 0086eA1.14")
+
+
+def test_lecture_context_lists_few_uebung_groups_and_counts_many():
+    from app.domain.course_offerings import UEBUNG_CONTEXT_MAX_GROUPS, _format_course
+
+    group = {"date": "2026-10-13", "start": "14:00", "end": "16:00"}
+    course = {"title": "X", "module_catalog_name": "Y", "lp": 5, "first_sessions": [], "uebungen": []}
+
+    assert "   Übung: no data" in _format_course(1, course, "vl")
+    assert not any("Übung" in line for line in _format_course(1, course, "seminar"))
+    few = _format_course(1, {**course, "uebungen": [group]}, "vl")
+    assert "   Übung groups (weekly): Tue 14:00-16:00 from 13.10.2026" in few
+    many = _format_course(1, {**course, "uebungen": [group] * (UEBUNG_CONTEXT_MAX_GROUPS + 1)}, "vl")
+    assert f"   Übung: {UEBUNG_CONTEXT_MAX_GROUPS + 1} groups (times not listed here)" in many

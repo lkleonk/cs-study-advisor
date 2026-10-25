@@ -876,6 +876,12 @@
     "aliases": []
   },
   {
+    "id": "complex_systems_in_bioinformatics_seminar",
+    "name": "Complex Systems in Bioinformatics (Seminar)",
+    "lp": null,
+    "aliases": []
+  },
+  {
     "id": "machine_learning_and_ai_in_the_life_sciences",
     "name": "Machine Learning and AI in the Life Sciences: Methods and Applications",
     "lp": null,
@@ -921,7 +927,9 @@
     "id": "diskrete_strukturen_fuer_informatik",
     "name": "Diskrete Strukturen für Informatik",
     "lp": 9,
-    "aliases": []
+    "aliases": [
+      "Diskrete Strukturen für (Bio-)Informatik"
+    ]
   },
   {
     "id": "auswirkungen_der_informatik",
@@ -951,7 +959,9 @@
     "id": "analysis_fuer_informatik",
     "name": "Analysis für Informatik",
     "lp": 9,
-    "aliases": []
+    "aliases": [
+      "Analysis für Informatik und Bioinformatik"
+    ]
   },
   {
     "id": "datenvisualisierung",
@@ -1137,6 +1147,726 @@
     "id": "stochastik_ii",
     "name": "Stochastik II",
     "lp": 10,
+    "aliases": []
+  },
+  {
+    "id": "einfuehrung_in_die_physik",
+    "name": "Einführung in die Physik",
+    "lp": 15,
+    "aliases": []
+  },
+  {
+    "id": "elektrodynamik_und_optik",
+    "name": "Elektrodynamik und Optik",
+    "lp": 8,
+    "aliases": [
+      "Experimentalphysik 2",
+      "Elektrodynamik und Optik (Exp.2)"
+    ]
+  },
+  {
+    "id": "grundlagen_der_mess_und_labortechnik",
+    "name": "Grundlagen der Mess- und Labortechnik",
+    "lp": 16,
+    "aliases": [
+      "Grundpraktikum",
+      "GP I",
+      "GP II"
+    ]
+  },
+  {
+    "id": "struktur_der_materie",
+    "name": "Struktur der Materie",
+    "lp": 16,
+    "aliases": [
+      "Festkörperphysik",
+      "Atom- und Molekülphysik"
+    ]
+  },
+  {
+    "id": "methodenpraktikum",
+    "name": "Methodenpraktikum",
+    "lp": 6,
+    "aliases": [
+      "Fortgeschrittenenpraktikum"
+    ]
+  },
+  {
+    "id": "analytische_mechanik",
+    "name": "Analytische Mechanik",
+    "lp": 8,
+    "aliases": [
+      "Theo2"
+    ]
+  },
+  {
+    "id": "quantenmechanik",
+    "name": "Quantenmechanik",
+    "lp": 12,
+    "aliases": []
+  },
+  {
+    "id": "theoretische_elektrodynamik",
+    "name": "Theoretische Elektrodynamik",
+    "lp": 8,
+    "aliases": []
+  },
+  {
+    "id": "lineare_algebra_fuer_physiker",
+    "name": "Lineare Algebra für Physiker",
+    "lp": 8,
+    "aliases": [
+      "Lineare Algebra (Physik)"
+    ]
+  },
+  {
+    "id": "analysis_fuer_die_physik",
+    "name": "Analysis für die Physik",
+    "lp": 16,
+    "aliases": [
+      "Mathematik für Physiker I",
+      "Mathematik für die Physik 3",
+      "Analysis 1 (Physik)",
+      "Analysis 2 (Physik)"
+    ]
+  },
+  {
+    "id": "biophysik",
+    "name": "Biophysik",
+    "lp": 10,
+    "aliases": [
+      "Biophysik für Bachelor"
+    ]
+  },
+  {
+    "id": "astronomie_und_astrophysik",
+    "name": "Astronomie und Astrophysik",
+    "lp": 10,
+    "aliases": [
+      "Einführung in die Astronomie und Astrophysik"
+    ]
+  },
+  {
+    "id": "kern_und_elementarteilchenphysik",
+    "name": "Kern- und Elementarteilchenphysik",
+    "lp": 10,
+    "aliases": []
+  },
+  {
+    "id": "computerphysik",
+    "name": "Computerphysik",
+    "lp": 10,
+    "aliases": [
+      "Computergestützte Methoden der exakten Naturwissenschaften"
+    ]
+  },
+  {
+    "id": "ausgewaehlte_kapitel_der_physik",
+    "name": "Ausgewählte Kapitel der Physik",
+    "lp": 5,
+    "aliases": []
+  },
+  {
+    "id": "spezielle_themen_der_physik_a",
+    "name": "Spezielle Themen der Physik A",
+    "lp": 5,
+    "aliases": []
+  },
+  {
+    "id": "spezielle_themen_der_physik_b",
+    "name": "Spezielle Themen der Physik B",
+    "lp": 10,
+    "aliases": []
+  },
+  {
+    "id": "projektpraktikum_physik",
+    "name": "Projektpraktikum (Physik)",
+    "lp": 5,
+    "aliases": [
+      "Projektpraktikum"
+    ]
+  },
+  {
+    "id": "praesentationstechniken_physik",
+    "name": "Präsentationstechniken (Physik)",
+    "lp": 5,
+    "aliases": [
+      "Präsentationstechniken"
+    ]
+  },
+  {
+    "id": "erneuerbare_energien_im_kontext_globaler_klimaveraenderungen",
+    "name": "Erneuerbare Energien im Kontext globaler Klimaveränderungen",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "zwischen_tafel_computer_und_labor_physik_als_wissenschaftskultur",
+    "name": "Zwischen Tafel, Computer und Labor: Physik als Wissenschaftskultur",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "biophysik_grundlagen_des_lebens",
+    "name": "Biophysik: Grundlagen des Lebens",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "wer_gehoert_dazu_science_identity_und_zugehoerigkeit_im_studium",
+    "name": "Wer gehört dazu? Science Identity und Zugehörigkeit im Studium",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "erneuerbare_energien",
+    "name": "Erneuerbare Energien",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "praesentationstechniken_im_allgemeinen_und_in_der_spektroskopie",
+    "name": "Präsentationstechniken im Allgemeinen und in der Spektroskopie",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "advanced_laboratory_course",
+    "name": "Advanced Laboratory Course",
+    "lp": 10,
+    "aliases": []
+  },
+  {
+    "id": "selected_topics_scientific_presentations",
+    "name": "Selected Topics: Scientific Presentations",
+    "lp": 5,
+    "aliases": []
+  },
+  {
+    "id": "advanced_quantum_mechanics",
+    "name": "Advanced Quantum Mechanics",
+    "lp": 10,
+    "aliases": []
+  },
+  {
+    "id": "statistical_physics_and_thermodynamics",
+    "name": "Statistical Physics and Thermodynamics",
+    "lp": 10,
+    "aliases": []
+  },
+  {
+    "id": "advanced_statistical_physics",
+    "name": "Advanced Statistical Physics",
+    "lp": 10,
+    "aliases": []
+  },
+  {
+    "id": "quantum_field_theory_and_many_body_physics",
+    "name": "Quantum Field Theory and Many-Body Physics",
+    "lp": 10,
+    "aliases": []
+  },
+  {
+    "id": "advanced_solid_state_physics",
+    "name": "Advanced Solid State Physics",
+    "lp": 10,
+    "aliases": []
+  },
+  {
+    "id": "advanced_atomic_and_molecular_physics",
+    "name": "Advanced Atomic and Molecular Physics",
+    "lp": 10,
+    "aliases": []
+  },
+  {
+    "id": "advanced_biophysics",
+    "name": "Advanced Biophysics",
+    "lp": 10,
+    "aliases": []
+  },
+  {
+    "id": "theoretical_condensed_matter_physics",
+    "name": "Theoretical Condensed Matter Physics",
+    "lp": 10,
+    "aliases": []
+  },
+  {
+    "id": "nanophysics",
+    "name": "Nanophysics",
+    "lp": 5,
+    "aliases": []
+  },
+  {
+    "id": "magnetism_and_spin_electronics",
+    "name": "Magnetism and Spin Electronics",
+    "lp": 5,
+    "aliases": []
+  },
+  {
+    "id": "surface_science",
+    "name": "Surface Science",
+    "lp": 5,
+    "aliases": []
+  },
+  {
+    "id": "theory_of_light_matter_interaction",
+    "name": "Theory of Light-Matter Interaction",
+    "lp": 10,
+    "aliases": []
+  },
+  {
+    "id": "advanced_optics",
+    "name": "Advanced Optics",
+    "lp": 10,
+    "aliases": []
+  },
+  {
+    "id": "ultrafast_spectroscopy_and_nonlinear_optics",
+    "name": "Ultrafast Spectroscopy and Nonlinear Optics",
+    "lp": 5,
+    "aliases": []
+  },
+  {
+    "id": "photobiophysics",
+    "name": "Photobiophysics",
+    "lp": 5,
+    "aliases": []
+  },
+  {
+    "id": "special_topics_in_molecular_biophysics",
+    "name": "Special Topics in Molecular Biophysics",
+    "lp": 5,
+    "aliases": []
+  },
+  {
+    "id": "advanced_biospectroscopy",
+    "name": "Advanced Biospectroscopy",
+    "lp": 5,
+    "aliases": []
+  },
+  {
+    "id": "semiconductor_physics",
+    "name": "Semiconductor Physics",
+    "lp": 5,
+    "aliases": []
+  },
+  {
+    "id": "advanced_astronomy_and_astrophysics",
+    "name": "Advanced Astronomy and Astrophysics",
+    "lp": 12,
+    "aliases": []
+  },
+  {
+    "id": "quantum_information_theory",
+    "name": "Quantum Information Theory",
+    "lp": 10,
+    "aliases": []
+  },
+  {
+    "id": "advanced_computational_physics",
+    "name": "Advanced Computational Physics",
+    "lp": 10,
+    "aliases": []
+  },
+  {
+    "id": "signal_analysis_for_physicist",
+    "name": "Signal Analysis for Physicist",
+    "lp": 8,
+    "aliases": []
+  },
+  {
+    "id": "physics_and_chemistry_of_sustainability_i_renewable_energy",
+    "name": "Physics and Chemistry of Sustainability I – Renewable Energy",
+    "lp": 5,
+    "aliases": []
+  },
+  {
+    "id": "science_studies_in_physics",
+    "name": "Science Studies in Physics",
+    "lp": 5,
+    "aliases": []
+  },
+  {
+    "id": "science_studies_communication",
+    "name": "Science Studies Communication",
+    "lp": 5,
+    "aliases": []
+  },
+  {
+    "id": "modern_theoretical_physics_a",
+    "name": "Modern Theoretical Physics A",
+    "lp": 5,
+    "aliases": []
+  },
+  {
+    "id": "modern_theoretical_physics_b",
+    "name": "Modern Theoretical Physics B",
+    "lp": 8,
+    "aliases": []
+  },
+  {
+    "id": "modern_theoretical_physics_c",
+    "name": "Modern Theoretical Physics C",
+    "lp": 10,
+    "aliases": []
+  },
+  {
+    "id": "modern_experimental_physics_a",
+    "name": "Modern Experimental Physics A",
+    "lp": 5,
+    "aliases": []
+  },
+  {
+    "id": "modern_experimental_physics_b",
+    "name": "Modern Experimental Physics B",
+    "lp": 8,
+    "aliases": []
+  },
+  {
+    "id": "modern_experimental_physics_c",
+    "name": "Modern Experimental Physics C",
+    "lp": 10,
+    "aliases": []
+  },
+  {
+    "id": "modern_physics_scientific_presentation",
+    "name": "Modern Physics: Scientific Presentation",
+    "lp": 5,
+    "aliases": []
+  },
+  {
+    "id": "scientific_specialization",
+    "name": "Scientific Specialization",
+    "lp": 15,
+    "aliases": []
+  },
+  {
+    "id": "methodology_and_project_planning",
+    "name": "Methodology and Project Planning",
+    "lp": 15,
+    "aliases": []
+  },
+  {
+    "id": "physical_platforms_of_quantum_information",
+    "name": "Physical Platforms of Quantum Information",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "advanced_statistical_and_stochastic_physics_of_equilibrium_and_non_equilibrium_many_body_systems",
+    "name": "Advanced Statistical and Stochastic Physics of Equilibrium and Non-Equilibrium Many-Body Systems",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "methods_for_reaching_cold_and_ultracold_temperatures_in_the_gas_phase",
+    "name": "Methods for reaching cold and ultracold temperatures in the gas-phase",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "chirality_induced_spin_selectivity",
+    "name": "Chirality-induced spin selectivity",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "molecular_simulations_and_theoretical_biophysics",
+    "name": "Molecular Simulations and Theoretical Biophysics",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "quantum_sensing_and_spin_based_technologies_in_biophysics",
+    "name": "Quantum Sensing and Spin-Based Technologies in Biophysics",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "plasma_astrophysics",
+    "name": "Plasma Astrophysics",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "physics_of_the_interstellar_and_intergalactic_medium",
+    "name": "Physics of the interstellar and intergalactic medium",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "astrophysical_practical_course",
+    "name": "Astrophysical practical course",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "stellar_winds",
+    "name": "Stellar Winds",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "molecular_astrophysics_of_stars_and_galaxies",
+    "name": "Molecular Astrophysics of Stars and Galaxies",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "computational_astrophysical_practical_course_numerikum",
+    "name": "Computational astrophysical practical course (Numerikum)",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "gender_and_diversity_in_physics",
+    "name": "Gender and Diversity in Physics",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "the_development_of_quantum_theory_since_1925",
+    "name": "The Development of Quantum Theory since 1925",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "science_technology_and_society",
+    "name": "Science, Technology & Society",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "science_as_social_practice_an_introduction_to_science_studies",
+    "name": "Science as social practice. An Introduction to Science Studies",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "gender_and_science_an_introduction",
+    "name": "Gender and Science: An Introduction",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "open_quantum_systems_and_measurement_theory",
+    "name": "Open quantum systems and measurement theory",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "foundations_of_molecular_simulation",
+    "name": "Foundations of Molecular Simulation",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "quantum_measurements",
+    "name": "Quantum Measurements",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "quantum_error_correction",
+    "name": "Quantum Error Correction",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "special_topics_in_molecular_biophysics_biophysics_of_metalloenzymes",
+    "name": "Special Topics in Molecular Biophysics: Biophysics of Metalloenzymes",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "modern_x_ray_and_neutron_scattering_methods",
+    "name": "Modern x-ray and neutron scattering methods for the determination of the structure and symmetry of solids",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "experimental_quantum_optics",
+    "name": "Experimental Quantum Optics",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "ultrafast_laserphysics",
+    "name": "Ultrafast Laserphysics",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "ultrafast_nanoscience",
+    "name": "Ultrafast Nanoscience",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "photon_school",
+    "name": "Photon School",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "advanced_spectroscopy",
+    "name": "Advanced Spectroscopy",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "electron_spin_resonance_spectroscopy",
+    "name": "Electron Spin Resonance Spectroscopy",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "physics_of_solar_cells_and_its_characterisation",
+    "name": "Physics of Solar Cells and its Characterisation",
+    "lp": null,
+    "aliases": []
+  },
+  {
+    "id": "algorithmische_bioinformatik_i_und_numerik",
+    "name": "Algorithmische Bioinformatik I und Numerik",
+    "lp": 5,
+    "aliases": []
+  },
+  {
+    "id": "praxis_der_algorithmischen_bioinformatik_i_und_numerik",
+    "name": "Praxis der Algorithmischen Bioinformatik I und Numerik",
+    "lp": 5,
+    "aliases": []
+  },
+  {
+    "id": "algorithmische_bioinformatik_ii",
+    "name": "Algorithmische Bioinformatik II",
+    "lp": 6,
+    "aliases": []
+  },
+  {
+    "id": "algorithmische_bioinformatik_iii_und_statistik",
+    "name": "Algorithmische Bioinformatik III und Statistik",
+    "lp": 7,
+    "aliases": []
+  },
+  {
+    "id": "wissenschaftliches_arbeiten_in_der_bioinformatik",
+    "name": "Wissenschaftliches Arbeiten in der Bioinformatik",
+    "lp": 5,
+    "aliases": []
+  },
+  {
+    "id": "statistik_fuer_bioinformatik_i",
+    "name": "Statistik für Bioinformatik I",
+    "lp": 6,
+    "aliases": []
+  },
+  {
+    "id": "statistik_fuer_bioinformatik_ii_und_maschinelles_lernen",
+    "name": "Statistik für Bioinformatik II und Maschinelles Lernen",
+    "lp": 6,
+    "aliases": []
+  },
+  {
+    "id": "allgemeine_chemie",
+    "name": "Allgemeine Chemie",
+    "lp": 7,
+    "aliases": [
+      "Chemie für Studierende der Veterinärmedizin, Biologie und Bioinformatik",
+      "Praktikum Allgemeine Chemie für Studierende der Bioinformatik"
+    ]
+  },
+  {
+    "id": "allgemeine_biologie",
+    "name": "Allgemeine Biologie",
+    "lp": 5,
+    "aliases": [
+      "Allgemeine Biologie für Bioinformatik - Teil Botanik",
+      "Allgemeine Biologie für Bioinformatik - Teil Zoologie"
+    ]
+  },
+  {
+    "id": "molekularbiologie_und_biochemie_i",
+    "name": "Molekularbiologie und Biochemie I",
+    "lp": 6,
+    "aliases": [
+      "Biochemie I - Grundlagen der Biochemie"
+    ]
+  },
+  {
+    "id": "molekularbiologie_und_biochemie_ii",
+    "name": "Molekularbiologie und Biochemie II",
+    "lp": 6,
+    "aliases": []
+  },
+  {
+    "id": "molekularbiologie_und_biochemie_iii",
+    "name": "Molekularbiologie und Biochemie III",
+    "lp": 6,
+    "aliases": []
+  },
+  {
+    "id": "genetik_und_genomforschung",
+    "name": "Genetik und Genomforschung",
+    "lp": 5,
+    "aliases": []
+  },
+  {
+    "id": "medizinische_physiologie",
+    "name": "Medizinische Physiologie",
+    "lp": 7,
+    "aliases": []
+  },
+  {
+    "id": "neurobiologie",
+    "name": "Neurobiologie",
+    "lp": 5,
+    "aliases": [
+      "Einführung in die Neurobiologie und Neuroinformatik für Studierende der Bioinformatik",
+      "Neurobiologie für Studierende der Bioinformatik"
+    ]
+  },
+  {
+    "id": "wahlbereich_bioinformatik",
+    "name": "Wahlbereich (B.Sc. Bioinformatik)",
+    "lp": 6,
+    "aliases": []
+  },
+  {
+    "id": "projektmanagement_im_softwarebereich",
+    "name": "Projektmanagement im Softwarebereich",
+    "lp": 10,
+    "aliases": [
+      "Softwarepraktikum"
+    ]
+  },
+  {
+    "id": "berufspraktikum_bioinformatik",
+    "name": "Berufspraktikum (B.Sc. Bioinformatik)",
+    "lp": 10,
+    "aliases": [
+      "Berufspraktikum für Bioinformatik"
+    ]
+  },
+  {
+    "id": "abv_wahlbereich_bioinformatik",
+    "name": "ABV-Wahlbereich (B.Sc. Bioinformatik)",
+    "lp": 10,
+    "aliases": []
+  },
+  {
+    "id": "einfuehrung_in_cpp",
+    "name": "Einführung in C++",
+    "lp": 5,
+    "aliases": [
+      "C++ Blockkurs"
+    ]
+  },
+  {
+    "id": "journal_club_biomedical_data_science",
+    "name": "Journal Club: Biomedical Data Science",
+    "lp": null,
     "aliases": []
   }
 ]

@@ -29,12 +29,24 @@ class DegreeInfo(BaseModel):
     plan_validation_enabled: bool
 
 
+class FirstSession(BaseModel):
+    """First appointment of one weekly slot (lecture or Übung group), not the timetable."""
+
+    date: str
+    start: str | None = None
+    end: str | None = None
+    room: str | None = None
+
+
 class CourseOfferingItem(BaseModel):
     title: str
     module_catalog_name: str | None = None
     lp: int | None = None
-    schedule: str | None = None
-    description: str | None = None
+    fu_module_code: str | None = None
+    first_sessions: list[FirstSession] = []
+    uebungen: list[FirstSession] = []
+    uebung_url: str | None = None
+    credit_note: str | None = None
     url: str | None = None
     is_bachelor_module: bool | None = None
 
@@ -48,6 +60,7 @@ class CourseOfferingType(BaseModel):
 class CourseOfferingArea(BaseModel):
     id: str
     label: str
+    note: str | None = None
     course_types: list[CourseOfferingType]
 
 

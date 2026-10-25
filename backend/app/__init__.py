@@ -1,1 +1,1 @@
-"""FU Berlin CS consultant backend."""
+"""Modulio FU Berlin study consultant backend."""

@@ -1,12 +1,12 @@
-![FU Berlin CS Consultant home page](ressources/home_page.png)
+![Modulio home page](ressources/home_page.png)
 
-Website: [cs-modulio.com](https://cs-modulio.com)
+Website: [unimodulio.com](https://unimodulio.com) (the old `cs-modulio.com` redirects there until it is deactivated)
 
-# Modulio — FU Berlin CS Consultant
+# Modulio — FU Berlin Study Consultant
 
-Full-stack prototype for a FU Berlin computer-science study consultant, named **Modulio** (a nod to *Leistungspunkte* — the LP credits it helps you track).
+Full-stack prototype for a FU Berlin study consultant, named **Modulio** (a nod to *Leistungspunkte* — the LP credits it helps you track).
 
-The app supports multiple degree programs through a backend degree registry — currently the M.Sc. Informatik (SPO 2014), the M.Sc. Data Science (FU-Mitteilungen 18/2021), and the B.Sc. Informatik (FU-Mitteilungen 23/2023). Users pick their degree in the welcome dialog and can switch later from the header; each session is bound to one degree. The app answers questions from local resources, offers a read-only Course Registry of locally listed semester offerings, and can check a proposed study plan against deterministic per-degree rules. The B.Sc. Informatik includes its 2023 degree rules and locally supplied SoSe 2026 offerings; availability in other semesters is unknown, 0084d maths courses are free-elective candidates only, and deterministic plan validation is still pending. It includes a standalone Next.js frontend and a FastAPI backend. It reuses architecture patterns from the parent `llm_chatbot` project, but all code lives inside `fu_berlin_cs_consultant/`.
+The app supports multiple degree programs through a backend degree registry — currently the M.Sc. Informatik (SPO 2014), the M.Sc. Data Science (FU-Mitteilungen 18/2021), the B.Sc. Informatik (FU-Mitteilungen 23/2023), the B.Sc. and M.Sc. Physik (both FU-Mitteilungen 12/2024), and the B.Sc. Bioinformatik (FU-Mitteilungen 34/2023). Users pick their degree in the welcome dialog and can switch later from the header; each session is bound to one degree. The app answers questions from local resources and offers a read-only Course Registry of locally listed SoSe 2026 and WiSe 2026/27 offerings. Deterministic study-plan validation is enabled for the M.Sc. Informatik only; for the other degrees, uploaded transcripts are used as chat context without rule validation. B.Sc. Informatik maths courses are free-elective candidates only. It includes a standalone Next.js frontend and a FastAPI backend. It reuses architecture patterns from the parent `llm_chatbot` project, but all code lives inside `fu_berlin_cs_consultant/`.
 
 ## Screenshots
 
@@ -299,13 +299,13 @@ CONSULTANT_HOST=0.0.0.0
 CONSULTANT_PORT=8000
 
 # Public DNS name only; do not include https:// or a path.
-APP_DOMAIN=cs-modulio.com
-APP_WWW_DOMAIN=www.cs-modulio.com
+APP_DOMAIN=example.com
+APP_WWW_DOMAIN=www.example.com
 CADDY_HTTP_PORT=80
 CADDY_HTTPS_PORT=443
 
-NEXT_PUBLIC_API_BASE_URL=https://cs-modulio.com
-CORS_ALLOWED_ORIGINS=https://cs-modulio.com
+NEXT_PUBLIC_API_BASE_URL=https://example.com
+CORS_ALLOWED_ORIGINS=https://example.com
 NEXT_PUBLIC_ENABLE_DEV_TOOLS=false
 
 # The backend port is loopback-only, so only local processes can reach it.
@@ -348,16 +348,20 @@ After any `NEXT_PUBLIC_*` change, rebuild the static export locally and upload
 the refreshed `frontend/out/` directory before restarting Caddy. Backend-only
 environment changes require a container recreation but not an image rebuild.
 
+Production now runs on Azure (see `docs/deployment.md`); the Droplet setup
+above is the previous single-server deployment.
+
 Production frontend:
 
 ```text
-https://cs-modulio.com/
+https://unimodulio.com/
 ```
 
-Production health check:
+Production health check (the static site has no `/health`; use the Container
+App URL from `terraform output -raw backend_url`):
 
 ```text
-https://cs-modulio.com/health
+<backend_url>/health
 ```
 
 ## WizardFlow Traces

@@ -14,8 +14,11 @@ deploy_backend   = false
 deploy_frontend  = true
 backend_image_tag = "initial"
 
-frontend_origin          = "https://cs-modulio.com"
-additional_frontend_origins = ["https://www.cs-modulio.com"]
+frontend_origin          = "https://unimodulio.com"
+additional_frontend_origins = []
+# Optional: custom domain on the frontend Storage account. Create the
+# `asverify` CNAME (DNS only) first; see infra/README.md.
+frontend_custom_domain = "unimodulio.com"
 academiccloud_secret_name = "academiccloud-api-key"
 academiccloud_model       = "qwen3-30b-a3b-instruct-2507"
 

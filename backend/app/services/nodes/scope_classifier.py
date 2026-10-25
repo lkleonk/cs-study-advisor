@@ -37,7 +37,7 @@ CLASSIFIER_SCHEMA = {
 }
 
 
-def heuristic_classify(message: str) -> str:
+def heuristic_classify(message: str, extra_domain_terms: tuple[str, ...] = ()) -> str:
     lowered = _normalize_text(message)
     plan_intent_terms = [
         "pruef",
@@ -77,6 +77,10 @@ def heuristic_classify(message: str) -> str:
         "bachelormodul",
         "fu berlin",
         "studienplan",
+        "bachelor",
+        "modul",
+        "abv",
+        *extra_domain_terms,
     ]
     has_domain_signal = any(term in lowered for term in domain_terms)
     has_concrete_lp_list = lowered.count(" lp") >= 3
@@ -184,7 +188,7 @@ async def scope_classifier_node(state: ConsultantState) -> ConsultantState:
         recent_messages(state, agent_flow_config.scope_classifier.history_turns)
     )
     llm_message = f"Classify the latest user message in this recent conversation:\n{conversation}"
-    fallback = heuristic_classify(message)
+    fallback = heuristic_classify(message, degree.prompts.fallback_domain_terms)
     fallback_cross_university = heuristic_needs_cross_university_rules(conversation)
     source = "heuristic"
 

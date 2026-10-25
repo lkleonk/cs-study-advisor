@@ -93,7 +93,14 @@ def test_only_msc_informatik_has_plan_validation():
     response = TestClient(app).get("/api/degrees")
 
     flags = {entry["id"]: entry["plan_validation_enabled"] for entry in response.json()}
-    assert flags == {"msc_informatik": True, "msc_data_science": False, "bsc_informatik": False}
+    assert flags == {
+        "msc_informatik": True,
+        "msc_data_science": False,
+        "bsc_informatik": False,
+        "bsc_physik": False,
+        "msc_physik": False,
+        "bsc_bioinformatik": False,
+    }
 
 
 def test_program_rules_endpoint_rejects_unknown_degree():
