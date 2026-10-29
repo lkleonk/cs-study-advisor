@@ -26,5 +26,5 @@ daily_global_actions = 150
 daily_user_actions   = 60
 
 tags = {
-  owner = "Leon Koch"
+  owner = "your-team"
 }

@@ -127,6 +127,14 @@ resource "azurerm_storage_account" "frontend" {
       use_subdomain = true
     }
   }
+
+  lifecycle {
+    # Azure accepts use_subdomain but never reads it back, so it would show as a
+    # pending change on every plan.
+    ignore_changes = [
+      custom_domain[0].use_subdomain,
+    ]
+  }
 }
 
 resource "azurerm_storage_account_static_website" "frontend" {

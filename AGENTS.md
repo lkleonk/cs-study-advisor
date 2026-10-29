@@ -131,13 +131,12 @@ Run `backend/tests/services/test_wizardflow_tracing.py` after tracing changes.
 Agents usually run in Windows PowerShell from the repository root:
 
 ```text
-C:\Users\Leon Koch\Desktop\code_Freizeit\fullstack_w_llm\fu_berlin_cs_consultant
+C:\path\to\fu_berlin_cs_consultant
 ```
 
 Prefer PowerShell-native commands for local inspection (`Get-ChildItem`,
 `Get-Content`, `Select-String`) and use `rg` / `rg --files` for fast search when
-available. Quote absolute paths because the user profile path contains a space
-(`Leon Koch`). Run Docker Compose commands from the repository root, backend
+available. Quote absolute paths because checkout paths may contain spaces. Run Docker Compose commands from the repository root, backend
 Python/test commands from `backend/` when the command says so, and frontend
 commands from `frontend/`.
 
