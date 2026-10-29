@@ -1,7 +1,7 @@
 # AGENTS.md
 
 Instructions for agents working in this project root (historically named
-`fu_berlin_cs_consultant/`, currently checked out as `unimodulio/`).
+`fu_berlin_cs_consultant/`).
 All project paths below are relative to the directory containing this file.
 
 This file is the lean core: hard rules, orientation, and how to verify. Deep
