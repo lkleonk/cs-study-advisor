@@ -25,6 +25,34 @@ Study plan check (visualizes the proposed study plan, then validates it against 
 - LLM provider can be AcademicCloud or FU/local Ollama.
 - Answers are advisory. Official FU Berlin documents and the examination office remain authoritative for real study decisions.
 
+## Documentation
+
+Paths and commands are relative to this project root, regardless of its
+checkout directory name. For architecture, start with the domain model, then
+read the agent flow and API contracts.
+
+| Topic | Reference |
+| --- | --- |
+| Degree registry, course data, and validation ownership | [Domain model](docs/domain-model.md) |
+| Graph routes, state, nodes, and tracing | [Agent flow](docs/agent-flow.md) |
+| Endpoints, sessions, and quotas | [Backend API](docs/backend-api.md) |
+| Tabs, contexts, browser storage, and API integration | [Frontend architecture](docs/frontend.md) |
+| Study-plan schemas and persistence | [Study-plan data](docs/study-plan-data.md) |
+| Transcript ingestion | [PDF pipeline](docs/pdf_node.md), current implementation section |
+| Data Science validator (runtime validation disabled) | [M.Sc. Data Science](docs/data_science_master.md) |
+| Providers, SSH tunnel, and prompts | [LLM providers](docs/llm-providers.md) |
+| Azure hosting, Compose, Caddy, and public origins | [Deployment](docs/deployment.md) |
+| Terraform bootstrap and backend image setup | [Infrastructure](infra/README.md) |
+| Frontend startup and mocked browser test | [Frontend README](frontend/README.md) |
+| Contributor constraints and verification | [AGENTS.md](AGENTS.md) |
+
+The [implementation checklist](implementation.md) and
+[frontend plan](docs/fu_consultant_frontend_plan.md) retain earlier phases and
+open ideas. The PDF document also preserves its original attachment proposal
+after the current implementation summary. Proposed endpoints and components in
+those plans are not evidence that they exist; use the current subsystem
+references and code for exact behavior.
+
 ## Project Structure
 
 ```text
@@ -204,8 +232,13 @@ docker compose --profile frontend-preview up --build
 `npm run build:local` bakes `http://localhost:8000` as the API base URL and
 enables the developer tools. Both `build:local` and `build:prod` work the same
 on Linux, macOS, and Windows (`build:local` sets its variables via `cross-env`).
-Do not commit `frontend/out/` from a local build; the tracked export must
-always come from `npm run build:prod` (see the production section below).
+The generated `frontend/out/` directory is gitignored. Build production exports
+with `npm run build:prod` and upload them separately (see the production
+section below).
+
+The preview Docker image builds its own export with developer tools off by
+default; the host `build:local` output is a separate artifact. See
+[frontend build details](frontend/README.md).
 
 The default local endpoints are:
 
@@ -222,7 +255,8 @@ cd frontend && npm run build:local && cd ..
 docker compose --profile frontend-preview up --build -d
 ```
 
-To package an already-built static export for the local preview:
+To build the Docker static preview (its Node builder creates a separate export
+with the Dockerfile's local defaults):
 
 ```bash
 docker compose build backend
@@ -246,7 +280,14 @@ updating the package index. If one of the guarded apt commands still times out,
 the problem is Debian mirror access from Docker rather than Python dependency
 resolution.
 
-## Production Deployment On A DigitalOcean Droplet
+## Production Deployment
+
+Production uses Azure Storage for the static frontend and Azure Container Apps
+for the backend. Start with [infra/README.md](infra/README.md) for provisioning
+and [docs/deployment.md](docs/deployment.md) for frontend origins, CORS, and
+Cloudflare configuration.
+
+### Previous DigitalOcean Droplet Deployment
 
 The production Compose profile adds Caddy. Caddy terminates HTTPS, serves the
 locally built static frontend export, and proxies backend paths over the
@@ -269,8 +310,8 @@ Prerequisites:
   Do not expose application ports publicly.
 
 Build the static export on the local machine with the production public API
-origin. `frontend/out/` is a tracked deployment artifact, so include its
-refreshed contents in the deployment revision before updating the server.
+origin. `frontend/out/` is gitignored; upload its refreshed contents separately
+when deploying the updated source revision.
 
 ```bash
 cd frontend
@@ -278,10 +319,12 @@ npm run build:prod
 cd ..
 ```
 
-`build:prod` (like plain `npm run build`) takes the production values from the
-tracked `frontend/.env.production`, so no environment juggling is needed. After
-testing with `build:local`, always run `build:prod` before committing
-`frontend/out/`.
+`build:prod` (like plain `npm run build`) reads production values from the
+local, gitignored `frontend/.env.production`. Copy `frontend/.env.example` to
+that path and fill in your deployment values first. Shell variables and local
+environment files can override those values. After testing with `build:local`,
+run `build:prod` again before uploading `frontend/out/`; do not commit either
+the populated environment file or the generated export.
 
 Create the production environment on the server and restrict its permissions:
 
@@ -500,18 +543,24 @@ curl http://localhost:8000/health
 
 ## Tests
 
-From `fu_berlin_cs_consultant/backend`:
+From `backend/`:
 
 ```bash
 uv run --isolated --python 3.12.10 --with-requirements requirements.txt --with pytest python -m pytest -q
 ```
 
-The current tests cover deterministic rule checking, resource chunking, and pure routing helpers.
+The backend suite covers degree rules, catalogue projections, agent helpers,
+PDF processing, API contracts, quotas, session lifecycle, settings, and tracing.
+GitHub Actions runs the compile check and backend suite on pushes and pull
+requests to `main` (`.github/workflows/backend-tests.yml`).
 
-From `fu_berlin_cs_consultant/frontend`:
+From `frontend/`:
 
 ```bash
 npm run lint
 npx tsc --noEmit
 npm run build
 ```
+
+The mocked browser journey is documented in [frontend/README.md](frontend/README.md).
+It verifies the consultation flow without a live backend or LLM.

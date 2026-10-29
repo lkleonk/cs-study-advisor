@@ -1,6 +1,8 @@
 # AGENTS.md
 
-Instructions for agents working in `fu_berlin_cs_consultant/`.
+Instructions for agents working in this project root (historically named
+`fu_berlin_cs_consultant/`, currently checked out as `unimodulio/`).
+All project paths below are relative to the directory containing this file.
 
 This file is the lean core: hard rules, orientation, and how to verify. Deep
 per-subsystem reference lives in `docs/` — see the **Reference** index at the
@@ -9,9 +11,9 @@ bottom and read the relevant doc on demand rather than assuming.
 ## Hard Rules
 
 - Do not use Git, except for read-only operations like `git diff`, `git status`, `git log`, and `git show`.
-- Do not edit files outside `fu_berlin_cs_consultant/`.
+- Do not edit files outside this project root.
 - Keep original files under `ressources/` untouched unless the user explicitly asks to update source material.
-- Frontend work is allowed only inside `fu_berlin_cs_consultant/frontend/`.
+- Frontend work is allowed only inside this project root's `frontend/`.
 - Course-offering sessions are first appointments `{date, start?, end?, room?}`,
   never the full timetable: `first_sessions` holds one per weekly lecture/seminar
   slot (max 4), `uebungen` (lectures only) one per Übung group, plus its VV
@@ -128,33 +130,27 @@ Run `backend/tests/services/test_wizardflow_tracing.py` after tracing changes.
 
 ## Local CLI Notes
 
-Agents usually run in Windows PowerShell from the repository root:
-
-```text
-C:\path\to\fu_berlin_cs_consultant
-```
-
-Prefer PowerShell-native commands for local inspection (`Get-ChildItem`,
-`Get-Content`, `Select-String`) and use `rg` / `rg --files` for fast search when
-available. Quote absolute paths because checkout paths may contain spaces. Run Docker Compose commands from the repository root, backend
-Python/test commands from `backend/` when the command says so, and frontend
-commands from `frontend/`.
+Use the shell provided by the current environment (for example zsh on macOS or
+PowerShell on Windows). Use `rg` / `rg --files` for fast search when available,
+and quote paths containing spaces. Do not assume the checkout directory name.
+Run Docker Compose commands from the project root, backend Python/test commands
+from `backend/`, and frontend commands from `frontend/`.
 
 ## Verification
 
 Compile check:
 
 ```bash
-python -m compileall -q "fu_berlin_cs_consultant\backend\app"
+python -m compileall -q backend/app
 ```
 
-Focused tests from `fu_berlin_cs_consultant/backend`:
+Focused tests from `backend/`:
 
 ```bash
 uv run --isolated --python 3.12.10 --with-requirements requirements.txt --with pytest python -m pytest -q
 ```
 
-Frontend checks from `fu_berlin_cs_consultant/frontend`:
+Frontend checks from `frontend/`:
 
 ```bash
 npm run lint
@@ -198,6 +194,9 @@ When behavior changes, update the relevant docs:
 - Implementation checklist: `implementation.md`
 
 ## Reference
+
+See the [main README documentation section](README.md#documentation) for
+subsystem links and the distinction between current references and historical plans.
 
 Read the relevant doc before working on a subsystem; the code is always the
 final source of truth for exact routes, schemas, and rule lists.

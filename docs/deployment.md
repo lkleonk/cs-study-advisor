@@ -1,4 +1,9 @@
-# Deployment (Docker / Compose / Caddy)
+# Deployment (Azure / Docker Compose / Caddy)
+
+Production uses Azure Storage static website hosting and Azure Container Apps;
+see [Azure infrastructure](../infra/README.md). The Compose production profile
+below is the previous single-server deployment and remains available as an
+alternative.
 
 `docker-compose.yml` starts the backend locally. The optional static-frontend
 preview uses the `frontend-preview` profile:
@@ -26,9 +31,11 @@ volume.
 
 The frontend is a static Next.js export (`output: "export"`). Build it on the
 local machine with `npm run build`; the generated `frontend/out/` directory is a
-gitignored deployment artifact and must be rebuilt and uploaded separately before deployment. The
-browser-facing API base URL is baked into that export; the optional Docker
-preview image packages the export unchanged:
+gitignored deployment artifact and must be rebuilt and uploaded separately
+before deployment. The browser-facing API base URL is baked into that export. The optional Docker
+preview image creates its own export in a Node builder stage and copies it into
+Caddy. Its `NEXT_PUBLIC_API_BASE_URL` and `NEXT_PUBLIC_ENABLE_DEV_TOOLS` build
+arguments default to the following values (Compose does not override them):
 
 ```text
 NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
@@ -56,17 +63,17 @@ The backend Dockerfile intentionally wraps apt update/install in timeouts. If
 apt times out, investigate Docker network access to Debian mirrors before
 changing Python dependencies.
 
-For production, first rebuild `frontend/out/` locally and deploy the updated
-repository revision, then run the production Compose profile; only `backend` and
-Caddy run. Use `docker compose logs -f backend caddy` when production runtime
-behavior is unclear.
+For the Compose production profile, first rebuild `frontend/out/` locally,
+upload the gitignored export separately, and deploy the updated source revision.
+Then run the production Compose profile; only `backend` and Caddy run. Use
+`docker compose logs -f backend caddy` when production runtime behavior is unclear.
 
-## Azure target architecture
+## Azure production architecture
 
-The initial Azure/Terraform stack lives in `infra/`. It provisions Azure Static
-Web Apps for the static frontend, ACR plus Azure Container Apps for the backend,
-Key Vault with managed-identity access for the AcademicCloud API key, and Log
-Analytics. The Container App is fixed at one warm replica while sessions and
+The Azure/Terraform stack lives in `infra/`. It provisions Azure Storage
+static website hosting for the frontend, ACR plus Azure Container Apps for the
+backend, Key Vault with managed-identity access for the AcademicCloud API key,
+and Log Analytics. The Container App is fixed at one warm replica while sessions and
 quotas remain process-local, and WizardFlow is disabled because no persistent
 trace storage is provisioned.
 

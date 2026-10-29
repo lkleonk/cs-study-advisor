@@ -1,4 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Modulio frontend
+
+Next.js App Router, React, TypeScript, and Material UI frontend for the FU Berlin
+study consultant. Both `/` and `/consultant/` show the consultant. Degree rules
+and course offerings come from the FastAPI backend; the frontend does not run
+degree validation or call the LLM directly.
+
+## Local development
+
+Run from `frontend/`:
+
+```bash
+npm ci
+npm run dev
+```
+
+Open [the consultant](http://localhost:3000/consultant/). Start the backend
+separately using the [project setup](../README.md). The default API origin is
+`http://localhost:8000`; for another origin, set `NEXT_PUBLIC_API_BASE_URL` in
+`frontend/.env.local` and restart the dev server. Backend CORS must allow the
+frontend origin.
+
+## Build and verification
+
+```bash
+npm run lint
+npx tsc --noEmit
+npm run build:local
+```
+
+`build:local` exports `out/` with the local API origin and developer tools on.
+`build:prod` (or `build`) uses the production environment, including the local,
+gitignored `.env.production` (copy `.env.example` and configure it first);
+shell variables and local environment files can
+override those values. Check overrides before producing a deployment artifact.
+All `NEXT_PUBLIC_*` values are public and embedded at build time.
+
+The configuration uses `output: "export"` and `trailingSlash: true`. Serve
+`out/` with a static host or the Compose `frontend-preview` profile; `next start`
+is not the serving path for this static export. The preview Dockerfile builds
+the export in a Node builder stage, then copies it into the Caddy static-server
+stage. Its build arguments default to the local API origin with developer tools
+off; Compose currently supplies no overrides. Azure uploads and the root Caddy
+service use the host-built `out/` instead. Rebuild that gitignored export with
+`npm run build:prod` and upload it separately before a release.
+
+Production uses Azure Storage static website hosting and a separate Azure
+Container App API origin. See [deployment](../docs/deployment.md) and
+[infrastructure](../infra/README.md).
 
 ## Legal pages
 
@@ -35,40 +83,19 @@ browser. It checks degree selection, session creation, message submission, and
 reply rendering without making an LLM call. It does not test the live backend
 or the correctness of an LLM answer.
 
-## Getting Started
+The Playwright server uses port `32177` and a separate `.next-playwright`
+build directory. Its configuration starts and stops that server automatically.
 
-First, run the development server:
+## Source map
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- `src/app/consultant/components/`: consultant shell, tabs, dialogs, and uploads.
+- `src/context/`: settings, degree selection, and usage allowance.
+- `src/services/api.ts` and `src/types/api.ts`: HTTP client and response types.
+- `src/theme/`: Material UI theme and persisted color scheme.
+- `src/config/`: public build configuration and legal contact details.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See [frontend architecture](../docs/frontend.md) for storage, switching degrees,
+quotas, diagnostic tracing, and developer previews.
 
 ## Private deployment configuration and generated output
 

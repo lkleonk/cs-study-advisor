@@ -1,5 +1,9 @@
 # FU Consultant Frontend Plan
 
+Historical implementation plan: completed and proposed phases coexist here.
+For current behavior and setup, use [frontend architecture](frontend.md) and
+the [frontend README](../frontend/README.md).
+
 DO NOT USE GIT.
 
 This plan covers the frontend for `fu_berlin_cs_consultant/`.

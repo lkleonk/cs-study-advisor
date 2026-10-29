@@ -1,4 +1,33 @@
-# PDF Attachment Node
+# PDF Transcript Pipeline
+
+## Current implementation
+
+The implemented route is `POST /api/sessions/{session_id}/transcript`, with
+multipart fields `file` and optional `tracing_enabled` (default `true`). There
+is no `/attachments` endpoint. Uploading immediately extracts, cleans, and
+checks text, calls the degree-specific study-plan parser, and returns a summary,
+`parsed_study_plan`, and an optional `rule_check_result`. Validation runs only
+when the session degree has `plan_validation_enabled`.
+
+`backend/app/services/session_service.py` orchestrates this pipeline;
+`backend/app/pdf/` handles extraction, cleaning, and readability checks. The
+raw PDF is not persisted. The parsed plan is stored in the in-memory graph
+checkpoint for follow-up questions. When tracing is enabled for the deployment
+and request, extracted text may also remain in unredacted diagnostic traces.
+
+Uploads accept at most `15 * 1024 * 1024` bytes. Empty files return 400,
+unsupported file types 415, oversized files 413, and extraction/readability
+failures 422 with `pdf_unreadable`. Readability requires at least 300 extracted
+characters overall and at least half the pages with more than 100 characters
+each. OCR is unavailable. See [backend API](backend-api.md) for session and quota
+contracts; tests live in `backend/tests/pdf/test_pdf_processing.py` and
+`backend/tests/api/test_transcript_route.py`.
+
+## Historical attachment proposal
+
+The remainder preserves the original design proposal. Its attachment endpoint,
+state additions, and deferred processing flow are proposals, not the current
+API contract; use the implementation summary above and code when integrating.
 
 This document describes a planned first implementation for letting users drag and drop a PDF into the chat and ask the consultant about it.
 

@@ -2,6 +2,10 @@
 
 # FU Berlin CS Consultant Implementation Plan
 
+This is a historical, cumulative checklist, not the current setup guide. Early
+phase restrictions and paths describe that phase; later phases supersede them.
+Use the [main README documentation section](README.md#documentation) for current references.
+
 Phase 1 goal: backend-only LLM consultant for FU Berlin Informatik Master questions, using the existing files in `ressources/` as source material. The implementation must stay fully inside `fu_berlin_cs_consultant/`.
 
 ## Scope
@@ -221,7 +225,8 @@ Phase 2 — shared course offerings:
 Phase 3 — degree packages:
 
 [x] `msc_data_science`: canonical module catalogue, profile-inference checklist validator, rules catalogue, prompts, tests.
-[ ] `bsc_informatik`: blocked on the §7(3) Pflicht and §7(4) Wahlpflicht module lists (SPO 2023).
+[x] `bsc_informatik`: rules catalogue, degree module mappings, and local SoSe 2026 / WiSe 2026/27 offerings.
+[ ] `bsc_informatik`: deterministic study-plan validation (disabled at runtime).
 [ ] Add curated Data Science semester offerings once the source data is ready.
 [x] `bsc_physik`: 2024 rules catalogue, module list, SoSe 2026 / WiSe 2026/27 offerings, per-degree heuristic fallback terms; plan validation disabled.
 [x] `bsc_bioinformatik`: 2023 rules catalogue (joint FU/Charité programme, three study areas, Wahlbereich, ABV), module list, WiSe 2026/27 offerings incl. Übung groups; plan validation disabled.

@@ -40,7 +40,9 @@ Important implications:
 - WizardFlow writes a local diagnostic trace, but there is no authoritative
   study-plan audit database. Deleting a session does not delete trace files.
 - There is no dedicated endpoint yet for reading or editing a study plan.
-- A parsed plan exists only after a message has gone through the `plan_check` path.
+- A parsed plan can come from a `plan_check` message or a transcript upload.
+  Uploads parse immediately; only degrees with `plan_validation_enabled` also
+  receive a deterministic validation result.
 
 ## Data Flow
 

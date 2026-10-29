@@ -2,7 +2,7 @@
 
 The static Next.js export is served at `/` (and `/consultant`) and uses React,
 TypeScript, Material UI, and the App Router. Keep all frontend edits inside
-`fu_berlin_cs_consultant/frontend/`.
+the project's `frontend/` directory.
 
 ## Tabs
 
@@ -49,12 +49,15 @@ TypeScript, Material UI, and the App Router. Keep all frontend edits inside
 - If i18n is added later, use `next-intl` and update all locale files together.
 
 The browser-facing backend origin comes from `NEXT_PUBLIC_API_BASE_URL`. This
-public value is embedded during `next build`, so rebuild and commit the tracked
-`frontend/out` deployment artifact after changing it. The local Compose default is
-`http://localhost:8000`; production should use the public HTTPS origin handled
-by the reverse proxy.
+public value is embedded during `next build`, so rebuild and upload the
+gitignored `frontend/out` deployment artifact after changing it. The local
+Compose default is
+`http://localhost:8000`. Azure production uses the separate public HTTPS
+Container App origin because Storage static hosting cannot proxy `/api`. See
+[deployment](deployment.md) for configuration.
 
-The optional Compose `production` profile runs Caddy on ports 80/443. Caddy
+For the previous single-server deployment, the optional Compose `production`
+profile runs Caddy on ports 80/443. Caddy
 serves the locally built `frontend/out` directory directly and proxies
 backend/API-documentation paths on the same public origin; no Node.js frontend
 container runs in production. `NEXT_PUBLIC_API_BASE_URL` and
