@@ -3,17 +3,17 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 ## Legal pages
 
 `/impressum` and `/datenschutz` use the same Material UI theme as the consultant.
-Configure the public provider details at build time:
+Copy `.env.example` to `.env.production` (gitignored) and configure the public provider details at build time:
 
 ```env
-NEXT_PUBLIC_LEGAL_NAME=Leon Koch
+NEXT_PUBLIC_LEGAL_NAME=Your provider name
 NEXT_PUBLIC_LEGAL_STREET=Street and house number
 NEXT_PUBLIC_LEGAL_CITY=Postal code and city
 NEXT_PUBLIC_LEGAL_COUNTRY=Deutschland
 NEXT_PUBLIC_LEGAL_EMAIL=contact@example.com
 ```
 
-These values are rendered publicly and are not secrets. A visible warning is
+Keep the populated environment file local, or supply these values through deployment settings. They are rendered publicly on the deployed website, so this keeps them out of Git, not out of the Impressum. A visible warning is
 shown on the legal pages while any value is missing. The privacy text also
 contains deployment-specific sections that must be completed with the actual
 hosting provider, LLM provider, recipients, and retention periods before a
@@ -69,3 +69,18 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Private deployment configuration and generated output
+
+The populated `.env.production` and generated `out/` directory are not tracked.
+Run `npm run build` locally with your deployment environment, then upload the
+resulting `out/` directory separately. A fresh checkout does not contain an export.
+Do not force-add either path: the export embeds the configured legal contact data.
+
+Docker build contexts exclude environment files. For a production site with the
+configured legal details, use the local export workflow above. The Docker preview
+uses placeholder legal details unless configuration is supplied separately.
+
+Earlier commits still contain their original configuration and exports. When
+sharing a sanitized source snapshot, reference the cleanup commit or a later
+revision, and ask indexers to exclude earlier revisions and parent diffs.

@@ -26,7 +26,7 @@ volume.
 
 The frontend is a static Next.js export (`output: "export"`). Build it on the
 local machine with `npm run build`; the generated `frontend/out/` directory is a
-tracked deployment artifact and must be refreshed before deployment. The
+gitignored deployment artifact and must be rebuilt and uploaded separately before deployment. The
 browser-facing API base URL is baked into that export; the optional Docker
 preview image packages the export unchanged:
 
@@ -71,7 +71,7 @@ quotas remain process-local, and WizardFlow is disabled because no persistent
 trace storage is provisioned.
 
 The static website has no reverse proxy, so `/api` on `unimodulio.com` does not
-reach the backend. `frontend/.env.production` therefore sets
+reach the backend. The local, gitignored `frontend/.env.production` therefore sets
 `NEXT_PUBLIC_API_BASE_URL` to the Container App URL (`terraform output -raw
 backend_url`); the backend's CORS allows `https://unimodulio.com`. Change it to
 `https://api.unimodulio.com` once that custom domain is set up.
