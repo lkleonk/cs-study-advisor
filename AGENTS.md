@@ -109,6 +109,23 @@ course-offering branch adds the looked-up offerings on top. Module names can
 appear in both (e.g. B.Sc. module lists): this overlap is intended, not a bug.
 Rules state requirements, offerings state semester availability.
 
+## WizardFlow Tracing
+
+WizardFlow is pinned in `backend/requirements.txt` (currently 0.9.0). Use
+`wizardflow_service.workflow(enabled=..., title=...)` at the request boundary
+and `node_scope(message_id, node_id, kind=...)` around node execution. Pass the
+SDK-generated `run.message_id` through graph state; context managers own timing
+and finalization, including failures. Do not restore manual `end_message` calls.
+Keep shared transcript parsing/validation helpers scoped so both entry points
+are traced. Per-request opt-out must use no-op scopes without changing the
+process-wide tracer or writing payloads.
+
+Preserve exact `llm_input` prompt/message payloads and existing event labels.
+Trace files contain unredacted user data: keep `backend/traces/` gitignored and
+use synthetic inputs for shareable samples. See `docs/agent-flow.md` for the
+tracing contract and `README.md` for running and opening a sample JSONL trace.
+Run `backend/tests/services/test_wizardflow_tracing.py` after tracing changes.
+
 ## Local CLI Notes
 
 Agents usually run in Windows PowerShell from the repository root:

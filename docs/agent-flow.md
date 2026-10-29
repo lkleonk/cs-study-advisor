@@ -299,8 +299,13 @@ everything else          -> offtopic
 
 ## WizardFlow Tracing
 
-`SessionService` creates a new UUID for each chat request or transcript upload
-and stores it in `ConsultantState.wizardflow_message_id`. The same UUID is passed
+WizardFlow 0.9.0 uses `with trace.workflow() as run` to finalize each request,
+including failures, and node context managers to capture execution timing.
+Chat graph nodes and transcript parsing/validation share the same scoped API.
+Per-request tracing opt-out uses no-op scopes and writes no trace data.
+
+`SessionService` creates an SDK-generated workflow ID for each chat request or transcript upload
+and stores it in `ConsultantState.wizardflow_message_id`. The same workflow ID is passed
 to each node and finalized once at the request boundary.
 
 The compiled graph topology is registered through
@@ -309,8 +314,8 @@ The compiled graph topology is registered through
 - LLM nodes: `llm_input`, `llm_output`, `llm_error`, and `node_output`.
 - Deterministic nodes: `node_input` and `node_output`.
 
-The `__start__` graph step is not logged. The `__end__` graph step is finalized
-as a payload-free marker.
+Only executed application nodes are recorded; synthetic `__start__` and
+`__end__` graph markers are omitted.
 
 Each `llm_input` contains both the exact system `prompt` and provider `msg`.
 Transcript parser messages are intentionally unredacted. Generated JSONL files

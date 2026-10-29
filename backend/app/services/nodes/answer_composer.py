@@ -18,12 +18,7 @@ from app.services.nodes.utils import (
     strip_advisory_disclaimer,
 )
 from app.services.states.consultant_state import ConsultantState
-from app.services.wizardflow_service import (
-    log_llm_error,
-    log_llm_input,
-    log_llm_output,
-    log_node_output,
-)
+from app.services.wizardflow_service import node_scope
 
 
 logger = logging.getLogger(__name__)
@@ -52,35 +47,35 @@ ANSWER_SCHEMA = {
 
 
 async def answer_composer_node(state: ConsultantState) -> ConsultantState:
-    logger.info("Answer composer invoked")
-    wizardflow_message_id = state.get("wizardflow_message_id")
-    degree = degree_for(state)
-    composer_prompt = degree.prompts.answer_composer_system_prompt
-    excluded_rule_sections = (
-        set()
-        if state.get("include_cross_university_rules")
-        else {CROSS_UNIVERSITY_RULE_SECTION_ID}
-    )
-    rules_context = render_rules_context(
-        degree.get_program_rules(),
-        exclude_section_ids=excluded_rule_sections,
-    )
-    user_message = latest_user_message(state)
-    history = format_recent_messages(
-        recent_messages(state, agent_flow_config.answer_composer.history_turns)
-    )
-    context = state.get("course_context") or "(no course-offering context)"
-    rule_result = state.get("rule_check_result") if degree.plan_validation_enabled else None
-    parsed_plan = state.get("parsed_study_plan")
-    rule_check_context = (
-        json.dumps(rule_result, ensure_ascii=False, indent=2)
-        if rule_result
-        else "(not a plan check)"
-        if degree.plan_validation_enabled
-        else NO_PLAN_VALIDATION_NOTE
-    )
+    with node_scope(state.get("wizardflow_message_id"), "answer_composer", kind='llm') as node:
+        logger.info("Answer composer invoked")
+        degree = degree_for(state)
+        composer_prompt = degree.prompts.answer_composer_system_prompt
+        excluded_rule_sections = (
+            set()
+            if state.get("include_cross_university_rules")
+            else {CROSS_UNIVERSITY_RULE_SECTION_ID}
+        )
+        rules_context = render_rules_context(
+            degree.get_program_rules(),
+            exclude_section_ids=excluded_rule_sections,
+        )
+        user_message = latest_user_message(state)
+        history = format_recent_messages(
+            recent_messages(state, agent_flow_config.answer_composer.history_turns)
+        )
+        context = state.get("course_context") or "(no course-offering context)"
+        rule_result = state.get("rule_check_result") if degree.plan_validation_enabled else None
+        parsed_plan = state.get("parsed_study_plan")
+        rule_check_context = (
+            json.dumps(rule_result, ensure_ascii=False, indent=2)
+            if rule_result
+            else "(not a plan check)"
+            if degree.plan_validation_enabled
+            else NO_PLAN_VALIDATION_NOTE
+        )
 
-    message = f"""
+        message = f"""
 User message:
 {user_message}
 
@@ -103,41 +98,36 @@ Deterministic rule-check result:
 {rule_check_context}
 """.strip()
 
-    log_llm_input(
-        wizardflow_message_id,
-        "answer_composer",
-        composer_prompt,
-        message,
-    )
-    try:
-        response = await ModelService().invoke(
-            prompt=composer_prompt,
-            message=message,
-            format=ANSWER_SCHEMA,
-        )
-        response_content = response.get("content", "")
-        log_llm_output(wizardflow_message_id, "answer_composer", response_content)
-        data = parse_json_content(response_content)
-        reply = data.get("message") if isinstance(data, dict) else None
-        if not isinstance(reply, str) or not reply.strip():
-            raise AnswerGenerationError("The answer composer returned an empty response.")
-    except DailyQuotaExceeded:
-        raise
-    except Exception as exc:
-        log_llm_error(wizardflow_message_id, "answer_composer", exc)
-        logger.exception("Answer composition failed.")
-        if isinstance(exc, AnswerGenerationError):
+        node.log("llm_input", {"prompt": composer_prompt, "msg": message})
+        try:
+            response = await ModelService().invoke(
+                prompt=composer_prompt,
+                message=message,
+                format=ANSWER_SCHEMA,
+            )
+            response_content = response.get("content", "")
+            node.log("llm_output", response_content)
+            data = parse_json_content(response_content)
+            reply = data.get("message") if isinstance(data, dict) else None
+            if not isinstance(reply, str) or not reply.strip():
+                raise AnswerGenerationError("The answer composer returned an empty response.")
+        except DailyQuotaExceeded:
             raise
-        raise AnswerGenerationError("The answer composer failed to generate a response.") from exc
+        except Exception as exc:
+            node.log("llm_error", {"type": type(exc).__name__, "message": str(exc)})
+            logger.exception("Answer composition failed.")
+            if isinstance(exc, AnswerGenerationError):
+                raise
+            raise AnswerGenerationError("The answer composer failed to generate a response.") from exc
 
-    reply = sanitize_reply_links(reply, f"{composer_prompt}\n{message}")
-    reply, model_added_disclaimer = strip_advisory_disclaimer(reply)
-    if model_added_disclaimer or state.get("message_type") == "plan_check":
-        disclaimer = ADVISORY_DISCLAIMER_DE if looks_german(user_message) else ADVISORY_DISCLAIMER_EN
-        reply = f"{reply}\n\n{disclaimer}"
-    result: ConsultantState = {
-        "reply": reply,
-        "messages": [{"role": "assistant", "content": reply}],
-    }
-    log_node_output(wizardflow_message_id, "answer_composer", result)
-    return result
+        reply = sanitize_reply_links(reply, f"{composer_prompt}\n{message}")
+        reply, model_added_disclaimer = strip_advisory_disclaimer(reply)
+        if model_added_disclaimer or state.get("message_type") == "plan_check":
+            disclaimer = ADVISORY_DISCLAIMER_DE if looks_german(user_message) else ADVISORY_DISCLAIMER_EN
+            reply = f"{reply}\n\n{disclaimer}"
+        result: ConsultantState = {
+            "reply": reply,
+            "messages": [{"role": "assistant", "content": reply}],
+        }
+        node.log("node_output", result)
+        return result

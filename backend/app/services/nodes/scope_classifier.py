@@ -12,13 +12,7 @@ from app.services.nodes.utils import (
     recent_messages,
 )
 from app.services.states.consultant_state import ConsultantState
-from app.services.wizardflow_service import (
-    log_llm_error,
-    log_llm_input,
-    log_llm_output,
-    log_node_input,
-    log_node_output,
-)
+from app.services.wizardflow_service import node_scope
 
 
 logger = logging.getLogger(__name__)
@@ -179,75 +173,66 @@ def _normalize_text(text: str) -> str:
 
 
 async def scope_classifier_node(state: ConsultantState) -> ConsultantState:
-    logger.info("Scope classifier invoked")
-    wizardflow_message_id = state.get("wizardflow_message_id")
-    degree = degree_for(state)
-    classifier_prompt = degree.prompts.classifier_system_prompt
-    message = latest_user_message(state)
-    conversation = format_recent_messages(
-        recent_messages(state, agent_flow_config.scope_classifier.history_turns)
-    )
-    llm_message = f"Classify the latest user message in this recent conversation:\n{conversation}"
-    fallback = heuristic_classify(message, degree.prompts.fallback_domain_terms)
-    fallback_cross_university = heuristic_needs_cross_university_rules(conversation)
-    source = "heuristic"
-
-    log_node_input(wizardflow_message_id, "scope_classifier", message)
-    log_llm_input(
-        wizardflow_message_id,
-        "scope_classifier",
-        classifier_prompt,
-        llm_message,
-    )
-    try:
-        response = await ModelService().invoke(
-            prompt=classifier_prompt,
-            message=llm_message,
-            format=CLASSIFIER_SCHEMA,
+    with node_scope(state.get("wizardflow_message_id"), "scope_classifier", kind='llm') as node:
+        logger.info("Scope classifier invoked")
+        degree = degree_for(state)
+        classifier_prompt = degree.prompts.classifier_system_prompt
+        message = latest_user_message(state)
+        conversation = format_recent_messages(
+            recent_messages(state, agent_flow_config.scope_classifier.history_turns)
         )
-        response_content = response.get("content", "")
-        log_llm_output(wizardflow_message_id, "scope_classifier", response_content)
-        data = parse_json_content(response_content)
-        message_type = data.get("message_type")
-        include_cross_university_rules = data.get("include_cross_university_rules")
-        if message_type not in {"degree_question", "course_offering_question", "plan_check", "off_topic"}:
+        llm_message = f"Classify the latest user message in this recent conversation:\n{conversation}"
+        fallback = heuristic_classify(message, degree.prompts.fallback_domain_terms)
+        fallback_cross_university = heuristic_needs_cross_university_rules(conversation)
+        source = "heuristic"
+
+        node.log("node_input", message)
+        node.log("llm_input", {"prompt": classifier_prompt, "msg": llm_message})
+        try:
+            response = await ModelService().invoke(
+                prompt=classifier_prompt,
+                message=llm_message,
+                format=CLASSIFIER_SCHEMA,
+            )
+            response_content = response.get("content", "")
+            node.log("llm_output", response_content)
+            data = parse_json_content(response_content)
+            message_type = data.get("message_type")
+            include_cross_university_rules = data.get("include_cross_university_rules")
+            if message_type not in {"degree_question", "course_offering_question", "plan_check", "off_topic"}:
+                message_type = fallback
+                source = "heuristic_invalid_llm_output"
+            else:
+                source = "llm"
+            if not isinstance(include_cross_university_rules, bool):
+                include_cross_university_rules = fallback_cross_university
+                source = f"{source}_heuristic_cross_university_flag"
+        except DailyQuotaExceeded:
+            raise
+        except Exception as exc:
+            node.log("llm_error", {"type": type(exc).__name__, "message": str(exc)})
+            logger.exception("Classifier failed; using heuristic fallback.")
             message_type = fallback
-            source = "heuristic_invalid_llm_output"
-        else:
-            source = "llm"
-        if not isinstance(include_cross_university_rules, bool):
             include_cross_university_rules = fallback_cross_university
-            source = f"{source}_heuristic_cross_university_flag"
-    except DailyQuotaExceeded:
-        raise
-    except Exception as exc:
-        log_llm_error(wizardflow_message_id, "scope_classifier", exc)
-        logger.exception("Classifier failed; using heuristic fallback.")
-        message_type = fallback
-        include_cross_university_rules = fallback_cross_university
 
-    if message_type == "plan_check" and not degree.plan_validation_enabled:
-        # No trusted validator for this degree: answer as a degree question.
-        message_type = "degree_question"
-        source = f"{source}_plan_validation_disabled"
+        if message_type == "plan_check" and not degree.plan_validation_enabled:
+            # No trusted validator for this degree: answer as a degree question.
+            message_type = "degree_question"
+            source = f"{source}_plan_validation_disabled"
 
-    logger.info(
-        "Scope classifier chose message_type=%s include_cross_university_rules=%s source=%s",
-        message_type,
-        include_cross_university_rules,
-        source,
-    )
-    result: ConsultantState = {
-        "message_type": message_type,
-        "include_cross_university_rules": include_cross_university_rules,
-    }
-    log_node_output(
-        wizardflow_message_id,
-        "scope_classifier",
-        {
+        logger.info(
+            "Scope classifier chose message_type=%s include_cross_university_rules=%s source=%s",
+            message_type,
+            include_cross_university_rules,
+            source,
+        )
+        result: ConsultantState = {
             "message_type": message_type,
             "include_cross_university_rules": include_cross_university_rules,
-            "source": source,
-        },
-    )
-    return result
+        }
+        node.log("node_output", {
+                "message_type": message_type,
+                "include_cross_university_rules": include_cross_university_rules,
+                "source": source,
+            })
+        return result

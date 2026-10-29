@@ -24,12 +24,7 @@ from app.services.nodes.utils import (
     recent_messages,
 )
 from app.services.states.consultant_state import ConsultantState
-from app.services.wizardflow_service import (
-    log_llm_error,
-    log_llm_input,
-    log_llm_output,
-    log_node_output,
-)
+from app.services.wizardflow_service import node_scope
 
 
 logger = logging.getLogger(__name__)
@@ -94,68 +89,63 @@ RULE_QUESTION_PATTERNS = [
 
 
 async def course_key_selector_node(state: ConsultantState) -> ConsultantState:
-    logger.info("Course key selector invoked")
-    wizardflow_message_id = state.get("wizardflow_message_id")
-    degree = degree_for(state)
-    if not has_offerings(degree.id):
-        result: ConsultantState = {
-            "course_lookup_keys": [],
-            "course_lookup_invalid_keys": [],
-            "course_lookup_needs_clarification": False,
-            "course_lookup_clarification_question": "",
-            "course_lookup_message": (
-                f"No local course-offering data is available for {degree.display_name} yet. "
+    with node_scope(state.get("wizardflow_message_id"), "course_key_selector", kind='llm') as node:
+        logger.info("Course key selector invoked")
+        degree = degree_for(state)
+        if not has_offerings(degree.id):
+            result: ConsultantState = {
+                "course_lookup_keys": [],
+                "course_lookup_invalid_keys": [],
+                "course_lookup_needs_clarification": False,
+                "course_lookup_clarification_question": "",
+                "course_lookup_message": (
+                    f"No local course-offering data is available for {degree.display_name} yet. "
                 "Course offerings must be checked in the official FU Berlin Vorlesungsverzeichnis."
-            ),
-        }
-        log_node_output(wizardflow_message_id, "course_key_selector", result)
-        return result
-    user_message = latest_user_message(state)
-    semester_note = (
-        build_available_semesters_note(degree.id)
-        if agent_flow_config.course_key_selector.include_available_semesters_note
-        else "(semester coverage note disabled)"
-    )
-    prompt = (
-        degree.prompts.course_key_selector_template.replace(
-            "{semester_coverage_note}",
-            semester_note,
-        ).replace(
-            "{course_tree}",
-            build_course_lookup_tree(degree.id),
+                ),
+            }
+            node.log("node_output", result)
+            return result
+        user_message = latest_user_message(state)
+        semester_note = (
+            build_available_semesters_note(degree.id)
+            if agent_flow_config.course_key_selector.include_available_semesters_note
+            else "(semester coverage note disabled)"
         )
-    )
-    history = format_recent_messages(
-        recent_messages(state, agent_flow_config.course_key_selector.history_turns)
-    )
-    llm_message = f"Recent conversation:\n{history}\n\nLatest user message:\n{user_message}"
-
-    log_llm_input(
-        wizardflow_message_id,
-        "course_key_selector",
-        prompt,
-        llm_message,
-    )
-    try:
-        response = await ModelService().invoke(
-            prompt=prompt,
-            message=llm_message,
-            format=COURSE_KEY_SELECTOR_SCHEMA,
+        prompt = (
+            degree.prompts.course_key_selector_template.replace(
+                "{semester_coverage_note}",
+                semester_note,
+            ).replace(
+                "{course_tree}",
+                build_course_lookup_tree(degree.id),
+            )
         )
-        response_content = response.get("content", "")
-        log_llm_output(wizardflow_message_id, "course_key_selector", response_content)
-        data = parse_json_content(response_content)
-    except DailyQuotaExceeded:
-        raise
-    except Exception as exc:
-        log_llm_error(wizardflow_message_id, "course_key_selector", exc)
-        logger.exception("Course key selection failed; using heuristic selector.")
-        data = heuristic_select_course_keys(user_message, degree.id)
+        history = format_recent_messages(
+            recent_messages(state, agent_flow_config.course_key_selector.history_turns)
+        )
+        llm_message = f"Recent conversation:\n{history}\n\nLatest user message:\n{user_message}"
 
-    selected = _sanitize_selector_result(data, user_message, degree.id)
-    logger.info("Selected course lookup keys: %s", selected["course_lookup_keys"])
-    log_node_output(wizardflow_message_id, "course_key_selector", selected)
-    return selected
+        node.log("llm_input", {"prompt": prompt, "msg": llm_message})
+        try:
+            response = await ModelService().invoke(
+                prompt=prompt,
+                message=llm_message,
+                format=COURSE_KEY_SELECTOR_SCHEMA,
+            )
+            response_content = response.get("content", "")
+            node.log("llm_output", response_content)
+            data = parse_json_content(response_content)
+        except DailyQuotaExceeded:
+            raise
+        except Exception as exc:
+            node.log("llm_error", {"type": type(exc).__name__, "message": str(exc)})
+            logger.exception("Course key selection failed; using heuristic selector.")
+            data = heuristic_select_course_keys(user_message, degree.id)
+
+        selected = _sanitize_selector_result(data, user_message, degree.id)
+        logger.info("Selected course lookup keys: %s", selected["course_lookup_keys"])
+        node.log("node_output", selected)
+        return selected
 
 
 def heuristic_select_course_keys(message: str, degree_id: str = DEFAULT_DEGREE_ID) -> dict[str, Any]:

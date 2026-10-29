@@ -1,5 +1,7 @@
 import logging
 from typing import Any
+from contextlib import contextmanager
+from types import SimpleNamespace
 
 import wizardflow
 
@@ -51,52 +53,22 @@ def reinit_tracing() -> str | None:
     return path
 
 
-def log_llm_input(message_id: str | None, node: str, prompt: str, msg: str) -> None:
-    _log(message_id, node, "llm_input", {"prompt": prompt, "msg": msg})
+
+_disabled_tracer = wizardflow.Client(enabled=False)
 
 
-def log_llm_output(message_id: str | None, node: str, output: Any) -> None:
-    _log(message_id, node, "llm_output", output)
-
-
-def log_llm_error(message_id: str | None, node: str, error: Exception) -> None:
-    _log(
-        message_id,
-        node,
-        "llm_error",
-        {"type": type(error).__name__, "message": str(error)},
-    )
-
-
-def log_node_input(message_id: str | None, node: str, content: Any) -> None:
-    _log(message_id, node, "node_input", content)
-
-
-def log_node_output(message_id: str | None, node: str, content: Any) -> None:
-    _log(message_id, node, "node_output", content)
-
-
-def end_message(message_id: str, title: str | None = None) -> None:
-    if not message_id or tracer is None:
+@contextmanager
+def workflow(*, enabled: bool, title: str):
+    """Own one request trace; opting out never changes the shared tracer."""
+    if not enabled or tracer is None:
+        yield SimpleNamespace(message_id="")
         return
-
-    try:
-        path = tracer.end_message(message_id, title=title)
-        logger.info("WizardFlow message written: %s", path)
-    except Exception:
-        logger.exception("Failed to finalize WizardFlow message %s", message_id)
+    with tracer.workflow() as run:
+        run.set_info(title=title)
+        yield run
 
 
-def _log(message_id: str | None, node: str, label: str, content: Any) -> None:
-    if not message_id or tracer is None:
-        return
-
-    try:
-        tracer.log(message_id, node, label, content)
-    except Exception:
-        logger.exception(
-            "Failed to write WizardFlow payload message_id=%s node=%s label=%s",
-            message_id,
-            node,
-            label,
-        )
+def node_scope(message_id: str | None, node_id: str, *, kind: str | None = None):
+    """Scope a graph node, including helpers shared with transcript uploads."""
+    client = tracer if message_id and tracer is not None else _disabled_tracer
+    return client.node(message_id or "disabled", node_id, kind=kind)

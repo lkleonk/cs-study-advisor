@@ -9,12 +9,7 @@ from app.services.model_service import ModelService
 from app.services.quota_service import DailyQuotaExceeded
 from app.services.nodes.utils import degree_for, latest_user_message, parse_json_content
 from app.services.states.consultant_state import ConsultantState
-from app.services.wizardflow_service import (
-    log_llm_error,
-    log_llm_input,
-    log_llm_output,
-    log_node_output,
-)
+from app.services.wizardflow_service import node_scope
 
 
 logger = logging.getLogger(__name__)
@@ -55,14 +50,15 @@ async def parse_study_plan(
     The LLM only parses here; deterministic Python rules validate the result
     afterwards. Falls back to a heuristic parser if the LLM call fails.
     """
-    degree = degree or get_degree_or_default(None)
-    parser_prompt = degree.prompts.study_plan_parser_system_prompt
-    fallback = heuristic_parse_plan(text, degree)
-    if existing_plan:
-        existing_plan_data = (
-            existing_plan.model_dump() if isinstance(existing_plan, StudyPlan) else existing_plan
-        )
-        llm_message = f"""
+    with node_scope(wizardflow_message_id, "study_plan_parser", kind='llm') as node:
+        degree = degree or get_degree_or_default(None)
+        parser_prompt = degree.prompts.study_plan_parser_system_prompt
+        fallback = heuristic_parse_plan(text, degree)
+        if existing_plan:
+            existing_plan_data = (
+                existing_plan.model_dump() if isinstance(existing_plan, StudyPlan) else existing_plan
+            )
+            llm_message = f"""
 Existing parsed study plan:
 {json.dumps(existing_plan_data, ensure_ascii=False, indent=2)}
 
@@ -72,34 +68,29 @@ Latest user message:
 Return the complete updated study plan. Preserve the existing plan and
 incorporate additions or corrections from the latest message.
 """.strip()
-    else:
-        llm_message = f"User message:\n{text}"
+        else:
+            llm_message = f"User message:\n{text}"
 
-    log_llm_input(
-        wizardflow_message_id,
-        "study_plan_parser",
-        parser_prompt,
-        llm_message,
-    )
-    try:
-        response = await ModelService().invoke(
-            prompt=parser_prompt,
-            message=llm_message,
-            format=degree.study_plan_schema,
-        )
-        response_content = response.get("content", "")
-        log_llm_output(wizardflow_message_id, "study_plan_parser", response_content)
-        data = parse_json_content(response_content)
-        plan = degree.enrich_study_plan(StudyPlan.model_validate(data))
-    except DailyQuotaExceeded:
-        raise
-    except Exception as exc:
-        log_llm_error(wizardflow_message_id, "study_plan_parser", exc)
-        logger.exception("Study plan parser failed; using heuristic parser.")
-        plan = fallback
+        node.log("llm_input", {"prompt": parser_prompt, "msg": llm_message})
+        try:
+            response = await ModelService().invoke(
+                prompt=parser_prompt,
+                message=llm_message,
+                format=degree.study_plan_schema,
+            )
+            response_content = response.get("content", "")
+            node.log("llm_output", response_content)
+            data = parse_json_content(response_content)
+            plan = degree.enrich_study_plan(StudyPlan.model_validate(data))
+        except DailyQuotaExceeded:
+            raise
+        except Exception as exc:
+            node.log("llm_error", {"type": type(exc).__name__, "message": str(exc)})
+            logger.exception("Study plan parser failed; using heuristic parser.")
+            plan = fallback
 
-    log_node_output(wizardflow_message_id, "study_plan_parser", plan.model_dump())
-    return plan
+        node.log("node_output", plan.model_dump())
+        return plan
 
 
 async def study_plan_parser_node(state: ConsultantState) -> ConsultantState:

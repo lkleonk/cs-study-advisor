@@ -366,8 +366,13 @@ App URL from `terraform output -raw backend_url`):
 
 ## WizardFlow Traces
 
+WizardFlow 0.9.0 uses `with trace.workflow() as run` to finalize each request,
+including failures, and node context managers to capture execution timing.
+Chat graph nodes and transcript parsing/validation share the same scoped API.
+Per-request tracing opt-out uses no-op scopes and writes no trace data.
+
 WizardFlow tracing is enabled by default. Each chat request and transcript
-upload receives a new UUID, and each active agent node writes payloads into a
+upload receives an SDK-generated workflow ID, and each active agent node writes payloads into a
 JSONL trace under `backend/traces/`. Docker persists `/app/traces` to that host
 directory.
 
@@ -379,8 +384,8 @@ llm_output -> raw model response
 llm_error  -> exception type and message, when a fallback is used
 ```
 
-Deterministic nodes record `node_input` and `node_output`. The `__start__` graph
-step is not logged; `__end__` is finalized as a payload-free marker. Trace
+Deterministic nodes record `node_input` and `node_output`. Only executed application nodes
+are recorded; synthetic `__start__` and `__end__` markers are omitted. Trace
 failures are logged but do not fail consultant requests.
 
 Configuration:
@@ -408,12 +413,24 @@ curl -X POST http://localhost:8000/api/tracing/reinit
 The old file is left as-is, open messages carry over into the new file, and a
 disabled tracer answers HTTP 409 with `error_code == "tracing_disabled"`.
 
-From `backend/`, inspect a generated trace with:
+To generate a sample trace, run from `backend/` in PowerShell with local LLM
+credentials configured:
 
-```bash
-wizardflow ui traces/<trace-file>.jsonl
-wizardflow json traces/<trace-file>.jsonl
+```powershell
+$env:WIZARDFLOW_ENABLED = 'true'
+uv run --isolated --python 3.12.10 --with-requirements requirements.txt python -m uvicorn app.main:app --host 127.0.0.1 --port 8011
 ```
+
+In a second PowerShell terminal, create a session and ask a sample question:
+
+```powershell
+$session = Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:8011/api/sessions' -ContentType 'application/json' -Body '{"degree":"msc_informatik"}'
+Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:8011/api/sessions/$($session.session_id)/message" -ContentType 'application/json' -Body '{"content":"How many total credit points do I need for M.Sc. Informatik? Please answer briefly.","tracing_enabled":true}'
+```
+
+Open the generated `backend/traces/*.jsonl` file in
+[getwizardflow.com](https://getwizardflow.com). Provider rate limits can cause
+requests to fail; failed workflows are also finalized in the trace.
 
 Trace files contain unredacted system prompts, chat messages, and extracted
 transcript text. Treat `backend/traces/` as sensitive local data; it is excluded

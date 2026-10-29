@@ -61,26 +61,26 @@ class SessionService:
     async def _process_message(
         self, session_id: str, message_content: str, tracing_enabled: bool = True
     ) -> ModelReply:
-        wizardflow_message_id = _trace_message_id(tracing_enabled)
         title = _message_title(message_content)
         try:
             agent_app = _get_agent_app()
-            config = {"configurable": {"thread_id": session_id}}
-            state = {
-                "messages": [{"role": "user", "content": message_content}],
-                "wizardflow_message_id": wizardflow_message_id,
-            }
-            result = await agent_app.ainvoke(state, config=config)
-            reply = result.get("reply")
-            if not isinstance(reply, str) or not reply.strip():
-                raise AnswerGenerationError("The consultant returned an empty response.")
-            return ModelReply(
-                reply=reply,
-                message_type=result.get("message_type") or "off_topic",
-                citations=result.get("citations") or [],
-                rule_check_result=result.get("rule_check_result"),
-                parsed_study_plan=result.get("parsed_study_plan"),
-            )
+            with wizardflow_service.workflow(enabled=tracing_enabled, title=title) as run:
+                config = {"configurable": {"thread_id": session_id}}
+                state = {
+                    "messages": [{"role": "user", "content": message_content}],
+                    "wizardflow_message_id": run.message_id,
+                }
+                result = await agent_app.ainvoke(state, config=config)
+                reply = result.get("reply")
+                if not isinstance(reply, str) or not reply.strip():
+                    raise AnswerGenerationError("The consultant returned an empty response.")
+                return ModelReply(
+                    reply=reply,
+                    message_type=result.get("message_type") or "off_topic",
+                    citations=result.get("citations") or [],
+                    rule_check_result=result.get("rule_check_result"),
+                    parsed_study_plan=result.get("parsed_study_plan"),
+                )
         except HTTPException:
             raise
         except AnswerGenerationError as exc:
@@ -95,8 +95,6 @@ class SessionService:
         except Exception as exc:
             logger.exception("Error processing consultant message")
             raise HTTPException(status_code=500, detail=str(exc)) from exc
-        finally:
-            wizardflow_service.end_message(wizardflow_message_id, title=title)
 
     async def process_transcript(
         self, session_id: str, file: UploadFile, tracing_enabled: bool = True
@@ -150,27 +148,24 @@ class SessionService:
                 detail={"error_code": "pdf_unreadable", "message": UNREADABLE_MESSAGE},
             ) from exc
 
-        wizardflow_message_id = _trace_message_id(tracing_enabled)
         degree = self._session_degree(session_id)
         try:
-            plan = await parse_study_plan(document.full_text, wizardflow_message_id, degree)
-            # Without a trusted validator the transcript only becomes chat context.
-            rule_result = (
-                check_study_plan(plan, wizardflow_message_id, degree)
-                if degree.plan_validation_enabled
-                else None
-            )
+            with wizardflow_service.workflow(
+                enabled=tracing_enabled, title=f"Transcript: {document.filename}"
+            ) as run:
+                wizardflow_message_id = run.message_id
+                plan = await parse_study_plan(document.full_text, wizardflow_message_id, degree)
+                # Without a trusted validator the transcript only becomes chat context.
+                rule_result = (
+                    check_study_plan(plan, wizardflow_message_id, degree)
+                    if degree.plan_validation_enabled
+                    else None
+                )
         except HTTPException:
             raise
         except Exception as exc:
             logger.exception("Failed to parse/validate uploaded transcript")
             raise HTTPException(status_code=500, detail=str(exc)) from exc
-        finally:
-            wizardflow_service.end_message(
-                wizardflow_message_id,
-                title=f"Transcript: {document.filename}",
-            )
-
         # Persist only the validated plan into LangGraph state so chat follow-ups
         # can reference it. When tracing is on, extracted text also remains in the
         # local WizardFlow trace because transcript llm_input payloads are
@@ -234,16 +229,6 @@ class SessionService:
             f"Processed {filename}: extracted {module_count} module(s) totalling "
             f"{total_lp} LP. {summary}"
         )
-
-
-def _trace_message_id(tracing_enabled: bool) -> str:
-    """Mint a WizardFlow message id, or an empty one when the client opted out.
-
-    Every ``wizardflow_service`` entry point short-circuits on a falsy message
-    id, so an empty id is what disables tracing for a single request without
-    touching the graph or the process-wide tracer.
-    """
-    return str(uuid.uuid4()) if tracing_enabled else ""
 
 
 def _message_title(message: str, max_length: int = 100) -> str:

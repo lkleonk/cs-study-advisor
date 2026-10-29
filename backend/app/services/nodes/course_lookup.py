@@ -8,66 +8,62 @@ from app.domain.course_offerings import (
 from app.services.agent_config import agent_flow_config
 from app.services.nodes.utils import degree_for
 from app.services.states.consultant_state import ConsultantState
-from app.services.wizardflow_service import log_node_input, log_node_output
+from app.services.wizardflow_service import node_scope
 
 
 logger = logging.getLogger(__name__)
 
 
 async def course_lookup_node(state: ConsultantState) -> ConsultantState:
-    logger.info("Course lookup invoked")
-    wizardflow_message_id = state.get("wizardflow_message_id")
-    log_node_input(
-        wizardflow_message_id,
-        "course_lookup",
-        {
-            "keys": state.get("course_lookup_keys") or [],
-            "invalid_keys": state.get("course_lookup_invalid_keys") or [],
-            "needs_clarification": bool(state.get("course_lookup_needs_clarification")),
-        },
-    )
+    with node_scope(state.get("wizardflow_message_id"), "course_lookup", kind=None) as node:
+        logger.info("Course lookup invoked")
+        node.log("node_input", {
+                "keys": state.get("course_lookup_keys") or [],
+                "invalid_keys": state.get("course_lookup_invalid_keys") or [],
+                "needs_clarification": bool(state.get("course_lookup_needs_clarification")),
+            })
 
-    if state.get("course_lookup_needs_clarification"):
-        question = state.get("course_lookup_clarification_question") or (
-            "Which semester should I use for the course offering lookup?"
+        if state.get("course_lookup_needs_clarification"):
+            question = state.get("course_lookup_clarification_question") or (
+                "Which semester should I use for the course offering lookup?"
+            )
+            result: ConsultantState = {
+                "course_context": f"Course lookup needs clarification: {question}",
+                "citations": [],
+            }
+            node.log("node_output", result)
+            return result
+
+        keys = state.get("course_lookup_keys") or []
+        invalid_keys = state.get("course_lookup_invalid_keys") or []
+        message = state.get("course_lookup_message")
+        notes = [message] if message else []
+
+        if not keys:
+            context = format_course_lookup_context([], invalid_keys=invalid_keys, notes=notes)
+            result = {
+                "course_context": context,
+                "citations": [],
+            }
+            node.log("node_output", result)
+            return result
+
+        buckets, missing_keys = lookup_course_buckets(degree_for(state).id, keys)
+        context = format_course_lookup_context(
+            buckets,
+            invalid_keys=[*invalid_keys, *missing_keys],
+            notes=notes,
+            include_course_urls=agent_flow_config.course_lookup.include_course_urls,
         )
-        result: ConsultantState = {
-            "course_context": f"Course lookup needs clarification: {question}",
-            "citations": [],
-        }
-        log_node_output(wizardflow_message_id, "course_lookup", result)
-        return result
+        citations = build_course_citations(
+            buckets,
+            include_course_urls=agent_flow_config.course_lookup.include_course_urls,
+        )
 
-    keys = state.get("course_lookup_keys") or []
-    invalid_keys = state.get("course_lookup_invalid_keys") or []
-    message = state.get("course_lookup_message")
-    notes = [message] if message else []
-
-    if not keys:
-        context = format_course_lookup_context([], invalid_keys=invalid_keys, notes=notes)
+        logger.info("Course lookup returned %d bucket(s)", len(buckets))
         result = {
             "course_context": context,
-            "citations": [],
+            "citations": citations,
         }
-        log_node_output(wizardflow_message_id, "course_lookup", result)
+        node.log("node_output", result)
         return result
-
-    buckets, missing_keys = lookup_course_buckets(degree_for(state).id, keys)
-    context = format_course_lookup_context(
-        buckets,
-        invalid_keys=[*invalid_keys, *missing_keys],
-        notes=notes,
-        include_course_urls=agent_flow_config.course_lookup.include_course_urls,
-    )
-    citations = build_course_citations(
-        buckets,
-        include_course_urls=agent_flow_config.course_lookup.include_course_urls,
-    )
-
-    logger.info("Course lookup returned %d bucket(s)", len(buckets))
-    result = {
-        "course_context": context,
-        "citations": citations,
-    }
-    log_node_output(wizardflow_message_id, "course_lookup", result)
-    return result

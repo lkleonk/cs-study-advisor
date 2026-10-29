@@ -1,10 +1,10 @@
 import asyncio
 import json
-import uuid
 from pathlib import Path
 
+import pytest
 import wizardflow
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.testclient import TestClient
 
 from app.domain.degrees import get_degree_or_default
@@ -14,111 +14,82 @@ from app.services.nodes import scope_classifier
 from app.services.session_service import SessionService
 
 
-def test_wizardflow_payloads_include_prompt_and_msg(tmp_path, monkeypatch):
-    client = wizardflow.init(
-        output_dir=str(tmp_path),
-        nodes=["__start__", "scope_classifier", "__end__"],
-    )
+def messages(client):
+    return [r for r in map(json.loads, Path(client.current_path).read_text(encoding="utf-8").splitlines()) if r["type"] == "message"]
+
+
+@pytest.fixture
+def trace(tmp_path, monkeypatch):
+    client = wizardflow.init(enabled=True, output_dir=str(tmp_path), nodes=["scope_classifier"], on_error="raise")
     monkeypatch.setattr(wizardflow_service, "tracer", client)
-
-    wizardflow_service.log_llm_input(
-        "message-1",
-        "scope_classifier",
-        "system prompt",
-        "user message",
-    )
-    wizardflow_service.log_llm_output(
-        "message-1",
-        "scope_classifier",
-        '{"message_type":"degree_question"}',
-    )
-    wizardflow_service.end_message("message-1", title="Question")
-
-    records = [
-        json.loads(line)
-        for line in Path(client.current_path).read_text(encoding="utf-8").splitlines()
-    ]
-    message = next(record for record in records if record["type"] == "message")
-    classifier_step = next(
-        step for step in message["steps"] if step["nodeId"] == "scope_classifier"
-    )
-
-    assert all(step["nodeId"] != "__start__" for step in message["steps"])
-    assert all(step["nodeId"] != "__end__" for step in message["steps"])
-    assert classifier_step["payloads"] == [
-        {
-            "label": "llm_input",
-            "value": {"prompt": "system prompt", "msg": "user message"},
-        },
-        {
-            "label": "llm_output",
-            "value": '{"message_type":"degree_question"}',
-        },
-    ]
+    return client
 
 
-def test_session_service_adds_a_unique_wizardflow_id_to_graph_state(monkeypatch):
+def test_scope_classifier_logs_exact_input_and_scoped_execution(trace, monkeypatch):
     captured = {}
+    class FakeModelService:
+        async def invoke(self, prompt, message, format):
+            captured.update(prompt=prompt, msg=message)
+            return {"content": '{"message_type":"degree_question","include_cross_university_rules":false}'}
+    monkeypatch.setattr(scope_classifier, "ModelService", FakeModelService)
+    async def execute():
+        with wizardflow_service.workflow(enabled=True, title="Question") as run:
+            return await scope_classifier.scope_classifier_node({
+                "wizardflow_message_id": run.message_id,
+                "messages": [{"role": "user", "content": "How many LP do I need?"}],
+            })
+    result = asyncio.run(execute())
+    assert result["message_type"] == "degree_question"
+    step = messages(trace)[0]["steps"][0]
+    assert step["nodeId"] == "scope_classifier"
+    payload = next(p for p in step["payloads"] if p["label"] == "llm_input")
+    assert payload["value"] == captured
+    assert captured["prompt"] == get_degree_or_default(None).prompts.classifier_system_prompt
+    assert captured["msg"] == "Classify the latest user message in this recent conversation:\nuser: How many LP do I need?"
 
+
+@pytest.mark.parametrize("enabled", [True, False])
+def test_concurrent_requests_and_opt_out(trace, monkeypatch, enabled):
+    ids = []
     class FakeAgentApp:
         async def ainvoke(self, state, config):
-            captured["state"] = state
-            captured["config"] = config
-            return {
-                "reply": "Answer",
-                "message_type": "degree_question",
-                "citations": [],
-            }
-
-    ends = []
-    monkeypatch.setattr(
-        "app.services.session_service._get_agent_app",
-        lambda: FakeAgentApp(),
-    )
-    monkeypatch.setattr(
-        wizardflow_service,
-        "end_message",
-        lambda message_id, title=None: ends.append((message_id, title)),
-    )
-
-    reply = asyncio.run(SessionService().process_message("session-1", "How many LP?"))
-
-    message_id = captured["state"]["wizardflow_message_id"]
-    uuid.UUID(message_id)
-    assert reply.reply == "Answer"
-    assert ends == [(message_id, "How many LP?")]
+            message_id = state["wizardflow_message_id"]
+            ids.append(message_id)
+            with wizardflow_service.node_scope(message_id, "scope_classifier") as node:
+                await asyncio.sleep(0)
+                node.log("input", state["messages"][0]["content"])
+            return {"reply": "Answer", "message_type": "degree_question"}
+    monkeypatch.setattr("app.services.session_service._get_agent_app", lambda: FakeAgentApp())
+    async def execute():
+        return await asyncio.gather(*(SessionService().process_message(f"session-{i}", f"Question {i}", tracing_enabled=enabled) for i in range(2)))
+    replies = asyncio.run(execute())
+    assert all(r.reply == "Answer" for r in replies)
+    if enabled:
+        assert len(set(ids)) == 2 and all(ids)
+        records = messages(trace)
+        assert len(records) == 2
+        assert {r["steps"][0]["payloads"][0]["value"] for r in records} == {"Question 0", "Question 1"}
+    else:
+        assert ids == ["", ""]
+        assert not Path(trace.current_path).exists()
 
 
-def test_session_service_writes_no_trace_payloads_when_the_client_opts_out(tmp_path, monkeypatch):
+def test_failure_finalizes_trace_and_preserves_application_error(trace, monkeypatch):
     class FakeAgentApp:
         async def ainvoke(self, state, config):
-            # Mirror a node: log through the real service using the state's id.
-            wizardflow_service.log_llm_input(
-                state["wizardflow_message_id"],
-                "scope_classifier",
-                "system prompt",
-                "user message",
-            )
-            return {"reply": "Answer", "message_type": "degree_question", "citations": []}
-
-    tracer = wizardflow.init(
-        output_dir=str(tmp_path),
-        nodes=["__start__", "scope_classifier", "__end__"],
-    )
-    monkeypatch.setattr(wizardflow_service, "tracer", tracer)
-    monkeypatch.setattr(
-        "app.services.session_service._get_agent_app",
-        lambda: FakeAgentApp(),
-    )
-
-    reply = asyncio.run(
-        SessionService().process_message("session-1", "How many LP?", tracing_enabled=False)
-    )
-
-    assert reply.reply == "Answer"
-    # An empty id disables tracing, so nothing was written and the lazily
-    # created trace file never came into existence.
-    assert not Path(tracer.current_path).exists()
+            with wizardflow_service.node_scope(state["wizardflow_message_id"], "scope_classifier"):
+                raise ValueError("test failure")
+    monkeypatch.setattr("app.services.session_service._get_agent_app", lambda: FakeAgentApp())
+    with pytest.raises(HTTPException) as exc:
+        asyncio.run(SessionService().process_message("failed-session", "Question"))
+    assert exc.value.status_code == 500
+    assert exc.value.detail == "test failure"
+    assert len(messages(trace)) == 1
+    # Exiting a failed workflow must reset its context for the next request.
+    with wizardflow_service.workflow(enabled=True, title="Next") as run:
+        with wizardflow_service.node_scope(run.message_id, "scope_classifier") as node:
+            node.log("output", "ok")
+    assert len(messages(trace)) == 2
 
 
 def _tracing_client() -> TestClient:
@@ -139,7 +110,7 @@ def test_tracing_reinit_returns_conflict_when_tracing_is_disabled(monkeypatch):
 
 
 def test_tracing_reinit_starts_a_new_trace_file(tmp_path, monkeypatch):
-    tracer = wizardflow.init(
+    tracer = wizardflow.init(enabled=True,
         output_dir=str(tmp_path),
         nodes=["__start__", "scope_classifier", "__end__"],
     )
@@ -153,57 +124,3 @@ def test_tracing_reinit_starts_a_new_trace_file(tmp_path, monkeypatch):
     new_path = response.json()["trace_path"]
     assert new_path == str(tracer.current_path)
     assert new_path != old_path
-
-
-def test_scope_classifier_logs_the_exact_llm_input(monkeypatch):
-    captured = {}
-
-    class FakeModelService:
-        async def invoke(self, prompt, message, format):
-            return {
-                "content": (
-                    '{"message_type":"degree_question",'
-                    '"include_cross_university_rules":false}'
-                )
-            }
-
-    monkeypatch.setattr(scope_classifier, "ModelService", FakeModelService)
-    monkeypatch.setattr(
-        scope_classifier,
-        "log_llm_input",
-        lambda message_id, node, prompt, msg: captured.update(
-            message_id=message_id,
-            node=node,
-            prompt=prompt,
-            msg=msg,
-        ),
-    )
-    monkeypatch.setattr(scope_classifier, "log_llm_output", lambda *args: None)
-    monkeypatch.setattr(scope_classifier, "log_node_output", lambda *args: None)
-
-    result = asyncio.run(
-        scope_classifier.scope_classifier_node(
-            {
-                "wizardflow_message_id": "trace-id",
-                "messages": [
-                    {"role": "user", "content": "Can I study at TU Berlin?"},
-                    {"role": "assistant", "content": "Yes, through cross-registration."},
-                    {"role": "user", "content": "How many LP do I need?"},
-                ],
-            }
-        )
-    )
-
-    assert result == {
-        "message_type": "degree_question",
-        "include_cross_university_rules": False,
-    }
-    assert captured["message_id"] == "trace-id"
-    assert captured["node"] == "scope_classifier"
-    assert captured["prompt"] == get_degree_or_default(None).prompts.classifier_system_prompt
-    assert captured["msg"] == (
-        "Classify the latest user message in this recent conversation:\n"
-        "user: Can I study at TU Berlin?\n"
-        "assistant: Yes, through cross-registration.\n"
-        "user: How many LP do I need?"
-    )

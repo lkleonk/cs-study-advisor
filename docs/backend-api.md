@@ -74,12 +74,12 @@ may opt out of tracing per request: `tracing_enabled` on the message body and as
 a multipart form field on the transcript upload, both defaulting to `true` so a
 client that omits it is traced normally.
 
-Enforcement is one decision in `session_service._trace_message_id()`: an opted-out
-request gets an empty WizardFlow message id instead of a UUID, and every
-`wizardflow_service` entry point already short-circuits on a falsy message id. No
-node changes, no separate code path. A client that sends `tracing_enabled: true`
-against a deployment with tracing off still writes nothing, because `_log` also
-bails when the process-wide `tracer` is `None`.
+`SessionService` opens `wizardflow_service.workflow(enabled=..., title=...)`
+for each request. Enabled requests use the SDK-generated `run.message_id`;
+opted-out requests or a disabled process-wide tracer yield an empty ID.
+`node_scope()` selects a disabled SDK client for empty IDs, so the same node
+code runs without recording payloads or changing the shared tracer. Workflow
+context exit finalizes enabled requests, including failures.
 
 ## Session lifecycle
 
