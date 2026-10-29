@@ -5,7 +5,7 @@ CONTEXT = """
 Rules with sources:
 - Official source: [B.Sc. SPO 2023](https://www.fu-berlin.de/service/zuvdocs/amtsblatt/2023/ab232023.pdf)
 - Step 1: [Moses](https://moseskonto.tu-berlin.de/moses/verzeichnis/veranstaltungen/vkpl_stg.html)
-- Contact: Prof. Dr. Claudia Müller-Birn (clmb@inf.fu-berlin.de)
+- Contact: Erika Mustermann (chair@example.org)
 """
 
 
@@ -43,10 +43,10 @@ def test_known_bare_url_is_kept_with_trailing_punctuation():
 
 
 def test_known_mailto_is_kept_and_unknown_is_stripped():
-    reply = "Write to [clmb@inf.fu-berlin.de](mailto:clmb@inf.fu-berlin.de) or [someone](mailto:fake@example.com)."
+    reply = "Write to [chair@example.org](mailto:chair@example.org) or [someone](mailto:fake@example.com)."
     assert (
         sanitize_reply_links(reply, CONTEXT)
-        == "Write to [clmb@inf.fu-berlin.de](mailto:clmb@inf.fu-berlin.de) or someone."
+        == "Write to [chair@example.org](mailto:chair@example.org) or someone."
     )
 
 

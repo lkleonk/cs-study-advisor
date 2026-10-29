@@ -320,11 +320,9 @@ def get_program_rules() -> ProgramRulesCatalogue:
                     ProgramRuleItem(
                         label="Step 2 - Optional pre-check with the Prüfungsausschuss",
                         text=(
-                            "Ask the Prüfungsausschussvorsitzende:r by email or in person whether the "
-                            "course could be credited. As of July 2026 this is Prof. Dr. Claudia "
-                            "Müller-Birn (clmb@inf.fu-berlin.de; see her "
-                            "[contact page](https://www.mi.fu-berlin.de/en/inf/groups/hcc/members/professor/mueller-birn.html) "
-                            "for details and appointment booking). "
+                            "Ask the Prüfungsausschuss chair by email or in person whether the "
+                            "course could be credited. Contact details are on the "
+                            "[exam board page](https://www.mi.fu-berlin.de/fb/beauf-aussch/pruefungsausschuss-inf-master/index.html). "
                             "The chair may not have time or may decline to assess a course you have not "
                             "taken yet; trying first and then deciding is still recommended."
                         ),
@@ -369,7 +367,7 @@ def get_program_rules() -> ProgramRulesCatalogue:
                             "M SPO §9(14)) on the "
                             "[Prüfungsausschuss Informatik page](https://www.mi.fu-berlin.de/w/Inf/PruefungsAusschuss) - "
                             "and then book an in-person appointment with the "
-                            "Prüfungsausschussvorsitzende:r to explain why you took the course and how "
+                            "Prüfungsausschuss chair to explain why you took the course and how "
                             "it should count. Bring the Leistungsnachweis and the HU/TU module "
                             "description (Modulbeschreibung)."
                         ),

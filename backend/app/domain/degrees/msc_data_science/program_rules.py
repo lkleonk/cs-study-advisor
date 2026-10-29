@@ -271,11 +271,9 @@ def get_program_rules() -> ProgramRulesCatalogue:
                     ProgramRuleItem(
                         label="Step 2 - Optional pre-check with the Prüfungsausschuss",
                         text=(
-                            "Ask the Prüfungsausschussvorsitzende:r by email or in person whether the "
-                            "course could be credited. As of July 2026 this is Prof. Dr. Claudia "
-                            "Schillings (c.schillings@fu-berlin.de; see her "
-                            "[contact page](https://www.mi.fu-berlin.de/math/groups/naspde/members/claudia_schillings.html) "
-                            "for details and appointment booking). "
+                            "Ask the Prüfungsausschuss chair by email or in person whether the "
+                            "course could be credited. Contact details are on the "
+                            "[exam board page](https://www.mi.fu-berlin.de/fb/beauf-aussch/pruefungsausschuss-data-science/index.html). "
                             "The chair may not have time or may decline to assess a course you have not "
                             "taken yet; trying first and then deciding is still recommended."
                         ),
@@ -316,7 +314,7 @@ def get_program_rules() -> ProgramRulesCatalogue:
                         text=(
                             "At the end of the semester, request Anerkennung at FU. For M.Sc. Data "
                             "Science no dedicated online procedure is documented here; contact the "
-                            "Prüfungsausschussvorsitzende:r or the Studienbüro directly to ask how to "
+                            "Prüfungsausschuss chair or the Studienbüro directly to ask how to "
                             "submit the request, then book an in-person appointment to explain why you "
                             "took the course and how it should count. Bring the Leistungsnachweis and "
                             "the HU/TU module description (Modulbeschreibung)."

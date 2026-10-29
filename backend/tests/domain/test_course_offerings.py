@@ -185,7 +185,7 @@ def test_credit_note_rejects_description_dumps():
     from app.domain.course_offerings import CREDIT_NOTE_FORBIDDEN_RE, FU_MODULE_CODE_RE
 
     assert not CREDIT_NOTE_FORBIDDEN_RE.search("Listed as a free-elective candidate only; recognition requires confirmation.")
-    assert CREDIT_NOTE_FORBIDDEN_RE.search("FU module 0086eA1.14. Vorlesung 19335601 (Volker Roth).")
+    assert CREDIT_NOTE_FORBIDDEN_RE.search("FU module 0086eA1.14. Vorlesung 19335601 (Erika Mustermann).")
     assert CREDIT_NOTE_FORBIDDEN_RE.search("Tutorium: Mo 12:00-14:00")
     assert FU_MODULE_CODE_RE.fullmatch("0086eA1.14") and FU_MODULE_CODE_RE.fullmatch("0590bB2.9")
     assert not FU_MODULE_CODE_RE.fullmatch("FU module 0086eA1.14")
